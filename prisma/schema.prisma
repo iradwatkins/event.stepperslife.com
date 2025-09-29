@@ -1,0 +1,1046 @@
+// SteppersLife Events Platform - Production Database Schema
+// Architecture Version 2.0 - Complete Square Integration & Business Logic
+// Designed for 10,000+ concurrent users, real-time features, and scalability
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =====================================================
+// USER MANAGEMENT & AUTHENTICATION
+// =====================================================
+
+model User {
+  id               String    @id @default(uuid())
+  email            String    @unique
+  emailVerified    DateTime?
+  passwordHash     String?   // For credential auth
+
+  // Profile Information
+  firstName        String
+  lastName         String
+  displayName      String?
+  phone            String?
+  dateOfBirth      DateTime?
+  profileImage     String?
+  bio              String?   @db.Text
+
+  // Account Status
+  role             UserRole  @default(ATTENDEE)
+  status           UserStatus @default(ACTIVE)
+  isVerified       Boolean   @default(false)
+  twoFactorEnabled Boolean   @default(false)
+
+  // Preferences
+  timezone         String    @default("America/New_York")
+  language         String    @default("en")
+  marketingOptIn   Boolean   @default(false)
+
+  // Square Integration
+  squareCustomerId String?   @unique
+
+  // Metadata
+  metadata         Json?     @default("{}")
+  lastLoginAt      DateTime?
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  // Relations
+  accounts         Account[]
+  sessions         Session[]
+  organizerProfile OrganizerProfile?
+
+  // Event Relations
+  eventsCreated    Event[]   @relation("EventOrganizer")
+  orders           Order[]
+  tickets          Ticket[]
+  reviews          Review[]
+  teamMemberships  TeamMember[]
+
+  // Social Relations
+  favorites        EventFavorite[]
+  following        Follow[]  @relation("Follower")
+  followers        Follow[]  @relation("Following")
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+  @@index([squareCustomerId])
+  @@map("users")
+}
+
+model OrganizerProfile {
+  id               String    @id @default(uuid())
+  userId           String    @unique
+
+  // Business Information
+  businessName     String
+  businessType     BusinessType @default(INDIVIDUAL)
+  taxId            String?
+  website          String?
+  socialMedia      Json?     @default("{}")
+
+  // Square Business Integration
+  squareLocationId String?
+  squareBusinessId String?
+  squareApplication String?
+
+  // Verification Status
+  isVerified       Boolean   @default(false)
+  verifiedAt       DateTime?
+  verificationLevel VerificationLevel @default(BASIC)
+
+  // Settings
+  autoPayoutEnabled Boolean  @default(true)
+  defaultPayoutSchedule PayoutSchedule @default(DAILY)
+
+  // Statistics
+  totalEvents      Int       @default(0)
+  totalRevenue     Decimal   @default(0) @db.Decimal(12, 2)
+  averageRating    Float?
+
+  // Relations
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team             TeamMember[]
+  venues           Venue[]
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("organizer_profiles")
+}
+
+model TeamMember {
+  id               String    @id @default(uuid())
+  organizerId      String
+  userId           String
+
+  role             TeamRole  @default(STAFF)
+  permissions      String[]  @default([])
+  isActive         Boolean   @default(true)
+
+  // Relations
+  organizer        OrganizerProfile @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@unique([organizerId, userId])
+  @@map("team_members")
+}
+
+// =====================================================
+// VENUE MANAGEMENT
+// =====================================================
+
+model Venue {
+  id               String    @id @default(uuid())
+  organizerId      String
+
+  // Basic Information
+  name             String
+  slug             String    @unique
+  description      String?   @db.Text
+
+  // Location
+  address          String
+  city             String
+  state            String
+  zipCode          String
+  country          String    @default("US")
+  latitude         Float?
+  longitude        Float?
+  timezone         String    @default("America/New_York")
+
+  // Capacity & Features
+  maxCapacity      Int
+  hasSeating       Boolean   @default(false)
+  hasParking       Boolean   @default(false)
+  isAccessible     Boolean   @default(true)
+  amenities        String[]  @default([])
+
+  // Contact Information
+  phone            String?
+  email            String?
+  website          String?
+
+  // Images
+  coverImage       String?
+  gallery          String[] @default([])
+
+  // Status
+  isActive         Boolean   @default(true)
+
+  // Relations
+  organizer        OrganizerProfile @relation(fields: [organizerId], references: [id])
+  events           Event[]
+  seatingCharts    SeatingChart[]
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([organizerId])
+  @@index([city, state])
+  @@map("venues")
+}
+
+model SeatingChart {
+  id               String    @id @default(uuid())
+  venueId          String
+
+  name             String
+  description      String?
+  isDefault        Boolean   @default(false)
+
+  // Chart Configuration
+  layout           Json      // SVG/coordinates data
+  sections         Json      // Section definitions
+  totalSeats       Int
+
+  // Relations
+  venue            Venue     @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  seats            Seat[]
+  events           Event[]
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([venueId])
+  @@map("seating_charts")
+}
+
+model Seat {
+  id               String    @id @default(uuid())
+  seatingChartId   String
+
+  // Seat Identification
+  section          String
+  row              String
+  number           String
+
+  // Properties
+  seatType         SeatType  @default(STANDARD)
+  isAccessible     Boolean   @default(false)
+
+  // Position
+  x                Float?    // SVG coordinates
+  y                Float?
+
+  // Relations
+  seatingChart     SeatingChart @relation(fields: [seatingChartId], references: [id], onDelete: Cascade)
+  tickets          Ticket[]
+
+  @@unique([seatingChartId, section, row, number])
+  @@index([seatingChartId])
+  @@map("seats")
+}
+
+// =====================================================
+// EVENT MANAGEMENT
+// =====================================================
+
+model Event {
+  id               String    @id @default(uuid())
+  organizerId      String
+  venueId          String?
+  seatingChartId   String?
+
+  // Basic Information
+  name             String
+  slug             String    @unique
+  description      String?   @db.Text
+  shortDescription String?
+
+  // Event Details
+  startDate        DateTime
+  endDate          DateTime
+  timezone         String    @default("America/New_York")
+
+  // Event Type & Settings
+  eventType        EventType @default(GENERAL_ADMISSION)
+  isVirtual        Boolean   @default(false)
+  virtualUrl       String?
+
+  // Capacity Management
+  maxCapacity      Int?
+  salesStartDate   DateTime?
+  salesEndDate     DateTime?
+
+  // Status & Visibility
+  status           EventStatus @default(DRAFT)
+  visibility       EventVisibility @default(PUBLIC)
+  isFeatured       Boolean   @default(false)
+
+  // Media
+  coverImage       String?
+  gallery          String[] @default([])
+
+  // SEO & Marketing
+  metaTitle        String?
+  metaDescription  String?
+  tags             String[] @default([])
+
+  // Square Integration
+  squareCatalogId  String?   @unique
+  squareLocationId String?
+
+  // Settings
+  settings         Json      @default("{}")
+
+  // Relations
+  organizer        User      @relation("EventOrganizer", fields: [organizerId], references: [id])
+  venue            Venue?    @relation(fields: [venueId], references: [id])
+  seatingChart     SeatingChart? @relation(fields: [seatingChartId], references: [id])
+
+  categories       EventCategory[]
+  ticketTypes      TicketType[]
+  sessions         EventSession[]
+  orders           Order[]
+  tickets          Ticket[]
+  discounts        Discount[]
+  waitlists        Waitlist[]
+
+  // Social
+  reviews          Review[]
+  favorites        EventFavorite[]
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  publishedAt      DateTime?
+  deletedAt        DateTime?
+
+  @@index([organizerId])
+  @@index([slug])
+  @@index([startDate])
+  @@index([status])
+  @@index([squareCatalogId])
+  @@map("events")
+}
+
+model EventCategory {
+  id               String    @id @default(uuid())
+  name             String    @unique
+  slug             String    @unique
+  description      String?
+  color            String?
+  icon             String?
+  sortOrder        Int       @default(0)
+  isActive         Boolean   @default(true)
+
+  // Relations
+  events           Event[]
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("event_categories")
+}
+
+model EventSession {
+  id               String    @id @default(uuid())
+  eventId          String
+
+  name             String
+  description      String?
+  startTime        DateTime
+  endTime          DateTime
+
+  // Relations
+  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([eventId])
+  @@map("event_sessions")
+}
+
+// =====================================================
+// TICKETING SYSTEM
+// =====================================================
+
+model TicketType {
+  id               String    @id @default(uuid())
+  eventId          String
+
+  // Basic Information
+  name             String
+  description      String?
+
+  // Pricing
+  price            Decimal   @db.Decimal(10, 2)
+  currency         String    @default("USD")
+
+  // Inventory
+  quantity         Int
+  sold             Int       @default(0)
+  reserved         Int       @default(0)
+
+  // Sales Rules
+  minPerOrder      Int       @default(1)
+  maxPerOrder      Int       @default(10)
+  salesStartDate   DateTime?
+  salesEndDate     DateTime?
+
+  // Square Integration
+  squareItemId     String?   @unique
+  squareVariationId String?  @unique
+
+  // Seating
+  requiresSeat     Boolean   @default(false)
+  allowedSections  String[] @default([])
+
+  // Rules & Settings
+  rules            Json      @default("{}")
+  metadata         Json?
+
+  // Status
+  isActive         Boolean   @default(true)
+  sortOrder        Int       @default(0)
+
+  // Relations
+  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tickets          Ticket[]
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([eventId])
+  @@index([squareItemId])
+  @@map("ticket_types")
+}
+
+model Order {
+  id               String    @id @default(uuid())
+  orderNumber      String    @unique
+  eventId          String
+  userId           String?
+
+  // Customer Information
+  email            String
+  firstName        String
+  lastName         String
+  phone            String?
+
+  // Order Details
+  subtotal         Decimal   @db.Decimal(10, 2)
+  fees             Decimal   @db.Decimal(10, 2) @default(0)
+  taxes            Decimal   @db.Decimal(10, 2) @default(0)
+  total            Decimal   @db.Decimal(10, 2)
+  currency         String    @default("USD")
+
+  // Status
+  status           OrderStatus @default(PENDING)
+
+  // Square Payment Integration
+  squareOrderId    String?   @unique
+  squarePaymentId  String?   @unique
+  squareReceiptUrl String?
+  squareReceiptNumber String?
+
+  // Payment Details
+  paymentMethod    String?
+  paymentStatus    PaymentStatus @default(PENDING)
+
+  // Metadata
+  browserInfo      Json?
+  ipAddress        String?
+  source           String?   @default("web")
+
+  // Relations
+  event            Event     @relation(fields: [eventId], references: [id])
+  user             User?     @relation(fields: [userId], references: [id])
+  tickets          Ticket[]
+  payment          Payment?
+  refunds          Refund[]
+  discountUses     DiscountUse[]
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  completedAt      DateTime?
+
+  @@index([orderNumber])
+  @@index([eventId])
+  @@index([userId])
+  @@index([email])
+  @@index([status])
+  @@map("orders")
+}
+
+model Ticket {
+  id               String    @id @default(uuid())
+  ticketNumber     String    @unique
+  orderId          String
+  ticketTypeId     String
+  eventId          String
+  userId           String?
+  seatId           String?
+
+  // Ticket Details
+  holderName       String?
+  holderEmail      String?
+
+  // Pricing
+  faceValue        Decimal   @db.Decimal(10, 2)
+  fees             Decimal   @db.Decimal(10, 2) @default(0)
+
+  // Status
+  status           TicketStatus @default(VALID)
+
+  // QR Code & Validation
+  qrCode           String    @unique
+  validationCode   String    @unique
+
+  // Check-in
+  checkedIn        Boolean   @default(false)
+  checkedInAt      DateTime?
+  checkedInBy      String?
+  checkInMethod    CheckInMethod?
+  checkInLocation  String?
+
+  // Transfer & Resale
+  transferrable    Boolean   @default(true)
+  resaleable       Boolean   @default(false)
+  transferredAt    DateTime?
+  transferredTo    String?
+
+  // Metadata
+  metadata         Json?
+
+  // Relations
+  order            Order     @relation(fields: [orderId], references: [id])
+  ticketType       TicketType @relation(fields: [ticketTypeId], references: [id])
+  event            Event     @relation(fields: [eventId], references: [id])
+  user             User?     @relation(fields: [userId], references: [id])
+  seat             Seat?     @relation(fields: [seatId], references: [id])
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([orderId])
+  @@index([ticketTypeId])
+  @@index([eventId])
+  @@index([userId])
+  @@index([qrCode])
+  @@index([status])
+  @@map("tickets")
+}
+
+// =====================================================
+// PAYMENT PROCESSING
+// =====================================================
+
+model Payment {
+  id               String    @id @default(uuid())
+  orderId          String    @unique
+
+  // Payment Details
+  amount           Decimal   @db.Decimal(10, 2)
+  currency         String    @default("USD")
+  method           PaymentMethod
+
+  // Square Integration
+  squarePaymentId  String    @unique
+  squareOrderId    String?
+  squareLocationId String?
+  squareReceiptUrl String?
+
+  // Status
+  status           PaymentStatus @default(PENDING)
+
+  // Card Details (tokenized)
+  cardBrand        String?
+  cardLast4        String?
+  cardExpMonth     Int?
+  cardExpYear      Int?
+
+  // Processing Info
+  processorFee     Decimal?  @db.Decimal(10, 2)
+  netAmount        Decimal?  @db.Decimal(10, 2)
+
+  // Risk & Verification
+  avsResult        String?
+  cvvResult        String?
+  riskEvaluation   Json?
+
+  // Square Response
+  squareResponse   Json?
+
+  // Relations
+  order            Order     @relation(fields: [orderId], references: [id])
+  refunds          Refund[]
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  processedAt      DateTime?
+
+  @@index([squarePaymentId])
+  @@index([status])
+  @@map("payments")
+}
+
+model Refund {
+  id               String    @id @default(uuid())
+  orderId          String
+  paymentId        String?
+
+  // Refund Details
+  amount           Decimal   @db.Decimal(10, 2)
+  reason           RefundReason
+  reasonText       String?   @db.Text
+
+  // Square Integration
+  squareRefundId   String?   @unique
+
+  // Status
+  status           RefundStatus @default(PENDING)
+
+  // Processing
+  processedBy      String?   // Admin user ID
+  processedAt      DateTime?
+
+  // Relations
+  order            Order     @relation(fields: [orderId], references: [id])
+  payment          Payment?  @relation(fields: [paymentId], references: [id])
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([orderId])
+  @@index([squareRefundId])
+  @@map("refunds")
+}
+
+// =====================================================
+// DISCOUNTS & PROMOTIONS
+// =====================================================
+
+model Discount {
+  id               String    @id @default(uuid())
+  eventId          String
+
+  // Basic Information
+  code             String    @unique
+  name             String
+  description      String?
+
+  // Discount Configuration
+  type             DiscountType
+  value            Decimal   @db.Decimal(10, 2)
+  isPercentage     Boolean   @default(false)
+
+  // Usage Limits
+  maxUses          Int?
+  maxUsesPerUser   Int?
+  usedCount        Int       @default(0)
+
+  // Validity
+  startDate        DateTime
+  endDate          DateTime
+  isActive         Boolean   @default(true)
+
+  // Restrictions
+  minOrderAmount   Decimal?  @db.Decimal(10, 2)
+  applicableTicketTypes String[] @default([])
+
+  // Relations
+  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  uses             DiscountUse[]
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([eventId])
+  @@index([code])
+  @@map("discounts")
+}
+
+model DiscountUse {
+  id               String    @id @default(uuid())
+  discountId       String
+  orderId          String
+
+  amountDiscounted Decimal   @db.Decimal(10, 2)
+
+  // Relations
+  discount         Discount  @relation(fields: [discountId], references: [id])
+  order            Order     @relation(fields: [orderId], references: [id])
+
+  createdAt        DateTime  @default(now())
+
+  @@unique([discountId, orderId])
+  @@map("discount_uses")
+}
+
+// =====================================================
+// WAITLIST SYSTEM
+// =====================================================
+
+model Waitlist {
+  id               String    @id @default(uuid())
+  eventId          String
+  email            String
+
+  // User Information
+  firstName        String?
+  lastName         String?
+  phone            String?
+
+  // Preferences
+  ticketQuantity   Int       @default(1)
+  maxPrice         Decimal?  @db.Decimal(10, 2)
+
+  // Status
+  status           WaitlistStatus @default(WAITING)
+  notifiedAt       DateTime?
+
+  // Relations
+  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@unique([eventId, email])
+  @@index([eventId, status])
+  @@map("waitlists")
+}
+
+// =====================================================
+// SOCIAL FEATURES
+// =====================================================
+
+model Review {
+  id               String    @id @default(uuid())
+  eventId          String
+  userId           String
+
+  rating           Int       // 1-5 stars
+  title            String?
+  comment          String?   @db.Text
+  isPublic         Boolean   @default(true)
+  isVerified       Boolean   @default(false)
+
+  // Moderation
+  isModerated      Boolean   @default(false)
+  moderatedBy      String?
+  moderatedAt      DateTime?
+
+  // Relations
+  event            Event     @relation(fields: [eventId], references: [id])
+  user             User      @relation(fields: [userId], references: [id])
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@map("reviews")
+}
+
+model EventFavorite {
+  id               String    @id @default(uuid())
+  userId           String
+  eventId          String
+
+  // Relations
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime  @default(now())
+
+  @@unique([userId, eventId])
+  @@map("event_favorites")
+}
+
+model Follow {
+  id               String    @id @default(uuid())
+  followerId       String
+  followingId      String
+
+  // Relations
+  follower         User      @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following        User      @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime  @default(now())
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
+// =====================================================
+// SYSTEM & ANALYTICS
+// =====================================================
+
+model AuditLog {
+  id               String    @id @default(uuid())
+
+  // Event Details
+  action           String
+  entityType       String
+  entityId         String
+
+  // User Information
+  userId           String?
+  ipAddress        String?
+  userAgent        String?
+
+  // Changes
+  oldValues        Json?
+  newValues        Json?
+
+  // Metadata
+  metadata         Json?
+
+  createdAt        DateTime  @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model SystemMetrics {
+  id               String    @id @default(uuid())
+
+  metricType       String
+  metricName       String
+  value            Float
+  unit             String?
+
+  // Dimensions
+  dimensions       Json?
+
+  timestamp        DateTime  @default(now())
+
+  @@index([metricType, metricName])
+  @@index([timestamp])
+  @@map("system_metrics")
+}
+
+// =====================================================
+// AUTHENTICATION MODELS
+// =====================================================
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// =====================================================
+// ENUMS
+// =====================================================
+
+enum UserRole {
+  ATTENDEE
+  ORGANIZER
+  STAFF
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  BANNED
+  PENDING_VERIFICATION
+}
+
+enum BusinessType {
+  INDIVIDUAL
+  SOLE_PROPRIETORSHIP
+  PARTNERSHIP
+  LLC
+  CORPORATION
+  NON_PROFIT
+}
+
+enum VerificationLevel {
+  BASIC
+  VERIFIED
+  PREMIUM
+  ENTERPRISE
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MANAGER
+  STAFF
+  VOLUNTEER
+}
+
+enum PayoutSchedule {
+  DAILY
+  WEEKLY
+  MONTHLY
+  ON_DEMAND
+}
+
+enum SeatType {
+  STANDARD
+  PREMIUM
+  VIP
+  ACCESSIBLE
+  OBSTRUCTED_VIEW
+}
+
+enum EventType {
+  GENERAL_ADMISSION
+  RESERVED_SEATING
+  FESTIVAL
+  CONFERENCE
+  WORKSHOP
+  CONCERT
+  SPORTS
+  THEATER
+  VIRTUAL
+  HYBRID
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  LIVE
+  POSTPONED
+  CANCELLED
+  COMPLETED
+}
+
+enum EventVisibility {
+  PUBLIC
+  PRIVATE
+  UNLISTED
+  INVITE_ONLY
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum TicketStatus {
+  VALID
+  USED
+  CANCELLED
+  REFUNDED
+  TRANSFERRED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  DISPUTED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  CASH_APP_PAY
+  BANK_TRANSFER
+  CASH
+  CHECK
+  GIFT_CARD
+}
+
+enum CheckInMethod {
+  QR_SCAN
+  MANUAL_SEARCH
+  BARCODE_SCAN
+  NFC
+  CONFIRMATION_NUMBER
+}
+
+enum RefundReason {
+  CUSTOMER_REQUEST
+  EVENT_CANCELLED
+  EVENT_POSTPONED
+  DUPLICATE_ORDER
+  FRAUD_PROTECTION
+  SYSTEM_ERROR
+  ADMIN_DECISION
+}
+
+enum RefundStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum DiscountType {
+  FIXED_AMOUNT
+  PERCENTAGE
+  BUY_X_GET_Y
+  EARLY_BIRD
+  GROUP_DISCOUNT
+}
+
+enum WaitlistStatus {
+  WAITING
+  NOTIFIED
+  PURCHASED
+  EXPIRED
+  REMOVED
+}

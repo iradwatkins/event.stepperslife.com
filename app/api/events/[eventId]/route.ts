@@ -1,0 +1,292 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { withAuth } from '@/lib/auth/rbac';
+import { prisma } from '@/lib/prisma';
+import { logError } from '@/lib/monitoring/sentry';
+
+async function handleGetEvent(request: NextRequest, context: any) {
+  const { user, params } = context;
+  const eventId = params.eventId;
+
+  try {
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      include: {
+        venue: true,
+        organizer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true
+          }
+        },
+        ticketTypes: {
+          where: { isActive: true },
+          orderBy: { tier: 'asc' }
+        },
+        _count: {
+          select: {
+            tickets: true
+          }
+        }
+      }
+    });
+
+    if (!event) {
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check if user has permission to view this event
+    const canView =
+      user.role === 'SUPER_ADMIN' ||
+      user.role === 'ADMIN' ||
+      event.organizerId === user.id ||
+      event.visibility === 'PUBLIC' ||
+      (event.visibility === 'UNLISTED' && user.role !== 'ATTENDEE');
+
+    if (!canView) {
+      return NextResponse.json(
+        { error: 'Access denied' },
+        { status: 403 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      event: {
+        ...event,
+        ticketsSold: event._count.tickets
+      }
+    });
+
+  } catch (error) {
+    console.error('Get event error:', error);
+
+    logError(error instanceof Error ? error : new Error(String(error)), {
+      user: { id: user.id, email: user.email, role: user.role },
+      tags: { component: 'event-api', operation: 'get-single' },
+      extra: { eventId }
+    });
+
+    return NextResponse.json(
+      { error: 'Failed to fetch event' },
+      { status: 500 }
+    );
+  }
+}
+
+async function handleUpdateEvent(request: NextRequest, context: any) {
+  const { user, params } = context;
+  const eventId = params.eventId;
+
+  try {
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      select: { id: true, organizerId: true }
+    });
+
+    if (!event) {
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check if user has permission to update this event
+    const canUpdate =
+      user.role === 'SUPER_ADMIN' ||
+      user.role === 'ADMIN' ||
+      event.organizerId === user.id;
+
+    if (!canUpdate) {
+      return NextResponse.json(
+        { error: 'Access denied' },
+        { status: 403 }
+      );
+    }
+
+    const body = await request.json();
+
+    // TODO: Add validation schema for updates
+
+    const updatedEvent = await prisma.event.update({
+      where: { id: eventId },
+      data: {
+        ...body,
+        updatedAt: new Date()
+      },
+      include: {
+        venue: true,
+        organizer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true
+          }
+        },
+        ticketTypes: true
+      }
+    });
+
+    // Log event update
+    await prisma.auditLog.create({
+      data: {
+        action: 'EVENT_UPDATED',
+        entityType: 'EVENT',
+        entityId: eventId,
+        userId: user.id,
+        metadata: {
+          eventTitle: updatedEvent.title,
+          updatedFields: Object.keys(body)
+        }
+      }
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Event updated successfully',
+      event: updatedEvent
+    });
+
+  } catch (error) {
+    console.error('Update event error:', error);
+
+    logError(error instanceof Error ? error : new Error(String(error)), {
+      user: { id: user.id, email: user.email, role: user.role },
+      tags: { component: 'event-api', operation: 'update' },
+      extra: { eventId }
+    });
+
+    return NextResponse.json(
+      { error: 'Failed to update event' },
+      { status: 500 }
+    );
+  }
+}
+
+async function handleDeleteEvent(request: NextRequest, context: any) {
+  const { user, params } = context;
+  const eventId = params.eventId;
+
+  try {
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      select: {
+        id: true,
+        organizerId: true,
+        title: true,
+        _count: { select: { tickets: true } }
+      }
+    });
+
+    if (!event) {
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check if user has permission to delete this event
+    const canDelete =
+      user.role === 'SUPER_ADMIN' ||
+      user.role === 'ADMIN' ||
+      event.organizerId === user.id;
+
+    if (!canDelete) {
+      return NextResponse.json(
+        { error: 'Access denied' },
+        { status: 403 }
+      );
+    }
+
+    // Check if event has sold tickets
+    if (event._count.tickets > 0) {
+      return NextResponse.json(
+        { error: 'Cannot delete event with sold tickets. Cancel the event instead.' },
+        { status: 400 }
+      );
+    }
+
+    // Delete event and related data
+    await prisma.$transaction(async (tx) => {
+      // Delete ticket types first
+      await tx.ticketType.deleteMany({
+        where: { eventId }
+      });
+
+      // Delete the event
+      await tx.event.delete({
+        where: { id: eventId }
+      });
+
+      // Log event deletion
+      await tx.auditLog.create({
+        data: {
+          action: 'EVENT_DELETED',
+          entityType: 'EVENT',
+          entityId: eventId,
+          userId: user.id,
+          metadata: {
+            eventTitle: event.title
+          }
+        }
+      });
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Event deleted successfully'
+    });
+
+  } catch (error) {
+    console.error('Delete event error:', error);
+
+    logError(error instanceof Error ? error : new Error(String(error)), {
+      user: { id: user.id, email: user.email, role: user.role },
+      tags: { component: 'event-api', operation: 'delete' },
+      extra: { eventId }
+    });
+
+    return NextResponse.json(
+      { error: 'Failed to delete event' },
+      { status: 500 }
+    );
+  }
+}
+
+// GET: Get single event
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ eventId: string }> }
+) {
+  const params = await context.params; {
+  return withAuth(handleGetEvent, {
+    permissions: ['events.view']
+  })(request, { params });
+}
+
+// PUT: Update event
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ eventId: string }> }
+) {
+  const params = await context.params; {
+  return withAuth(handleUpdateEvent, {
+    permissions: ['events.edit_own']
+  })(request, { params });
+}
+
+// DELETE: Delete event
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ eventId: string }> }
+) {
+  const params = await context.params; {
+  return withAuth(handleDeleteEvent, {
+    permissions: ['events.delete_own']
+  })(request, { params });
+}

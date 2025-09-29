@@ -1,0 +1,742 @@
+// SteppersLife Events Platform - Production Database Schema
+// Complete schema aligned with PRD requirements for US ticketing platform
+// Supports 10,000+ concurrent users, real-time seat selection, Square payments
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "tracing", "relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ================================
+// USER MANAGEMENT
+// ================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  role          UserRole  @default(ATTENDEE)
+
+  // Profile
+  firstName     String?   @map("first_name")
+  lastName      String?   @map("last_name")
+  phone         String?
+  avatar        String?
+  bio           String?   @db.Text
+
+  // Verification & Status
+  isVerified    Boolean   @default(false)
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime? @map("last_login_at")
+
+  // Square Integration (for organizers)
+  squareCustomerId String? @unique @map("square_customer_id")
+  squareMerchantId String? @map("square_merchant_id")
+
+  // Metadata
+  metadata      Json?
+  preferences   Json      @default("{}")
+
+  // Relations
+  organizedEvents   Event[]     @relation("OrganizerEvents")
+  orders           Order[]
+  tickets          Ticket[]
+  teamMemberships  TeamMember[]
+  auditLogs        AuditLog[]
+
+  // Timestamps
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+  @@map("users")
+}
+
+model TeamMember {
+  id          String      @id @default(uuid())
+  userId      String      @map("user_id")
+  eventId     String      @map("event_id")
+  role        TeamRole    @default(STAFF)
+  permissions Json        @default("{}")
+  invitedBy   String?     @map("invited_by")
+  invitedAt   DateTime?   @map("invited_at")
+  acceptedAt  DateTime?   @map("accepted_at")
+
+  // Relations
+  user        User        @relation(fields: [userId], references: [id])
+  event       Event       @relation(fields: [eventId], references: [id])
+
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@unique([userId, eventId])
+  @@index([eventId])
+  @@map("team_members")
+}
+
+// ================================
+// VENUE MANAGEMENT
+// ================================
+
+model Venue {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+
+  // Location
+  address     String
+  city        String
+  state       String
+  zipCode     String    @map("zip_code")
+  country     String    @default("US")
+  latitude    Float?
+  longitude   Float?
+
+  // Details
+  capacity    Int?
+  type        VenueType @default(GENERAL)
+  amenities   String[]
+
+  // Contact
+  phone       String?
+  email       String?
+  website     String?
+
+  // Images
+  images      String[]
+
+  // Metadata
+  isActive    Boolean   @default(true)
+  metadata    Json?
+
+  // Relations
+  events      Event[]
+  seatingCharts SeatingChart[]
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([city, state])
+  @@map("venues")
+}
+
+model SeatingChart {
+  id          String    @id @default(uuid())
+  venueId     String    @map("venue_id")
+  name        String
+  isDefault   Boolean   @default(false)
+
+  // Chart data (SVG/JSON representation)
+  chartData   Json
+
+  // Capacity breakdown
+  totalSeats  Int       @map("total_seats")
+  sections    Json      @default("[]")
+
+  // Relations
+  venue       Venue     @relation(fields: [venueId], references: [id])
+  events      Event[]
+  seats       Seat[]
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([venueId])
+  @@map("seating_charts")
+}
+
+model Seat {
+  id              String        @id @default(uuid())
+  seatingChartId  String        @map("seating_chart_id")
+
+  // Seat identification
+  row             String
+  number          String
+  section         String?
+  level           String?       // For multi-level venues
+
+  // Position (for rendering)
+  x               Float
+  y               Float
+
+  // Properties
+  seatType        SeatType      @default(STANDARD)
+  isAccessible    Boolean       @default(false)
+
+  // Metadata
+  metadata        Json?
+
+  // Relations
+  seatingChart    SeatingChart  @relation(fields: [seatingChartId], references: [id])
+  tickets         Ticket[]
+
+  @@unique([seatingChartId, row, number])
+  @@index([seatingChartId])
+  @@map("seats")
+}
+
+// ================================
+// EVENT MANAGEMENT
+// ================================
+
+model Event {
+  id              String        @id @default(uuid())
+  organizerId     String        @map("organizer_id")
+  venueId         String?       @map("venue_id")
+  seatingChartId  String?       @map("seating_chart_id")
+
+  // Basic Info
+  name            String
+  slug            String        @unique
+  description     String?       @db.Text
+  shortDescription String?      @map("short_description")
+
+  // Scheduling
+  startDate       DateTime      @map("start_date")
+  endDate         DateTime      @map("end_date")
+  timezone        String        @default("America/New_York")
+  doors           DateTime?     // When doors open
+
+  // Sales Window
+  salesStartDate  DateTime?     @map("sales_start_date")
+  salesEndDate    DateTime?     @map("sales_end_date")
+
+  // Capacity
+  capacity        Int?
+  isSeated        Boolean       @default(false) @map("is_seated")
+
+  // Status & Visibility
+  status          EventStatus   @default(DRAFT)
+  visibility      Visibility    @default(PUBLIC)
+  requiresApproval Boolean      @default(false) @map("requires_approval")
+
+  // Images & Media
+  coverImage      String?       @map("cover_image")
+  images          String[]
+  videos          String[]
+
+  // Square Integration
+  squareCatalogId String?       @unique @map("square_catalog_id")
+  squareLocationId String?      @map("square_location_id")
+
+  // Pricing
+  currency        String        @default("USD")
+
+  // Categories & Tags
+  category        String?
+  tags            String[]
+
+  // Settings
+  settings        Json          @default("{}")
+
+  // Relations
+  organizer       User          @relation("OrganizerEvents", fields: [organizerId], references: [id])
+  venue           Venue?        @relation(fields: [venueId], references: [id])
+  seatingChart    SeatingChart? @relation(fields: [seatingChartId], references: [id])
+  ticketTypes     TicketType[]
+  orders          Order[]
+  sessions        Session[]
+  teamMembers     TeamMember[]
+  waitlists       Waitlist[]
+  discounts       Discount[]
+  checkIns        CheckIn[]
+
+  // Timestamps
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  publishedAt     DateTime?     @map("published_at")
+  deletedAt       DateTime?     @map("deleted_at")
+
+  @@index([organizerId])
+  @@index([slug])
+  @@index([startDate])
+  @@index([status])
+  @@index([visibility])
+  @@fulltext([name, description])
+  @@map("events")
+}
+
+model Session {
+  id          String    @id @default(uuid())
+  eventId     String    @map("event_id")
+  name        String
+  description String?   @db.Text
+  startTime   DateTime  @map("start_time")
+  endTime     DateTime  @map("end_time")
+  speakers    String[]
+  location    String?
+
+  // Relations
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([eventId])
+  @@map("sessions")
+}
+
+// ================================
+// TICKETING SYSTEM
+// ================================
+
+model TicketType {
+  id              String    @id @default(uuid())
+  eventId         String    @map("event_id")
+
+  // Basic Info
+  name            String
+  description     String?   @db.Text
+  price           Decimal   @db.Decimal(10, 2)
+
+  // Inventory
+  quantity        Int
+  sold            Int       @default(0)
+  reserved        Int       @default(0)
+
+  // Sales Rules
+  minPerOrder     Int       @default(1) @map("min_per_order")
+  maxPerOrder     Int       @default(10) @map("max_per_order")
+  salesStartDate  DateTime? @map("sales_start_date")
+  salesEndDate    DateTime? @map("sales_end_date")
+
+  // Seat Assignment (for reserved seating)
+  isSeated        Boolean   @default(false) @map("is_seated")
+  sections        String[]  // Which sections this ticket type can access
+
+  // Square Integration
+  squareItemId    String?   @map("square_item_id")
+  squareVariationId String? @map("square_variation_id")
+
+  // Settings
+  isActive        Boolean   @default(true) @map("is_active")
+  sortOrder       Int       @default(0) @map("sort_order")
+  rules           Json      @default("{}")
+  metadata        Json?
+
+  // Relations
+  event           Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tickets         Ticket[]
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([eventId])
+  @@index([isActive])
+  @@map("ticket_types")
+}
+
+model Order {
+  id              String        @id @default(uuid())
+  userId          String?       @map("user_id")
+  eventId         String        @map("event_id")
+
+  // Order Details
+  orderNumber     String        @unique @map("order_number")
+  email           String
+  firstName       String        @map("first_name")
+  lastName        String        @map("last_name")
+  phone           String?
+
+  // Pricing
+  subtotal        Decimal       @db.Decimal(10, 2)
+  fees            Decimal       @db.Decimal(10, 2) @default(0)
+  taxes           Decimal       @db.Decimal(10, 2) @default(0)
+  discountAmount  Decimal       @db.Decimal(10, 2) @default(0) @map("discount_amount")
+  total           Decimal       @db.Decimal(10, 2)
+
+  // Status
+  status          OrderStatus   @default(PENDING)
+
+  // Square Integration
+  squareOrderId   String?       @unique @map("square_order_id")
+
+  // Discounts
+  discountCode    String?       @map("discount_code")
+
+  // Metadata
+  metadata        Json?
+  ipAddress       String?       @map("ip_address")
+  userAgent       String?       @map("user_agent")
+
+  // Relations
+  user            User?         @relation(fields: [userId], references: [id])
+  event           Event         @relation(fields: [eventId], references: [id])
+  tickets         Ticket[]
+  payments        Payment[]
+
+  // Timestamps
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  completedAt     DateTime?     @map("completed_at")
+  expiresAt       DateTime?     @map("expires_at")
+
+  @@index([userId])
+  @@index([eventId])
+  @@index([email])
+  @@index([orderNumber])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model Ticket {
+  id              String        @id @default(uuid())
+  orderId         String        @map("order_id")
+  ticketTypeId    String        @map("ticket_type_id")
+  userId          String?       @map("user_id")
+  seatId          String?       @map("seat_id")
+
+  // Ticket Details
+  ticketNumber    String        @unique @map("ticket_number")
+  qrCode          String        @unique @map("qr_code")
+  price           Decimal       @db.Decimal(10, 2)
+
+  // Status
+  status          TicketStatus  @default(VALID)
+
+  // Transfer & Assignment
+  holderName      String?       @map("holder_name")
+  holderEmail     String?       @map("holder_email")
+  assignedAt      DateTime?     @map("assigned_at")
+
+  // Check-in
+  isCheckedIn     Boolean       @default(false) @map("is_checked_in")
+  checkedInAt     DateTime?     @map("checked_in_at")
+  checkedInBy     String?       @map("checked_in_by")
+  checkInMethod   String?       @map("check_in_method")
+  checkInLocation String?       @map("check_in_location")
+
+  // Metadata
+  metadata        Json?
+
+  // Relations
+  order           Order         @relation(fields: [orderId], references: [id])
+  ticketType      TicketType    @relation(fields: [ticketTypeId], references: [id])
+  user            User?         @relation(fields: [userId], references: [id])
+  seat            Seat?         @relation(fields: [seatId], references: [id])
+  checkIns        CheckIn[]
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@index([orderId])
+  @@index([ticketTypeId])
+  @@index([userId])
+  @@index([ticketNumber])
+  @@index([qrCode])
+  @@index([status])
+  @@index([isCheckedIn])
+  @@map("tickets")
+}
+
+// ================================
+// PAYMENT PROCESSING
+// ================================
+
+model Payment {
+  id              String        @id @default(uuid())
+  orderId         String        @map("order_id")
+
+  // Payment Details
+  amount          Decimal       @db.Decimal(10, 2)
+  currency        String        @default("USD")
+  method          PaymentMethod @default(CARD)
+
+  // Square Integration
+  squarePaymentId String        @unique @map("square_payment_id")
+  squareReceiptUrl String?      @map("square_receipt_url")
+  squareResponse  Json?         @map("square_response")
+
+  // Status
+  status          PaymentStatus @default(PENDING)
+
+  // Processing Details
+  processedAt     DateTime?     @map("processed_at")
+  failureReason   String?       @map("failure_reason")
+
+  // Refunds
+  refundedAmount  Decimal       @db.Decimal(10, 2) @default(0) @map("refunded_amount")
+  refundedAt      DateTime?     @map("refunded_at")
+  refundReason    String?       @map("refund_reason")
+
+  // Relations
+  order           Order         @relation(fields: [orderId], references: [id])
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@index([orderId])
+  @@index([squarePaymentId])
+  @@index([status])
+  @@map("payments")
+}
+
+// ================================
+// DISCOUNTS & PROMOTIONS
+// ================================
+
+model Discount {
+  id              String        @id @default(uuid())
+  eventId         String        @map("event_id")
+
+  // Code Details
+  code            String        @unique
+  name            String
+  description     String?       @db.Text
+
+  // Discount Type
+  type            DiscountType  @default(PERCENTAGE)
+  value           Decimal       @db.Decimal(10, 2)
+  maxAmount       Decimal?      @db.Decimal(10, 2) @map("max_amount")
+
+  // Usage Limits
+  usageLimit      Int?          @map("usage_limit")
+  usageCount      Int           @default(0) @map("usage_count")
+  perUserLimit    Int?          @map("per_user_limit")
+
+  // Validity
+  startDate       DateTime      @map("start_date")
+  endDate         DateTime      @map("end_date")
+  isActive        Boolean       @default(true) @map("is_active")
+
+  // Restrictions
+  minOrderAmount  Decimal?      @db.Decimal(10, 2) @map("min_order_amount")
+  applicableTicketTypes String[] @map("applicable_ticket_types")
+
+  // Relations
+  event           Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@index([eventId])
+  @@index([code])
+  @@index([isActive])
+  @@map("discounts")
+}
+
+// ================================
+// WAITLIST SYSTEM
+// ================================
+
+model Waitlist {
+  id              String        @id @default(uuid())
+  eventId         String        @map("event_id")
+  email           String
+  firstName       String?       @map("first_name")
+  lastName        String?       @map("last_name")
+  phone           String?
+
+  // Preferences
+  ticketTypeId    String?       @map("ticket_type_id")
+  quantity        Int           @default(1)
+  maxPrice        Decimal?      @db.Decimal(10, 2) @map("max_price")
+
+  // Status
+  status          WaitlistStatus @default(ACTIVE)
+  notifiedAt      DateTime?     @map("notified_at")
+  expiresAt       DateTime?     @map("expires_at")
+
+  // Relations
+  event           Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@index([eventId])
+  @@index([email])
+  @@index([status])
+  @@map("waitlists")
+}
+
+// ================================
+// CHECK-IN SYSTEM
+// ================================
+
+model CheckIn {
+  id              String        @id @default(uuid())
+  ticketId        String        @map("ticket_id")
+  eventId         String        @map("event_id")
+
+  // Check-in Details
+  method          CheckInMethod @default(QR_SCAN)
+  staffId         String?       @map("staff_id")
+  location        String?       // Gate/entrance name
+  device          String?       // Device identifier
+
+  // Location tracking
+  latitude        Float?
+  longitude       Float?
+
+  // Metadata
+  metadata        Json?
+  notes           String?
+
+  // Relations
+  ticket          Ticket        @relation(fields: [ticketId], references: [id])
+  event           Event         @relation(fields: [eventId], references: [id])
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  @@index([ticketId])
+  @@index([eventId])
+  @@index([createdAt])
+  @@map("check_ins")
+}
+
+// ================================
+// AUDIT & LOGGING
+// ================================
+
+model AuditLog {
+  id              String        @id @default(uuid())
+  userId          String?       @map("user_id")
+
+  // Action Details
+  action          String
+  entity          String        // e.g., 'event', 'ticket', 'order'
+  entityId        String        @map("entity_id")
+
+  // Changes
+  oldValues       Json?         @map("old_values")
+  newValues       Json?         @map("new_values")
+
+  // Context
+  ipAddress       String?       @map("ip_address")
+  userAgent       String?       @map("user_agent")
+
+  // Relations
+  user            User?         @relation(fields: [userId], references: [id])
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([action])
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ================================
+// ENUMS
+// ================================
+
+enum UserRole {
+  ATTENDEE      // Regular users who buy tickets
+  ORGANIZER     // Event organizers
+  STAFF         // Event staff members
+  ADMIN         // Platform administrators
+  SUPER_ADMIN   // Super administrators
+}
+
+enum TeamRole {
+  STAFF         // Basic event staff
+  MANAGER       // Event manager
+  ADMIN         // Event admin
+}
+
+enum VenueType {
+  GENERAL       // General venue
+  THEATER       // Theater with fixed seating
+  STADIUM       // Large stadium
+  ARENA         // Indoor arena
+  CONFERENCE    // Conference center
+  OUTDOOR       // Outdoor venue
+  VIRTUAL       // Virtual venue
+}
+
+enum SeatType {
+  STANDARD      // Regular seat
+  VIP           // VIP seat
+  ACCESSIBLE    // Wheelchair accessible
+  PREMIUM       // Premium seating
+  BOX           // Box seat
+}
+
+enum EventStatus {
+  DRAFT         // Event being created
+  PUBLISHED     // Live event
+  ONGOING       // Event in progress
+  COMPLETED     // Event finished
+  CANCELLED     // Event cancelled
+  POSTPONED     // Event postponed
+}
+
+enum Visibility {
+  PUBLIC        // Visible to everyone
+  PRIVATE       // Only accessible via direct link
+  UNLISTED      // Not shown in listings but accessible
+}
+
+enum OrderStatus {
+  PENDING       // Order created, awaiting payment
+  PROCESSING    // Payment being processed
+  COMPLETED     // Order complete
+  FAILED        // Payment failed
+  CANCELLED     // Order cancelled
+  REFUNDED      // Order refunded
+  EXPIRED       // Order expired (cart abandonment)
+}
+
+enum TicketStatus {
+  VALID         // Valid ticket
+  USED          // Ticket has been used/checked in
+  CANCELLED     // Ticket cancelled
+  REFUNDED      // Ticket refunded
+  TRANSFERRED   // Ticket transferred to another user
+  EXPIRED       // Ticket expired
+}
+
+enum PaymentStatus {
+  PENDING       // Payment initiated
+  PROCESSING    // Being processed by Square
+  COMPLETED     // Payment successful
+  FAILED        // Payment failed
+  CANCELLED     // Payment cancelled
+  REFUNDED      // Payment refunded
+  DISPUTED      // Payment disputed/chargedback
+}
+
+enum PaymentMethod {
+  CARD          // Credit/debit card
+  CASH_APP      // Cash App Pay
+  APPLE_PAY     // Apple Pay
+  GOOGLE_PAY    // Google Pay
+  BANK_TRANSFER // Bank transfer
+  CASH          // Cash payment at venue
+}
+
+enum DiscountType {
+  PERCENTAGE    // Percentage discount
+  FIXED_AMOUNT  // Fixed dollar amount
+  FREE_SHIPPING // Free shipping/fees
+  BUY_X_GET_Y   // Buy X get Y free
+}
+
+enum WaitlistStatus {
+  ACTIVE        // Active on waitlist
+  NOTIFIED      // Notified of availability
+  PURCHASED     // Purchased tickets
+  EXPIRED       // Notification expired
+  REMOVED       // Removed from waitlist
+}
+
+enum CheckInMethod {
+  QR_SCAN       // QR code scan
+  MANUAL        // Manual check-in
+  NFC           // NFC scan
+  BARCODE       // Barcode scan
+  NAME_SEARCH   // Name lookup
+}

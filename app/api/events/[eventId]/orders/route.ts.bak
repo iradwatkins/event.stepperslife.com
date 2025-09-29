@@ -1,0 +1,135 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { withAuth } from '@/lib/auth/rbac';
+import { prisma } from '@/lib/prisma';
+import { logError } from '@/lib/monitoring/sentry';
+
+async function handleGetEventOrders(request: NextRequest, context: any) {
+  const { user, params } = context;
+  const eventId = params.eventId;
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100);
+    const status = searchParams.get('status');
+    const search = searchParams.get('search');
+
+    // First, verify the user has access to this event
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      select: { id: true, organizerId: true }
+    });
+
+    if (!event) {
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check if user has permission to view orders for this event
+    const canView =
+      user.role === 'SUPER_ADMIN' ||
+      user.role === 'ADMIN' ||
+      event.organizerId === user.id;
+
+    if (!canView) {
+      return NextResponse.json(
+        { error: 'Access denied' },
+        { status: 403 }
+      );
+    }
+
+    // Build where clause
+    const whereClause: any = {
+      eventId: eventId
+    };
+
+    if (status) {
+      whereClause.status = status;
+    }
+
+    if (search) {
+      whereClause.OR = [
+        { orderNumber: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { firstName: { contains: search, mode: 'insensitive' } },
+        { lastName: { contains: search, mode: 'insensitive' } }
+      ];
+    }
+
+    // Get total count for pagination
+    const totalCount = await prisma.order.count({ where: whereClause });
+
+    // Fetch orders with pagination
+    const orders = await prisma.order.findMany({
+      where: whereClause,
+      include: {
+        tickets: {
+          select: {
+            id: true,
+            ticketNumber: true,
+            status: true,
+            faceValue: true,
+            holderName: true,
+            holderEmail: true,
+            checkedIn: true,
+            checkedInAt: true
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit
+    });
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalCount / limit);
+    const hasMore = page < totalPages;
+
+    return NextResponse.json({
+      success: true,
+      orders: orders.map(order => ({
+        ...order,
+        ticketCount: order.tickets.length,
+        checkedInCount: order.tickets.filter(t => t.checkedIn).length
+      })),
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        hasMore
+      }
+    });
+
+  } catch (error) {
+    console.error('Get event orders error:', error);
+
+    logError(error instanceof Error ? error : new Error(String(error)), {
+      user: { id: user.id, email: user.email, role: user.role },
+      tags: { component: 'orders-api', operation: 'get-event-orders' },
+      extra: { eventId }
+    });
+
+    return NextResponse.json(
+      { error: 'Failed to fetch orders' },
+      { status: 500 }
+    );
+  }
+}
+
+// GET: Get orders for an event
+export async function GET(request: NextRequest, { params }: { params: { eventId: string } }) {
+  return withAuth(handleGetEventOrders, {
+    permissions: ['events.view_own']
+  })(request, { params });
+}

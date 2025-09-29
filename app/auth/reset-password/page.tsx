@@ -1,0 +1,391 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Eye, EyeOff, Check, Loader2, ArrowLeft } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Progress } from '@/components/ui/progress';
+
+// Schema for requesting reset
+const requestResetSchema = z.object({
+  email: z.string().email('Please enter a valid email address')
+});
+
+// Schema for confirming reset
+const confirmResetSchema = z.object({
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string().min(8, 'Please confirm your password')
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Passwords do not match',
+  path: ['confirmPassword']
+});
+
+type RequestResetForm = z.infer<typeof requestResetSchema>;
+type ConfirmResetForm = z.infer<typeof confirmResetSchema>;
+
+interface PasswordStrength {
+  score: number;
+  feedback: string[];
+  color: string;
+}
+
+const checkPasswordStrength = (password: string): PasswordStrength => {
+  let score = 0;
+  const feedback: string[] = [];
+
+  if (password.length >= 8) score++;
+  else feedback.push('At least 8 characters');
+
+  if (/[a-z]/.test(password)) score++;
+  else feedback.push('One lowercase letter');
+
+  if (/[A-Z]/.test(password)) score++;
+  else feedback.push('One uppercase letter');
+
+  if (/\d/.test(password)) score++;
+  else feedback.push('One number');
+
+  if (/[@$!%*?&]/.test(password)) score++;
+  else feedback.push('One special character');
+
+  let color = 'bg-red-500';
+  if (score >= 4) color = 'bg-green-500';
+  else if (score >= 3) color = 'bg-yellow-500';
+
+  return { score, feedback, color };
+};
+
+export default function ResetPasswordPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const token = searchParams.get('token');
+  const isConfirmMode = !!token;
+
+  // Form for requesting reset
+  const requestForm = useForm<RequestResetForm>({
+    resolver: zodResolver(requestResetSchema)
+  });
+
+  // Form for confirming reset
+  const confirmForm = useForm<ConfirmResetForm>({
+    resolver: zodResolver(confirmResetSchema)
+  });
+
+  const password = confirmForm.watch('password', '');
+  const passwordStrength = checkPasswordStrength(password);
+
+  const handleRequestReset = async (data: RequestResetForm) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/auth/reset-password/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send reset email');
+      }
+
+      setSuccess(true);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to send reset email');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleConfirmReset = async (data: ConfirmResetForm) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          token,
+          password: data.password
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to reset password');
+      }
+
+      setSuccess(true);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to reset password');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Request reset mode
+  if (!isConfirmMode) {
+    if (success) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 px-4">
+          <Card className="w-full max-w-md">
+            <CardHeader className="text-center">
+              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <Check className="w-8 h-8 text-green-600" />
+              </div>
+              <CardTitle className="text-2xl">Check Your Email</CardTitle>
+              <CardDescription>
+                If an account with that email exists, we've sent password reset instructions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Alert>
+                  <AlertDescription>
+                    The email may take a few minutes to arrive. Don't forget to check your spam folder.
+                  </AlertDescription>
+                </Alert>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/auth/login">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Login
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Reset Your Password</CardTitle>
+            <CardDescription>
+              Enter your email address and we'll send you a link to reset your password
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={requestForm.handleSubmit(handleRequestReset)} className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  {...requestForm.register('email')}
+                  className={requestForm.formState.errors.email ? 'border-red-500' : ''}
+                />
+                {requestForm.formState.errors.email && (
+                  <p className="text-sm text-red-600">
+                    {requestForm.formState.errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending Reset Email...
+                  </>
+                ) : (
+                  'Send Reset Email'
+                )}
+              </Button>
+
+              <div className="text-center">
+                <Link
+                  href="/auth/login"
+                  className="text-sm text-primary hover:underline inline-flex items-center"
+                >
+                  <ArrowLeft className="mr-1 h-3 w-3" />
+                  Back to Login
+                </Link>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Confirm reset mode
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+              <Check className="w-8 h-8 text-green-600" />
+            </div>
+            <CardTitle className="text-2xl">Password Reset Successfully</CardTitle>
+            <CardDescription>
+              Your password has been updated. You can now sign in with your new password.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full" asChild>
+              <Link href="/auth/login">
+                Sign In to Your Account
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 px-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Set New Password</CardTitle>
+          <CardDescription>
+            Enter your new password below
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={confirmForm.handleSubmit(handleConfirmReset)} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {/* New Password */}
+            <div className="space-y-2">
+              <Label htmlFor="password">New Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  {...confirmForm.register('password')}
+                  className={confirmForm.formState.errors.password ? 'border-red-500' : ''}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 px-0"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+
+              {/* Password Strength Indicator */}
+              {password && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Progress
+                      value={(passwordStrength.score / 5) * 100}
+                      className="flex-1 h-2"
+                    />
+                    <span className="text-sm text-muted-foreground">
+                      {passwordStrength.score}/5
+                    </span>
+                  </div>
+                  {passwordStrength.feedback.length > 0 && (
+                    <div className="text-sm text-muted-foreground">
+                      <span className="font-medium">Needs: </span>
+                      {passwordStrength.feedback.join(', ')}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {confirmForm.formState.errors.password && (
+                <p className="text-sm text-red-600">
+                  {confirmForm.formState.errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  {...confirmForm.register('confirmPassword')}
+                  className={confirmForm.formState.errors.confirmPassword ? 'border-red-500' : ''}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 px-0"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+              {confirmForm.formState.errors.confirmPassword && (
+                <p className="text-sm text-red-600">
+                  {confirmForm.formState.errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Updating Password...
+                </>
+              ) : (
+                'Update Password'
+              )}
+            </Button>
+
+            <div className="text-center">
+              <Link
+                href="/auth/login"
+                className="text-sm text-primary hover:underline inline-flex items-center"
+              >
+                <ArrowLeft className="mr-1 h-3 w-3" />
+                Back to Login
+              </Link>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
