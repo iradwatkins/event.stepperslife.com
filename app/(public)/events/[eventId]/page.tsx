@@ -88,20 +88,6 @@ export default function PublicEventDetailsPage() {
     buyerPhone: ''
   });
 
-  useEffect(() => {
-    fetchEvent();
-  }, [fetchEvent]);
-
-  useEffect(() => {
-    if (session?.user) {
-      setPurchaseForm(prev => ({
-        ...prev,
-        buyerName: session.user.name || session.user.email,
-        buyerEmail: session.user.email
-      }));
-    }
-  }, [session]);
-
   const fetchEvent = useCallback(async () => {
     try {
       const response = await fetch(`/api/events/public?eventId=${eventId}`);
@@ -132,6 +118,20 @@ export default function PublicEventDetailsPage() {
       setLoading(false);
     }
   }, [eventId]);
+
+  useEffect(() => {
+    fetchEvent();
+  }, [fetchEvent]);
+
+  useEffect(() => {
+    if (session?.user) {
+      setPurchaseForm(prev => ({
+        ...prev,
+        buyerName: session.user.name || session.user.email,
+        buyerEmail: session.user.email
+      }));
+    }
+  }, [session]);
 
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
