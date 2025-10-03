@@ -25,8 +25,12 @@ import {
   Share2,
   Eye,
   Edit,
-  QrCode
+  QrCode,
+  XCircle
 } from 'lucide-react';
+import CancelEventDialog from '@/components/events/CancelEventDialog';
+import ShareEventButton from '@/components/events/ShareEventButton';
+import { PublishEventDialog } from '@/components/events/PublishEventDialog';
 
 interface TicketType {
   id: string;
@@ -50,7 +54,9 @@ interface Order {
 interface EventData {
   id: string;
   name: string;
+  slug: string;
   description: string;
+  coverImage?: string | null;
   startDate: string;
   endDate: string;
   status: string;
@@ -92,6 +98,8 @@ export default function EventManagementPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [showPublishDialog, setShowPublishDialog] = useState(false);
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -256,20 +264,46 @@ export default function EventManagementPage() {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
+              <ShareEventButton
+                eventId={event.id}
+                eventName={event.name}
+                eventDescription={event.description}
+                eventImage={event.coverImage}
+                eventDate={event.startDate}
+                eventUrl={`/events/${event.slug}`}
+              />
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/events/${eventId}`}>
+                <Link href={`/events/${event.slug}`}>
                   <Eye className="w-4 h-4 mr-2" />
                   Preview
                 </Link>
               </Button>
-              <Button size="sm">
-                <Edit className="w-4 h-4 mr-2" />
-                Edit Event
+              <Button size="sm" asChild>
+                <Link href={`/dashboard/events/${event.id}/edit`}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit Event
+                </Link>
               </Button>
+              {event.status === 'DRAFT' && (
+                <Button
+                  size="sm"
+                  onClick={() => setShowPublishDialog(true)}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Publish Event
+                </Button>
+              )}
+              {event.status !== 'CANCELLED' && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setShowCancelDialog(true)}
+                >
+                  <XCircle className="w-4 h-4 mr-2" />
+                  Cancel Event
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -513,6 +547,30 @@ export default function EventManagementPage() {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Publish Event Dialog */}
+      <PublishEventDialog
+        eventId={eventId}
+        eventName={event.name}
+        open={showPublishDialog}
+        onOpenChange={setShowPublishDialog}
+        onSuccess={() => {
+          fetchEventData(); // Refresh event data to show updated status
+        }}
+      />
+
+      {/* Cancel Event Dialog */}
+      <CancelEventDialog
+        eventId={eventId}
+        eventName={event.name}
+        ticketsSold={event._count?.tickets || 0}
+        isOpen={showCancelDialog}
+        onClose={() => setShowCancelDialog(false)}
+        onSuccess={() => {
+          setShowCancelDialog(false);
+          fetchEventData(); // Refresh event data to show updated status
+        }}
+      />
     </div>
   );
 }

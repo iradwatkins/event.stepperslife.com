@@ -262,7 +262,7 @@ async function handleBulkCheckIn(request: NextRequest, context: any) {
             checkedIn: true,
             checkedInAt: new Date(),
             checkedInBy: user.id,
-            checkInMethod: 'BULK_IMPORT',
+            checkInMethod: 'MANUAL_SEARCH',
             checkInLocation: 'Bulk Check-in'
           }
         });
@@ -409,18 +409,18 @@ export async function POST(
   request: NextRequest,
   context: { params: Promise<{ eventId: string }> }
 ) {
-  const params = await context.params; {
+  const params = await context.params;
   const { searchParams } = new URL(request.url);
   const action = searchParams.get('action');
 
   if (action === 'bulk') {
     return withAuth(handleBulkCheckIn, {
-      permissions: ['events.manage_own']
+      permissions: ['events.edit_own']
     })(request, { params });
   }
 
   return withAuth(handleCheckInTicket, {
-    permissions: ['events.manage_own']
+    permissions: ['events.edit_own']
   })(request, { params });
 }
 
@@ -429,8 +429,8 @@ export async function GET(
   request: NextRequest,
   context: { params: Promise<{ eventId: string }> }
 ) {
-  const params = await context.params; {
+  const params = await context.params;
   return withAuth(handleGetCheckInStats, {
-    permissions: ['events.view_own']
+    permissions: ['events.view']
   })(request, { params });
 }

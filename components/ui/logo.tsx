@@ -40,7 +40,7 @@ export function Logo({ className = '', width = 200, height = 60, priority = fals
 
   return (
     <Image
-      src={isDark ? '/logos/stepperslife-logo-light.svg' : '/logos/stepperslife-logo-dark.svg'}
+      src={isDark ? '/logos/stepperslife-logo-dark.svg' : '/logos/stepperslife-logo-light.svg'}
       alt="Stepperslife Events"
       width={width}
       height={height}

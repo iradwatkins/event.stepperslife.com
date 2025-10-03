@@ -1,114 +1,185 @@
-import { NextAuthOptions } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import type { NextAuthConfig } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import EmailProvider from 'next-auth/providers/email';
 import { prisma } from '@/lib/prisma';
-import { verifyPassword } from '@/lib/auth/password';
 import { UserRole } from '@prisma/client';
+import { sendMagicLinkEmail } from '@/lib/services/email';
 
-export const authOptions: NextAuthOptions = {
+// Super Admin email addresses - auto-assigned SUPER_ADMIN role
+const SUPER_ADMIN_EMAILS = [
+  'iradwatkins@gmail.com',
+  'bobbygwatkins@gmail.com'
+];
+
+// Admin email addresses - auto-assigned ADMIN role
+const ADMIN_EMAILS: string[] = [];
+
+export const authOptions: NextAuthConfig = {
+  trustHost: true,
 
   providers: [
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
+    // Google OAuth Provider
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true, // Allow linking Google to existing email accounts
+    }),
+
+    // Email Magic Link Provider
+    EmailProvider({
+      server: {
+        host: 'smtp.resend.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'resend',
+          pass: process.env.RESEND_API_KEY!,
+        },
       },
+      from: process.env.RESEND_FROM_EMAIL || 'noreply@events.stepperslife.com',
+      sendVerificationRequest: async ({ identifier: email, url }) => {
+        await sendMagicLinkEmail(email, url);
+      },
+    }),
+  ],
 
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Invalid credentials');
-        }
+  callbacks: {
+    async signIn({ user, account }) {
+      // Allow sign in
+      if (!user.email || !account) return false;
 
-        // Find user with email
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email.toLowerCase() },
-          select: {
-            id: true,
-            email: true,
-            emailVerified: true,
-            passwordHash: true,
-            firstName: true,
-            lastName: true,
-            role: true,
-            status: true,
-            isVerified: true
-          }
+      try {
+        // Find or create user
+        let existingUser = await prisma.user.findUnique({
+          where: { email: user.email.toLowerCase() }
         });
 
-        if (!user || !user.passwordHash) {
-          throw new Error('Invalid email or password');
-        }
+        if (!existingUser) {
+          // Create new user
+          const role = SUPER_ADMIN_EMAILS.includes(user.email.toLowerCase())
+            ? UserRole.SUPER_ADMIN
+            : ADMIN_EMAILS.includes(user.email.toLowerCase())
+            ? UserRole.ADMIN
+            : UserRole.ATTENDEE;
 
-        // Check if user is verified
-        if (!user.emailVerified) {
-          throw new Error('Please verify your email before logging in');
-        }
+          // Extract name from profile or user
+          const name = user.name || '';
+          const [firstName, ...lastNameParts] = name.split(' ');
 
-        // Check if account is active
-        if (user.status !== 'ACTIVE') {
-          throw new Error('Your account has been suspended');
-        }
-
-        // Verify password
-        const isValidPassword = await verifyPassword(
-          credentials.password,
-          user.passwordHash
-        );
-
-        if (!isValidPassword) {
-          // Log failed attempt
-          await prisma.auditLog.create({
+          existingUser = await prisma.user.create({
             data: {
-              action: 'LOGIN_FAILED',
-              entityType: 'USER',
-              entityId: user.id,
-              metadata: {
-                reason: 'Invalid password',
-                email: credentials.email
+              email: user.email.toLowerCase(),
+              firstName: firstName || '',
+              lastName: lastNameParts.join(' ') || '',
+              displayName: user.name || '',
+              profileImage: user.image || null,
+              role,
+              isVerified: true, // Auto-verify for OAuth/magic link
+              emailVerified: new Date(),
+              lastLoginAt: new Date(),
+            }
+          });
+
+          // Set user.id for the account creation below
+          user.id = existingUser.id;
+        } else {
+          // Update last login and verification
+          await prisma.user.update({
+            where: { id: existingUser.id },
+            data: {
+              lastLoginAt: new Date(),
+              emailVerified: new Date(),
+            }
+          });
+
+          // Set user.id for the account creation below
+          user.id = existingUser.id;
+        }
+
+        // Check if this provider account is already linked
+        if (account.provider !== 'email') {
+          const existingAccount = await prisma.account.findUnique({
+            where: {
+              provider_providerAccountId: {
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
               }
             }
           });
 
-          throw new Error('Invalid email or password');
+          // Create account link if it doesn't exist
+          if (!existingAccount) {
+            await prisma.account.create({
+              data: {
+                userId: existingUser.id,
+                type: account.type,
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+                refresh_token: account.refresh_token,
+                access_token: account.access_token,
+                expires_at: account.expires_at,
+                token_type: account.token_type,
+                scope: account.scope,
+                id_token: account.id_token,
+                session_state: account.session_state as string | null,
+              }
+            });
+          }
         }
 
-        // Update last login
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { lastLoginAt: new Date() }
-        });
-
-        // Log successful login
-        await prisma.auditLog.create({
-          data: {
-            action: 'LOGIN_SUCCESS',
-            entityType: 'USER',
-            entityId: user.id,
-            userId: user.id,
-            metadata: {
-              email: user.email
-            }
-          }
-        });
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: `${user.firstName} ${user.lastName}`,
-          role: user.role,
-          isVerified: user.isVerified
-        };
+        return true;
+      } catch (error) {
+        console.error('Sign in error:', error);
+        return false;
       }
-    })
-  ],
+    },
 
-  callbacks: {
-    async jwt({ token, user, account }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.role = (user as any).role || UserRole.ATTENDEE;
-        token.isVerified = (user as any).isVerified || false;
+    async redirect({ url, baseUrl }) {
+      // Allow callback URLs on the same origin
+      if (url.startsWith(baseUrl)) return url;
+      // Allow relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Default redirect to dashboard
+      return `${baseUrl}/dashboard`;
+    },
+
+    async jwt({ token, user }) {
+      // On initial sign in, set user data in token
+      if (user?.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: { id: true, email: true, role: true, isVerified: true, firstName: true, lastName: true, displayName: true }
+        });
+
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.email = dbUser.email;
+          token.role = dbUser.role;
+          token.isVerified = dbUser.isVerified;
+          token.name = dbUser.displayName || `${dbUser.firstName} ${dbUser.lastName}`;
+          token.lastRoleCheck = Date.now();
+        }
+      }
+
+      // Refresh role from database every 5 minutes
+      const shouldRefreshRole = !token.lastRoleCheck ||
+        (Date.now() - (token.lastRoleCheck as number)) > 5 * 60 * 1000;
+
+      if (shouldRefreshRole && token.id) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { role: true, isVerified: true }
+          });
+
+          if (dbUser) {
+            token.role = dbUser.role;
+            token.isVerified = dbUser.isVerified;
+            token.lastRoleCheck = Date.now();
+          }
+        } catch (error) {
+          console.error('Error refreshing user role:', error);
+        }
       }
 
       return token;
@@ -121,22 +192,13 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as UserRole;
         session.user.isVerified = token.isVerified as boolean;
       }
-
       return session;
     },
-
-    async signIn({ user, account, profile }) {
-      // Additional sign-in checks can be added here
-      return true;
-    }
   },
 
   pages: {
     signIn: '/auth/login',
-    signOut: '/auth/logout',
     error: '/auth/error',
-    verifyRequest: '/auth/verify',
-    newUser: '/dashboard'
   },
 
   session: {
@@ -145,50 +207,19 @@ export const authOptions: NextAuthOptions = {
     updateAge: 24 * 60 * 60 // 24 hours
   },
 
-  jwt: {
-    secret: process.env.NEXTAUTH_SECRET
-  },
-
-  events: {
-    async signIn({ user, account, profile }) {
-      console.log(`User ${user.email} signed in`);
-    },
-    async signOut({ session, token }) {
-      if (session?.user?.email) {
-        console.log(`User ${session.user.email} signed out`);
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true
       }
     }
   },
 
+  useSecureCookies: true,
+
   debug: process.env.NODE_ENV === 'development'
 };
-
-// Type extensions for NextAuth
-declare module 'next-auth' {
-  interface User {
-    id: string;
-    email: string;
-    role: UserRole;
-    isVerified: boolean;
-  }
-
-  interface Session {
-    user: {
-      id: string;
-      email: string;
-      name?: string | null;
-      image?: string | null;
-      role: UserRole;
-      isVerified: boolean;
-    };
-  }
-}
-
-declare module 'next-auth/jwt' {
-  interface JWT {
-    id: string;
-    email: string;
-    role: UserRole;
-    isVerified: boolean;
-  }
-}

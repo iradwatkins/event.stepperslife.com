@@ -29,20 +29,15 @@ export const PERMISSIONS = {
     'reports.view_own',
     'team.manage_own',
     'venues.create_own',
-    'venues.edit_own'
+    'venues.edit_own',
+    'billing.view',
+    'billing.manage',
+    'orders.view'
   ],
 
-  // Staff permissions (includes organizer permissions for assigned events)
-  STAFF: [
-    'events.browse',
-    'events.view',
-    'tickets.purchase',
-    'tickets.view_own',
-    'profile.edit_own',
-    'tickets.validate',
-    'events.checkin',
-    'reports.view_assigned'
-  ],
+  // NOTE: STAFF and AFFILIATE permissions removed
+  // These are now checked via TeamMember and AffiliateLink tables
+  // Use hasTeamMemberPermission() and hasAffiliateLinkPermission() instead
 
   // Admin permissions (includes all organizer permissions + admin functions)
   ADMIN: [
@@ -60,6 +55,9 @@ export const PERMISSIONS = {
     'team.manage_own',
     'venues.create_own',
     'venues.edit_own',
+    'billing.view',
+    'billing.manage',
+    'orders.view',
     'events.edit_any',
     'events.delete_any',
     'users.view',
@@ -85,6 +83,9 @@ export const PERMISSIONS = {
     'team.manage_own',
     'venues.create_own',
     'venues.edit_own',
+    'billing.view',
+    'billing.manage',
+    'orders.view',
     'events.edit_any',
     'events.delete_any',
     'users.view',
@@ -105,7 +106,7 @@ export type Permission = typeof PERMISSIONS[UserRole][number];
  * Check if a user role has a specific permission
  */
 export function hasPermission(role: UserRole, permission: Permission): boolean {
-  return PERMISSIONS[role].includes(permission);
+  return (PERMISSIONS[role] as readonly Permission[]).includes(permission);
 }
 
 /**
@@ -232,10 +233,11 @@ export function createPermissionChecker(userRole: UserRole) {
     isAtLeast: (role: UserRole) => {
       const roleHierarchy = {
         ATTENDEE: 0,
-        STAFF: 1,
-        ORGANIZER: 2,
-        ADMIN: 3,
-        SUPER_ADMIN: 4
+        AFFILIATE: 1,
+        STAFF: 2,
+        ORGANIZER: 3,
+        ADMIN: 4,
+        SUPER_ADMIN: 5
       };
       return roleHierarchy[userRole] >= roleHierarchy[role];
     }
@@ -276,3 +278,82 @@ export const ROUTE_PROTECTION = {
   ADMIN: ['users.view'],
   SUPER_ADMIN: ['platform.admin']
 } as const;
+
+/**
+ * Check if user has staff permissions for a specific event
+ * Staff permissions are assigned via TeamMember table by event organizer
+ */
+export async function hasTeamMemberPermission(
+  userId: string,
+  eventId: string,
+  permission?: string
+): Promise<boolean> {
+  const { prisma } = await import('@/lib/prisma');
+
+  // Get event's organizer
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+    select: { organizerId: true }
+  });
+
+  if (!event) return false;
+
+  // Get organizer profile
+  const organizerProfile = await prisma.organizerProfile.findUnique({
+    where: { userId: event.organizerId },
+    select: { id: true }
+  });
+
+  if (!organizerProfile) return false;
+
+  // Check if user is assigned as team member
+  const teamMember = await prisma.teamMember.findUnique({
+    where: {
+      organizerId_userId: {
+        organizerId: organizerProfile.id,
+        userId
+      }
+    },
+    select: { role: true, permissions: true, isActive: true }
+  });
+
+  if (!teamMember || !teamMember.isActive) return false;
+
+  // If specific permission requested, check if they have it
+  if (permission && teamMember.permissions.length > 0) {
+    return teamMember.permissions.includes(permission);
+  }
+
+  // Otherwise, they have team member access
+  return true;
+}
+
+/**
+ * Check if user has affiliate permissions for a specific event
+ * Affiliate assignments are created via AffiliateLink table by event organizer
+ */
+export async function hasAffiliateLinkPermission(
+  userId: string,
+  eventId: string
+): Promise<boolean> {
+  const { prisma } = await import('@/lib/prisma');
+
+  // Check if user has an approved affiliate account
+  const affiliate = await prisma.affiliate.findUnique({
+    where: { userId },
+    select: { id: true, status: true }
+  });
+
+  if (!affiliate || affiliate.status !== 'APPROVED') return false;
+
+  // Check if they're assigned to this specific event
+  const affiliateLink = await prisma.affiliateLink.findFirst({
+    where: {
+      affiliateId: affiliate.id,
+      eventId,
+      isActive: true
+    }
+  });
+
+  return !!affiliateLink;
+}

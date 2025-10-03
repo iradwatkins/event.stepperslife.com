@@ -393,6 +393,6 @@ export async function GET(
 ) {
   const params = await context.params;
   return withAuth(handleGetEventAnalytics, {
-    permissions: ['events.view_own']
+    permissions: ['events.view']
   })(request, { params });
 }

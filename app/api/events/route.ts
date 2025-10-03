@@ -8,7 +8,7 @@ import { logMessage, logError } from '@/lib/monitoring/sentry';
 const createEventSchema = z.object({
   title: z.string().min(1, 'Event title is required').max(200, 'Title too long'),
   description: z.string().optional(),
-  category: z.enum(['SOCIAL', 'WORKSHOP', 'COMPETITION', 'CLASS', 'CRUISE', 'TRIP']),
+  category: z.enum(['WORKSHOP', 'SETS', 'IN_THE_PARK', 'TRIP', 'CRUISE', 'HOLIDAY', 'COMPETITION', 'CLASSES', 'OTHER']),
 
   // Date and time
   eventDate: z.string().refine((date) => !isNaN(Date.parse(date)), 'Invalid date'),
@@ -22,7 +22,11 @@ const createEventSchema = z.object({
   // Pricing and capacity
   ticketPrice: z.number().min(0, 'Price cannot be negative').optional(),
   earlyBirdPrice: z.number().min(0, 'Early bird price cannot be negative').optional(),
+  earlyBirdEndDate: z.string().optional(),
   capacity: z.number().int().min(1, 'Capacity must be at least 1').optional(),
+
+  // Media
+  coverImage: z.string().optional().or(z.literal('')),
 
   // Event settings
   isPublished: z.boolean().default(false),
@@ -108,10 +112,10 @@ async function handleCreateEvent(request: NextRequest, context: any) {
     if (addressParts.length >= 2) {
       // Assume format: "Street, City, State Zip"
       city = addressParts[1] || '';
-      if (addressParts.length >= 3) {
+      if (addressParts.length >= 3 && addressParts[2]) {
         const stateZip = addressParts[2].trim();
         const stateZipMatch = stateZip.match(/^([A-Z]{2})\s+(\d{5})$/);
-        if (stateZipMatch) {
+        if (stateZipMatch && stateZipMatch[1] && stateZipMatch[2]) {
           state = stateZipMatch[1];
           zipCode = stateZipMatch[2];
         } else {
@@ -139,7 +143,7 @@ async function handleCreateEvent(request: NextRequest, context: any) {
           businessType: 'INDIVIDUAL',
           isVerified: user.role === 'ADMIN',
           verifiedAt: user.role === 'ADMIN' ? new Date() : null,
-          verificationLevel: user.role === 'ADMIN' ? 'FULL' : 'BASIC'
+          verificationLevel: user.role === 'ADMIN' ? 'VERIFIED' : 'BASIC'
         }
       });
     }
@@ -172,16 +176,18 @@ async function handleCreateEvent(request: NextRequest, context: any) {
     // Create the event
     const event = await prisma.event.create({
       data: {
-        title: eventData.title,
+        name: eventData.title,
+        slug: `${eventData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`,
         description: eventData.description || '',
-        category: eventData.category,
+        eventType: eventData.category, // Map category to eventType
         startDate: eventDateTime,
-        endDate: endDateTime,
+        endDate: endDateTime || eventDateTime,
         venueId: venue.id,
-        organizerId: organizerProfile.id,
-        capacity: eventData.capacity || 100,
-        visibility: eventData.visibility,
+        organizerId: user.id, // Use user.id, not organizerProfile.id
+        maxCapacity: eventData.capacity || 100,
+        visibility: eventData.visibility || 'PUBLIC',
         status: eventData.isPublished ? 'PUBLISHED' : 'DRAFT',
+        coverImage: eventData.coverImage || null,
 
         // Create default ticket type
         ticketTypes: {
@@ -189,10 +195,9 @@ async function handleCreateEvent(request: NextRequest, context: any) {
             name: 'General Admission',
             price: eventData.ticketPrice || 0,
             quantity: eventData.capacity || 100,
-            saleStartDate: new Date(),
-            saleEndDate: new Date(eventDateTime.getTime() - 24 * 60 * 60 * 1000), // 24 hours before event
-            isActive: true,
-            tier: 'GENERAL'
+            salesStartDate: new Date(),
+            salesEndDate: new Date(eventDateTime.getTime() - 24 * 60 * 60 * 1000), // 24 hours before event
+            isActive: true
           }
         }
       },
@@ -212,18 +217,36 @@ async function handleCreateEvent(request: NextRequest, context: any) {
 
     // Create early bird ticket type if specified
     if (eventData.earlyBirdPrice && eventData.earlyBirdPrice < (eventData.ticketPrice || 0)) {
+      // Calculate early bird end date
+      let earlyBirdEndDate: Date;
+      if (eventData.earlyBirdEndDate) {
+        earlyBirdEndDate = new Date(eventData.earlyBirdEndDate);
+      } else {
+        // Default to 7 days before event
+        earlyBirdEndDate = new Date(eventDateTime.getTime() - 7 * 24 * 60 * 60 * 1000);
+      }
+
       await prisma.ticketType.create({
         data: {
           eventId: event.id,
           name: 'Early Bird',
           price: eventData.earlyBirdPrice,
           quantity: Math.floor((eventData.capacity || 100) * 0.3), // 30% of capacity for early bird
-          saleStartDate: new Date(),
-          saleEndDate: new Date(eventDateTime.getTime() - 7 * 24 * 60 * 60 * 1000), // 1 week before event
-          isActive: true,
-          tier: 'EARLY_BIRD'
+          salesStartDate: new Date(),
+          salesEndDate: earlyBirdEndDate,
+          isActive: true
         }
       });
+    }
+
+    // Upgrade user to ORGANIZER role when they create their first event
+    // This allows them to sell tickets and assign staff/affiliates to THEIR events
+    if (user.role === 'ATTENDEE') {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { role: 'ORGANIZER' }
+      });
+      console.log(`User ${user.email} upgraded from ATTENDEE to ORGANIZER role`);
     }
 
     // Log event creation
@@ -234,10 +257,10 @@ async function handleCreateEvent(request: NextRequest, context: any) {
         entityId: event.id,
         userId: user.id,
         metadata: {
-          eventTitle: event.title,
+          eventTitle: event.name,
           eventDate: eventDateTime.toISOString(),
           venue: venue.name,
-          capacity: event.capacity,
+          capacity: event.maxCapacity,
           status: event.status
         }
       }
@@ -245,7 +268,7 @@ async function handleCreateEvent(request: NextRequest, context: any) {
 
     logMessage('Event created successfully', 'info', {
       user: { id: user.id, email: user.email, role: user.role },
-      extra: { eventId: event.id, eventTitle: event.title }
+      extra: { eventId: event.id, eventTitle: event.name }
     });
 
     return NextResponse.json({
@@ -253,12 +276,12 @@ async function handleCreateEvent(request: NextRequest, context: any) {
       message: 'Event created successfully',
       event: {
         id: event.id,
-        title: event.title,
-        category: event.category,
+        title: event.name,
+        category: event.eventType,
         startDate: event.startDate,
         endDate: event.endDate,
         venue: event.venue,
-        capacity: event.capacity,
+        capacity: event.maxCapacity,
         status: event.status,
         ticketTypes: event.ticketTypes,
         organizer: event.organizer
@@ -306,10 +329,26 @@ async function handleGetEvents(request: NextRequest, context: any) {
     const where: any = {};
 
     // Filter by user's access level
-    if (user.role === 'ORGANIZER') {
+    if (user.role === 'ATTENDEE') {
+      // Attendees can only see events they've purchased tickets for or favorited
+      // This endpoint should NOT be used for browsing events - use /api/events/public instead
+      where.OR = [
+        {
+          tickets: {
+            some: { userId: user.id }
+          }
+        },
+        {
+          favorites: {
+            some: { userId: user.id }
+          }
+        }
+      ];
+    } else if (user.role === 'ORGANIZER') {
+      // Organizers see only their created events
       where.organizerId = user.id;
     } else if (user.role === 'STAFF') {
-      // Staff can see events they're assigned to
+      // Staff can see events they're assigned to or organized
       where.OR = [
         { organizerId: user.id },
         {
@@ -323,7 +362,7 @@ async function handleGetEvents(request: NextRequest, context: any) {
 
     // Apply filters
     if (category) {
-      where.category = category;
+      where.eventType = category;
     }
 
     if (status) {
@@ -332,7 +371,7 @@ async function handleGetEvents(request: NextRequest, context: any) {
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
         { venue: { name: { contains: search, mode: 'insensitive' } } }
       ];
@@ -369,7 +408,11 @@ async function handleGetEvents(request: NextRequest, context: any) {
       success: true,
       events: events.map(event => ({
         ...event,
-        ticketsSold: event._count.tickets
+        ticketsSold: event._count.tickets,
+        ticketTypes: event.ticketTypes.map(ticket => ({
+          ...ticket,
+          price: Number(ticket.price)
+        }))
       })),
       pagination: {
         page,

@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,19 +21,23 @@ import {
   Settings,
   BarChart3,
   Ticket,
-  Clock
+  Clock,
+  ImageIcon
 } from 'lucide-react';
+import ShareEventButton from '@/components/events/ShareEventButton';
 
 interface EventData {
   id: string;
-  title: string;
+  name: string; // Database uses 'name', not 'title'
+  slug: string;
   description: string;
-  category: string;
+  eventType: string; // Database uses 'eventType', not 'category'
   startDate: string;
   endDate: string;
   status: string;
-  capacity: number;
+  maxCapacity: number; // Database uses 'maxCapacity', not 'capacity'
   visibility: string;
+  coverImage?: string | null;
   venue: {
     name: string;
     address: string;
@@ -47,7 +52,7 @@ interface EventData {
     name: string;
     price: number;
     quantity: number;
-    tier: string;
+    tier?: string;
   }>;
   ticketsSold: number;
 }
@@ -185,29 +190,37 @@ export default function EventDetailsPage() {
                 </Link>
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{event.title}</h1>
+                <h1 className="text-2xl font-bold text-gray-900">{event.name}</h1>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge className={getStatusColor(event.status)}>
                     {event.status}
                   </Badge>
-                  <Badge variant="outline" className={getCategoryColor(event.category)}>
-                    {event.category}
+                  <Badge variant="outline" className={getCategoryColor(event.eventType)}>
+                    {event.eventType}
                   </Badge>
                 </div>
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline">
-                <Share className="w-4 h-4 mr-2" />
-                Share
+              <ShareEventButton
+                eventId={event.id}
+                eventName={event.name}
+                eventDescription={event.description}
+                eventImage={event.coverImage}
+                eventDate={event.startDate}
+                eventUrl={`/events/${event.slug}`}
+              />
+              <Button variant="outline" asChild>
+                <Link href={`/dashboard/events/${event.id}/manage`}>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Manage
+                </Link>
               </Button>
-              <Button variant="outline">
-                <Edit className="w-4 h-4 mr-2" />
-                Edit
-              </Button>
-              <Button variant="outline">
-                <Eye className="w-4 h-4 mr-2" />
-                Preview
+              <Button variant="outline" asChild>
+                <Link href={`/events/${event.slug}`} target="_blank">
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Public
+                </Link>
               </Button>
             </div>
           </div>
@@ -216,9 +229,30 @@ export default function EventDetailsPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Event Details */}
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column - Image */}
+          <div className="lg:col-span-4">
+            {event.coverImage ? (
+              <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 shadow-lg sticky top-8">
+                <Image
+                  src={event.coverImage}
+                  alt={event.name}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  priority
+                />
+              </div>
+            ) : (
+              <div className="relative w-full aspect-[3/4] rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center shadow-lg sticky top-8">
+                <ImageIcon className="w-24 h-24 text-primary/40" />
+              </div>
+            )}
+          </div>
+
+          {/* Middle Column - Event Details */}
+          <div className="lg:col-span-5 space-y-6">
+
             {/* Basic Information */}
             <Card>
               <CardHeader>
@@ -260,7 +294,7 @@ export default function EventDetailsPage() {
                   <Users className="w-4 h-4 text-gray-500" />
                   <div>
                     <p className="text-sm text-gray-500">Capacity</p>
-                    <p className="font-medium">{event.capacity} people</p>
+                    <p className="font-medium">{event.maxCapacity} people</p>
                   </div>
                 </div>
 
@@ -290,7 +324,7 @@ export default function EventDetailsPage() {
                         <p className="text-sm text-gray-600">{ticket.tier} • {ticket.quantity} available</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-lg">${ticket.price.toFixed(2)}</p>
+                        <p className="font-bold text-lg">${Number(ticket.price).toFixed(2)}</p>
                       </div>
                     </div>
                   ))}
@@ -299,8 +333,8 @@ export default function EventDetailsPage() {
             </Card>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
+          {/* Right Sidebar */}
+          <div className="lg:col-span-3 space-y-6">
             {/* Quick Stats */}
             <Card>
               <CardHeader>
@@ -320,11 +354,11 @@ export default function EventDetailsPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Capacity</span>
-                  <span className="font-medium">{event.capacity}</span>
+                  <span className="font-medium">{event.maxCapacity}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Availability</span>
-                  <span className="font-medium">{event.capacity - event.ticketsSold} left</span>
+                  <span className="font-medium">{event.maxCapacity - event.ticketsSold} left</span>
                 </div>
               </CardContent>
             </Card>
@@ -357,21 +391,29 @@ export default function EventDetailsPage() {
                 <CardTitle>Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button className="w-full" variant="outline">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Manage Event
+                <Button className="w-full" variant="outline" asChild>
+                  <Link href={`/dashboard/events/${event.id}/manage`}>
+                    <Settings className="w-4 h-4 mr-2" />
+                    Manage Event
+                  </Link>
                 </Button>
-                <Button className="w-full" variant="outline">
-                  <BarChart3 className="w-4 h-4 mr-2" />
-                  View Analytics
+                <Button className="w-full" variant="outline" asChild>
+                  <Link href={`/dashboard/events/${event.id}/analytics`}>
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    View Analytics
+                  </Link>
                 </Button>
-                <Button className="w-full" variant="outline">
-                  <Users className="w-4 h-4 mr-2" />
-                  View Attendees
+                <Button className="w-full" variant="outline" asChild>
+                  <Link href={`/dashboard/events/${event.id}/checkin`}>
+                    <Users className="w-4 h-4 mr-2" />
+                    Check-in
+                  </Link>
                 </Button>
-                <Button className="w-full" variant="outline" disabled={event.status !== 'DRAFT'}>
-                  <Eye className="w-4 h-4 mr-2" />
-                  Publish Event
+                <Button className="w-full" variant="outline" asChild>
+                  <Link href={`/events/${event.slug}`} target="_blank">
+                    <Eye className="w-4 h-4 mr-2" />
+                    View Public Page
+                  </Link>
                 </Button>
               </CardContent>
             </Card>

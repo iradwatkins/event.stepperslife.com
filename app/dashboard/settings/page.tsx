@@ -23,13 +23,18 @@ import {
   Save,
   AlertTriangle,
   CheckCircle,
-  Server
+  Server,
+  Trash2
 } from 'lucide-react';
 
 export default function SettingsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('general');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmEmail, setDeleteConfirmEmail] = useState('');
+  const [deleteReason, setDeleteReason] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   if (status === 'loading') {
     return (
@@ -55,6 +60,37 @@ export default function SettingsPage() {
   const handleSave = async () => {
     // TODO: Implement save functionality
     alert('Settings save functionality will be implemented in Sprint 2!');
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!deleteConfirmEmail || deleteConfirmEmail !== session?.user?.email) {
+      alert('Please enter your email to confirm account deletion');
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch('/api/users/me/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          confirmEmail: deleteConfirmEmail,
+          reason: deleteReason
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete account');
+      }
+
+      alert('Your account has been successfully deleted. You will be logged out.');
+      router.push('/auth/login');
+    } catch (error: any) {
+      alert(error.message || 'Failed to delete account');
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -450,11 +486,136 @@ export default function SettingsPage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <Card className="border-red-200">
+                  <CardHeader className="bg-red-50">
+                    <CardTitle className="flex items-center gap-2 text-red-800">
+                      <AlertTriangle className="w-5 h-5" />
+                      Danger Zone
+                    </CardTitle>
+                    <CardDescription className="text-red-600">
+                      Irreversible and destructive actions
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pt-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between p-4 border border-red-200 rounded-lg bg-red-50">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-red-900">Delete Account</h4>
+                          <p className="text-sm text-red-700 mt-1">
+                            Permanently delete your account and all associated data. This action cannot be undone.
+                          </p>
+                          <ul className="text-xs text-red-600 mt-2 space-y-1 ml-4 list-disc">
+                            <li>All your personal information will be removed</li>
+                            <li>You cannot have active events or upcoming tickets</li>
+                            <li>This action is irreversible</li>
+                          </ul>
+                        </div>
+                        <Button
+                          variant="destructive"
+                          onClick={() => setShowDeleteModal(true)}
+                          className="ml-4"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete Account
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             )}
           </div>
         </div>
       </main>
+
+      {/* Delete Account Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-red-100 rounded-full">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">Delete Account</h3>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-gray-700">
+                Are you absolutely sure you want to delete your account? This action is permanent and cannot be undone.
+              </p>
+
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-sm font-medium text-red-800">This will:</p>
+                <ul className="text-sm text-red-700 mt-1 space-y-1 ml-4 list-disc">
+                  <li>Permanently delete your account</li>
+                  <li>Remove all your personal data</li>
+                  <li>Log you out of all devices</li>
+                  <li>Cannot be reversed</li>
+                </ul>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirm-email">
+                  Type your email <span className="text-red-600">({session?.user?.email})</span> to confirm:
+                </Label>
+                <Input
+                  id="confirm-email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={deleteConfirmEmail}
+                  onChange={(e) => setDeleteConfirmEmail(e.target.value)}
+                  className="border-red-200 focus:border-red-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="delete-reason">Reason (optional):</Label>
+                <Textarea
+                  id="delete-reason"
+                  placeholder="Let us know why you're leaving..."
+                  value={deleteReason}
+                  onChange={(e) => setDeleteReason(e.target.value)}
+                  rows={3}
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setDeleteConfirmEmail('');
+                  setDeleteReason('');
+                }}
+                disabled={isDeleting}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDeleteAccount}
+                disabled={isDeleting || deleteConfirmEmail !== session?.user?.email}
+                className="flex-1"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Forever
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

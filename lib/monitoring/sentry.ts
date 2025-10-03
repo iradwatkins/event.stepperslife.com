@@ -46,10 +46,10 @@ export function initSentry() {
 
     // Additional configuration
     release: process.env.VERCEL_GIT_COMMIT_SHA || process.env.npm_package_version,
-    integrations: [
-      new Sentry.Integrations.Http({ tracing: true }),
-      new Sentry.Integrations.Console(),
-    ],
+    // integrations: [
+    //   new Sentry.Integrations.Http({ tracing: true }),
+    //   new Sentry.Integrations.Console(),
+    // ],
 
     // Tags for better organization
     initialScope: {
@@ -155,10 +155,8 @@ export function logMessage(
 export function startTransaction(name: string, operation: string) {
   if (!SENTRY_DSN) return null;
 
-  return Sentry.startTransaction({
-    name,
-    op: operation
-  });
+  // Transactions API has changed in latest Sentry - use startSpan instead
+  return null; // TODO: Update to use Sentry.startSpan() API
 }
 
 export function addBreadcrumb(message: string, category?: string, level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug') {

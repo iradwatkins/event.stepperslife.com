@@ -22,7 +22,7 @@ async function handleGetEvent(request: NextRequest, context: any) {
         },
         ticketTypes: {
           where: { isActive: true },
-          orderBy: { tier: 'asc' }
+          orderBy: { price: 'asc' }
         },
         _count: {
           select: {
@@ -58,7 +58,11 @@ async function handleGetEvent(request: NextRequest, context: any) {
       success: true,
       event: {
         ...event,
-        ticketsSold: event._count.tickets
+        ticketsSold: event._count.tickets,
+        ticketTypes: event.ticketTypes.map(ticket => ({
+          ...ticket,
+          price: Number(ticket.price)
+        }))
       }
     });
 
@@ -85,7 +89,7 @@ async function handleUpdateEvent(request: NextRequest, context: any) {
   try {
     const event = await prisma.event.findUnique({
       where: { id: eventId },
-      select: { id: true, organizerId: true }
+      include: { venue: true }
     });
 
     if (!event) {
@@ -110,14 +114,52 @@ async function handleUpdateEvent(request: NextRequest, context: any) {
 
     const body = await request.json();
 
-    // TODO: Add validation schema for updates
+    // Process date and time if provided
+    let startDate = event.startDate;
+    let endDate = event.endDate;
 
+    if (body.eventDate && body.startTime) {
+      startDate = new Date(`${body.eventDate} ${body.startTime}`);
+
+      if (body.endTime) {
+        endDate = new Date(`${body.eventDate} ${body.endTime}`);
+        // Handle times crossing midnight
+        if (endDate < startDate) {
+          endDate.setDate(endDate.getDate() + 1);
+        }
+      } else {
+        endDate = startDate;
+      }
+    }
+
+    // Update basic event fields
+    const updateData: any = {
+      updatedAt: new Date()
+    };
+
+    if (body.title) updateData.name = body.title;
+    if (body.description !== undefined) updateData.description = body.description;
+    if (body.category) updateData.eventType = body.category;
+    if (body.coverImage !== undefined) updateData.coverImage = body.coverImage;
+    if (body.capacity) updateData.maxCapacity = body.capacity;
+    if (startDate) updateData.startDate = startDate;
+    if (endDate) updateData.endDate = endDate;
+
+    // Update venue if provided
+    if (body.venueName || body.venueAddress) {
+      await prisma.venue.update({
+        where: { id: event.venueId! },
+        data: {
+          ...(body.venueName && { name: body.venueName }),
+          ...(body.venueAddress && { address: body.venueAddress }),
+        }
+      });
+    }
+
+    // Update the event
     const updatedEvent = await prisma.event.update({
       where: { id: eventId },
-      data: {
-        ...body,
-        updatedAt: new Date()
-      },
+      data: updateData,
       include: {
         venue: true,
         organizer: {
@@ -132,6 +174,65 @@ async function handleUpdateEvent(request: NextRequest, context: any) {
       }
     });
 
+    // Handle ticket types updates if provided
+    if (body.ticketTypes && Array.isArray(body.ticketTypes)) {
+      // Deactivate all existing ticket types
+      await prisma.ticketType.updateMany({
+        where: { eventId },
+        data: { isActive: false }
+      });
+
+      // Create or update ticket types
+      for (const ticketData of body.ticketTypes) {
+        if (ticketData.id) {
+          // Update existing ticket type
+          await prisma.ticketType.update({
+            where: { id: ticketData.id },
+            data: {
+              name: ticketData.name,
+              price: ticketData.price,
+              quantity: ticketData.quantity,
+              salesStartDate: ticketData.salesStartDate ? new Date(ticketData.salesStartDate) : undefined,
+              salesEndDate: ticketData.salesEndDate ? new Date(ticketData.salesEndDate) : undefined,
+              isActive: true
+            }
+          });
+        } else {
+          // Create new ticket type
+          await prisma.ticketType.create({
+            data: {
+              eventId,
+              name: ticketData.name,
+              price: ticketData.price,
+              quantity: ticketData.quantity,
+              salesStartDate: ticketData.salesStartDate ? new Date(ticketData.salesStartDate) : new Date(),
+              salesEndDate: ticketData.salesEndDate ? new Date(ticketData.salesEndDate) : startDate,
+              isActive: true
+            }
+          });
+        }
+      }
+    }
+
+    // Fetch updated event with new ticket types
+    const finalEvent = await prisma.event.findUnique({
+      where: { id: eventId },
+      include: {
+        venue: true,
+        organizer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true
+          }
+        },
+        ticketTypes: {
+          where: { isActive: true }
+        }
+      }
+    });
+
     // Log event update
     await prisma.auditLog.create({
       data: {
@@ -140,7 +241,7 @@ async function handleUpdateEvent(request: NextRequest, context: any) {
         entityId: eventId,
         userId: user.id,
         metadata: {
-          eventTitle: updatedEvent.title,
+          eventTitle: updatedEvent.name,
           updatedFields: Object.keys(body)
         }
       }
@@ -149,7 +250,7 @@ async function handleUpdateEvent(request: NextRequest, context: any) {
     return NextResponse.json({
       success: true,
       message: 'Event updated successfully',
-      event: updatedEvent
+      event: finalEvent
     });
 
   } catch (error) {
@@ -178,7 +279,7 @@ async function handleDeleteEvent(request: NextRequest, context: any) {
       select: {
         id: true,
         organizerId: true,
-        title: true,
+        name: true,
         _count: { select: { tickets: true } }
       }
     });
@@ -231,7 +332,7 @@ async function handleDeleteEvent(request: NextRequest, context: any) {
           entityId: eventId,
           userId: user.id,
           metadata: {
-            eventTitle: event.title
+            eventTitle: event.name
           }
         }
       });
@@ -263,7 +364,7 @@ export async function GET(
   request: NextRequest,
   context: { params: Promise<{ eventId: string }> }
 ) {
-  const params = await context.params; {
+  const params = await context.params;
   return withAuth(handleGetEvent, {
     permissions: ['events.view']
   })(request, { params });
@@ -274,7 +375,7 @@ export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ eventId: string }> }
 ) {
-  const params = await context.params; {
+  const params = await context.params;
   return withAuth(handleUpdateEvent, {
     permissions: ['events.edit_own']
   })(request, { params });
@@ -285,7 +386,7 @@ export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ eventId: string }> }
 ) {
-  const params = await context.params; {
+  const params = await context.params;
   return withAuth(handleDeleteEvent, {
     permissions: ['events.delete_own']
   })(request, { params });

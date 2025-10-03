@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,19 +20,21 @@ import {
   Eye,
   Edit,
   Trash2,
-  Filter
+  Filter,
+  ImageIcon
 } from 'lucide-react';
 
 interface EventData {
   id: string;
-  title: string;
+  name: string; // Database field is 'name', not 'title'
   description: string;
-  category: string;
+  eventType: string; // Database field is 'eventType', not 'category'
   startDate: string;
   endDate: string | null;
   status: string;
-  capacity: number;
+  maxCapacity: number; // Database field is 'maxCapacity', not 'capacity'
   visibility: string;
+  coverImage?: string | null;
   venue: {
     name: string;
     address: string;
@@ -46,7 +49,7 @@ interface EventData {
     name: string;
     price: number;
     quantity: number;
-    tier: string;
+    tier?: string;
   }>;
   ticketsSold: number;
 }
@@ -68,8 +71,15 @@ export default function EventsListPage() {
       return;
     }
 
+    // Only organizers and admins can access this page
+    // Attendees should create their first event to become organizers
+    if (session.user.role === 'ATTENDEE') {
+      router.push('/dashboard/tickets');
+      return;
+    }
+
     fetchEvents();
-  }, [session, status, searchTerm, filterCategory, filterStatus]);
+  }, [session, status, searchTerm, filterCategory, filterStatus, router]);
 
   const fetchEvents = async () => {
     try {
@@ -151,8 +161,8 @@ export default function EventsListPage() {
                 </Link>
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Event Management</h1>
-                <p className="text-gray-600">Manage all your events</p>
+                <h1 className="text-2xl font-bold text-gray-900">My Events</h1>
+                <p className="text-gray-600">Events I organize and manage</p>
               </div>
             </div>
             <Button asChild>
@@ -191,12 +201,15 @@ export default function EventsListPage() {
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <option value="">All Categories</option>
-                <option value="SOCIAL">Social Event</option>
-                <option value="WORKSHOP">Workshop</option>
-                <option value="COMPETITION">Competition</option>
-                <option value="CLASS">Class</option>
-                <option value="CRUISE">Cruise</option>
-                <option value="TRIP">Trip</option>
+                <option value="workshop">Workshop</option>
+                <option value="sets">Sets</option>
+                <option value="in_the_park">In the Park</option>
+                <option value="trip">Trip</option>
+                <option value="cruise">Cruise</option>
+                <option value="holiday">Holiday</option>
+                <option value="competition">Competition</option>
+                <option value="classes">Classes</option>
+                <option value="other">Other</option>
               </select>
 
               <select
@@ -242,73 +255,63 @@ export default function EventsListPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {events.map((event) => (
-              <Card key={event.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg line-clamp-2">{event.title}</CardTitle>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Badge className={getStatusColor(event.status)}>
-                          {event.status}
-                        </Badge>
-                        <Badge variant="outline" className={getCategoryColor(event.category)}>
-                          {event.category}
-                        </Badge>
-                      </div>
+              <div key={event.id} className="group">
+                {/* Cover Image */}
+                <div className="relative w-full aspect-square bg-gray-100 rounded-lg overflow-hidden mb-3 shadow-md hover:shadow-xl transition-shadow">
+                  {event.coverImage ? (
+                    <Image
+                      src={event.coverImage}
+                      alt={event.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                      <Calendar className="w-20 h-20 text-primary/40" />
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Calendar className="w-4 h-4" />
-                      <span>{new Date(event.startDate).toLocaleDateString()}</span>
-                      <span>{new Date(event.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <MapPin className="w-4 h-4" />
-                      <span className="truncate">{event.venue.name}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Users className="w-4 h-4" />
-                      <span>{event.ticketsSold} / {event.capacity} tickets</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <DollarSign className="w-4 h-4" />
-                      <span>
-                        {event.ticketTypes.length > 0
-                          ? `$${Math.min(...event.ticketTypes.map(t => t.price)).toFixed(2)} - $${Math.max(...event.ticketTypes.map(t => t.price)).toFixed(2)}`
-                          : 'Free'
-                        }
-                      </span>
-                    </div>
-                  </div>
-
-                  {event.description && (
-                    <p className="text-sm text-gray-600 line-clamp-2">{event.description}</p>
                   )}
 
-                  <div className="flex gap-2 pt-2">
-                    <Button variant="outline" size="sm" asChild className="flex-1">
-                      <Link href={`/dashboard/events/${event.id}`}>
-                        <Eye className="w-4 h-4 mr-1" />
-                        View
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="sm" asChild className="flex-1">
-                      <Link href={`/dashboard/events/${event.id}/manage`}>
-                        <Edit className="w-4 h-4 mr-1" />
-                        Manage
-                      </Link>
-                    </Button>
+                  {/* Status Badge Overlay */}
+                  <div className="absolute top-3 right-3">
+                    <Badge className={getStatusColor(event.status)}>
+                      {event.status}
+                    </Badge>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 mb-3">
+                  <Button variant="outline" size="sm" asChild className="flex-1">
+                    <Link href={`/dashboard/events/${event.id}`}>
+                      <Eye className="w-4 h-4 mr-1" />
+                      View
+                    </Link>
+                  </Button>
+                  <Button variant="default" size="sm" asChild className="flex-1">
+                    <Link href={`/dashboard/events/${event.id}/manage`}>
+                      <Edit className="w-4 h-4 mr-1" />
+                      Manage
+                    </Link>
+                  </Button>
+                </div>
+
+                {/* Event Date */}
+                <div className="text-center">
+                  <p className="text-sm font-medium text-foreground">
+                    {new Date(event.startDate).toLocaleDateString('en-US', {
+                      month: '2-digit',
+                      day: '2-digit',
+                      year: 'numeric'
+                    })}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                    {event.name}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         )}

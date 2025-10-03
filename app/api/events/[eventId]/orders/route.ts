@@ -132,8 +132,8 @@ export async function GET(
   request: NextRequest,
   context: { params: Promise<{ eventId: string }> }
 ) {
-  const params = await context.params; {
+  const params = await context.params;
   return withAuth(handleGetEventOrders, {
-    permissions: ['events.view_own']
+    permissions: ['events.view']
   })(request, { params });
 }

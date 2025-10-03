@@ -66,33 +66,76 @@ export default function DashboardPage() {
   const quickActions = [
     {
       title: 'Create Event',
-      description: 'Set up a new stepping event',
+      description: 'Host your own event - Create and manage stepping events',
       icon: Plus,
       href: '/dashboard/events/create',
-      color: 'bg-blue-500 hover:bg-blue-600'
+      color: 'bg-teal-500 hover:bg-teal-600',
+      roles: ['ATTENDEE', 'AFFILIATE', 'ORGANIZER', 'STAFF', 'ADMIN', 'SUPER_ADMIN'], // Available to ALL users
+      featured: true // Make this prominent for attendees
+    },
+    {
+      title: 'My Tickets',
+      description: 'View and manage your tickets',
+      icon: Activity,
+      href: '/dashboard/tickets',
+      color: 'bg-indigo-500 hover:bg-indigo-600',
+      roles: ['ATTENDEE', 'AFFILIATE', 'ORGANIZER', 'STAFF', 'ADMIN', 'SUPER_ADMIN']
+    },
+    {
+      title: 'My Events',
+      description: 'Events I organize and manage',
+      icon: Calendar,
+      href: '/dashboard/events',
+      color: 'bg-blue-500 hover:bg-blue-600',
+      roles: ['ORGANIZER', 'STAFF', 'ADMIN', 'SUPER_ADMIN']
     },
     {
       title: 'Manage Users',
       description: 'View and manage user accounts',
       icon: Users,
       href: '/dashboard/users',
-      color: 'bg-green-500 hover:bg-green-600'
+      color: 'bg-green-500 hover:bg-green-600',
+      roles: ['ADMIN', 'SUPER_ADMIN']
     },
     {
       title: 'View Analytics',
       description: 'Check platform statistics',
       icon: BarChart3,
       href: '/dashboard/analytics',
-      color: 'bg-purple-500 hover:bg-purple-600'
+      color: 'bg-purple-500 hover:bg-purple-600',
+      roles: ['ORGANIZER', 'ADMIN', 'SUPER_ADMIN']
+    },
+    {
+      title: 'Admin Panel',
+      description: 'Access admin control panel',
+      icon: Shield,
+      href: '/admin',
+      color: 'bg-red-500 hover:bg-red-600',
+      roles: ['ADMIN', 'SUPER_ADMIN']
+    },
+    {
+      title: 'Theme Editor',
+      description: 'Customize colors and typography',
+      icon: Settings,
+      href: '/admin/theme',
+      color: 'bg-pink-500 hover:bg-pink-600',
+      roles: ['SUPER_ADMIN']
     },
     {
       title: 'Platform Settings',
       description: 'Configure system settings',
       icon: Settings,
       href: '/dashboard/settings',
-      color: 'bg-orange-500 hover:bg-orange-600'
+      color: 'bg-orange-500 hover:bg-orange-600',
+      roles: ['ADMIN', 'SUPER_ADMIN']
     }
   ];
+
+  // Filter actions based on user role
+  const userRole = session.user.role;
+  const availableActions = quickActions.filter(action =>
+    action.roles.includes(userRole)
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50">
@@ -175,8 +218,8 @@ export default function DashboardPage() {
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {quickActions.map((action, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {availableActions.map((action, index) => (
               <Link key={index} href={action.href}>
                 <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
                   <CardContent className="p-6">

@@ -1,0 +1,439 @@
+'use client';
+
+import { useState } from 'react';
+import {
+  AlertTriangle,
+  Shield,
+  Clock,
+  MapPin,
+  DollarSign,
+  User,
+  CheckCircle2,
+  XCircle,
+  Eye,
+  MessageSquare
+} from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { format } from 'date-fns';
+
+// ============================================================================
+// TYPES
+// ============================================================================
+
+interface FlaggedSale {
+  id: string;
+  saleDate: Date;
+  fraudRiskScore: number;
+  fraudFlags: string[];
+  soldDuringEvent: boolean;
+  soldByStaff: boolean;
+  ticketCount: number;
+  total: number;
+  commissionAmount: number;
+  saleType: string;
+  paymentMethod: string;
+  affiliate: {
+    id: string;
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      role: string;
+    };
+  };
+  order: {
+    id: string;
+    orderNumber: string;
+    total: number;
+    status: string;
+  };
+}
+
+interface FraudSummary {
+  totalSales: number;
+  flaggedSales: number;
+  duringEventSales: number;
+  staffSales: number;
+  criticalFlags: number;
+  flagRate: number;
+}
+
+// ============================================================================
+// FRAUD ALERT PANEL COMPONENT
+// ============================================================================
+
+export function FraudAlertPanel({
+  eventId,
+  eventName
+}: {
+  eventId: string;
+  eventName: string;
+}) {
+  const [summary, setSummary] = useState<FraudSummary | null>(null);
+  const [flaggedSales, setFlaggedSales] = useState<FlaggedSale[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedSale, setSelectedSale] = useState<FlaggedSale | null>(null);
+  const [reviewNotes, setReviewNotes] = useState('');
+  const [isReviewing, setIsReviewing] = useState(false);
+
+  // =========================================================================
+  // FETCH FRAUD DATA
+  // =========================================================================
+
+  const fetchFraudData = async () => {
+    setIsLoading(true);
+    try {
+      const [summaryRes, salesRes] = await Promise.all([
+        fetch(`/api/events/${eventId}/fraud/summary`),
+        fetch(`/api/events/${eventId}/fraud/flagged-sales`)
+      ]);
+
+      if (summaryRes.ok && salesRes.ok) {
+        setSummary(await summaryRes.json());
+        setFlaggedSales(await salesRes.json());
+      }
+    } catch (error) {
+      console.error('Error fetching fraud data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // =========================================================================
+  // MARK AS REVIEWED
+  // =========================================================================
+
+  const markAsReviewed = async (approved: boolean) => {
+    if (!selectedSale) return;
+
+    setIsReviewing(true);
+    try {
+      const response = await fetch(
+        `/api/events/${eventId}/fraud/review/${selectedSale.id}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            approved,
+            notes: reviewNotes
+          })
+        }
+      );
+
+      if (response.ok) {
+        // Remove from flagged list
+        setFlaggedSales(prev => prev.filter(s => s.id !== selectedSale.id));
+        setSelectedSale(null);
+        setReviewNotes('');
+        // Refresh summary
+        await fetchFraudData();
+      }
+    } catch (error) {
+      console.error('Error reviewing sale:', error);
+    } finally {
+      setIsReviewing(false);
+    }
+  };
+
+  // =========================================================================
+  // LOAD DATA ON MOUNT
+  // =========================================================================
+
+  useState(() => {
+    fetchFraudData();
+  });
+
+  // =========================================================================
+  // RENDER HELPERS
+  // =========================================================================
+
+  const getRiskColor = (score: number) => {
+    if (score >= 70) return 'text-red-600 bg-red-50 border-red-200';
+    if (score >= 40) return 'text-orange-600 bg-orange-50 border-orange-200';
+    return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+  };
+
+  const getRiskLabel = (score: number) => {
+    if (score >= 70) return 'CRITICAL';
+    if (score >= 40) return 'HIGH';
+    return 'MEDIUM';
+  };
+
+  const getFlagLabel = (flag: string) => {
+    const labels: Record<string, string> = {
+      SOLD_DURING_EVENT_BY_STAFF: '🚨 Staff Sold During Event',
+      CASH_SALE_DURING_EVENT: '💰 Cash During Event',
+      LOCATION_MISMATCH_DURING_EVENT: '📍 Location Mismatch',
+      SOLD_BY_STAFF_MEMBER: '👤 Staff Member',
+      CASH_SALE_24H_BEFORE_EVENT: '⏰ Last-Minute Cash',
+      MULTIPLE_SALES_SAME_IP: '🔄 Multiple Same IP',
+      UNUSUAL_SALE_TIME: '🌙 Unusual Time',
+      MANUAL_ENTRY_SALE: '✍️ Manual Entry',
+      HIGH_TICKET_COUNT: '🎫 High Volume',
+      LATE_NIGHT_SALE: '🌙 Late Night'
+    };
+    return labels[flag] || flag;
+  };
+
+  // =========================================================================
+  // RENDER: NO FLAGS
+  // =========================================================================
+
+  if (!isLoading && summary && summary.flaggedSales === 0) {
+    return (
+      <Alert className="bg-green-50 border-green-200">
+        <Shield className="h-4 w-4 text-green-600" />
+        <AlertDescription className="text-green-800">
+          ✅ No suspicious affiliate sales detected for this event
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  // =========================================================================
+  // RENDER: CRITICAL ALERT
+  // =========================================================================
+
+  if (summary && summary.criticalFlags > 0) {
+    return (
+      <div className="space-y-4">
+        {/* Critical Alert Banner */}
+        <Alert variant="destructive" className="border-2">
+          <AlertTriangle className="h-5 w-5" />
+          <AlertDescription className="font-semibold">
+            ⚠️ CRITICAL: {summary.criticalFlags} sale(s) flagged for potential side-selling by staff during event!
+          </AlertDescription>
+        </Alert>
+
+        {/* Summary Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold text-red-600">
+                {summary.criticalFlags}
+              </div>
+              <div className="text-xs text-muted-foreground">Critical Flags</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold text-orange-600">
+                {summary.flaggedSales}
+              </div>
+              <div className="text-xs text-muted-foreground">Flagged Sales</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold text-blue-600">
+                {summary.duringEventSales}
+              </div>
+              <div className="text-xs text-muted-foreground">During Event</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold text-purple-600">
+                {summary.staffSales}
+              </div>
+              <div className="text-xs text-muted-foreground">Staff Sales</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-2xl font-bold">
+                {summary.flagRate.toFixed(1)}%
+              </div>
+              <div className="text-xs text-muted-foreground">Flag Rate</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Flagged Sales List */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Flagged Sales Requiring Review</CardTitle>
+            <CardDescription>
+              Review these sales before processing affiliate payouts
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {flaggedSales.map((sale) => (
+              <div
+                key={sale.id}
+                className={`border rounded-lg p-4 ${getRiskColor(sale.fraudRiskScore)}`}
+              >
+                {/* Header Row */}
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <div className="font-semibold flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      {sale.affiliate.user.firstName} {sale.affiliate.user.lastName}
+                      {sale.soldByStaff && (
+                        <Badge variant="outline" className="ml-2">
+                          STAFF MEMBER
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {sale.affiliate.user.email}
+                    </div>
+                  </div>
+                  <Badge className={getRiskColor(sale.fraudRiskScore)}>
+                    {getRiskLabel(sale.fraudRiskScore)} RISK ({sale.fraudRiskScore})
+                  </Badge>
+                </div>
+
+                {/* Sale Details */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3 text-sm">
+                  <div>
+                    <div className="text-muted-foreground">Order #</div>
+                    <div className="font-mono">{sale.order.orderNumber}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Sale Date</div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {format(new Date(sale.saleDate), 'MMM dd, HH:mm')}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Amount</div>
+                    <div className="flex items-center gap-1">
+                      <DollarSign className="h-3 w-3" />
+                      ${sale.total.toFixed(2)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Commission</div>
+                    <div className="font-semibold text-green-600">
+                      ${sale.commissionAmount.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Fraud Flags */}
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {sale.fraudFlags.map((flag) => (
+                    <Badge key={flag} variant="secondary" className="text-xs">
+                      {getFlagLabel(flag)}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setSelectedSale(sale)}
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        Review Sale
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Review Flagged Sale</DialogTitle>
+                        <DialogDescription>
+                          Assess this sale and mark as approved or rejected
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      <div className="space-y-4">
+                        {/* Sale Summary */}
+                        <Alert className={getRiskColor(sale.fraudRiskScore)}>
+                          <AlertTriangle className="h-4 w-4" />
+                          <AlertDescription>
+                            <div className="font-semibold mb-2">
+                              Risk Score: {sale.fraudRiskScore}/100 ({getRiskLabel(sale.fraudRiskScore)})
+                            </div>
+                            {sale.soldDuringEvent && sale.soldByStaff && (
+                              <div className="text-sm">
+                                🚨 This staff member sold {sale.ticketCount} ticket(s) DURING the event for ${sale.total.toFixed(2)}
+                              </div>
+                            )}
+                          </AlertDescription>
+                        </Alert>
+
+                        {/* Flags Explanation */}
+                        <div>
+                          <h4 className="font-semibold mb-2">Fraud Indicators:</h4>
+                          <ul className="space-y-1 text-sm">
+                            {sale.fraudFlags.map((flag) => (
+                              <li key={flag} className="flex items-start gap-2">
+                                <span className="text-red-500">•</span>
+                                <span>{getFlagLabel(flag)}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Review Notes */}
+                        <div>
+                          <label className="block text-sm font-medium mb-2">
+                            Review Notes
+                          </label>
+                          <Textarea
+                            placeholder="Add notes about your investigation..."
+                            value={reviewNotes}
+                            onChange={(e) => setReviewNotes(e.target.value)}
+                            rows={4}
+                          />
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-3">
+                          <Button
+                            onClick={() => markAsReviewed(true)}
+                            disabled={isReviewing}
+                            className="flex-1"
+                            variant="outline"
+                          >
+                            <CheckCircle2 className="h-4 w-4 mr-2" />
+                            Approve Sale
+                          </Button>
+                          <Button
+                            onClick={() => markAsReviewed(false)}
+                            disabled={isReviewing}
+                            variant="destructive"
+                            className="flex-1"
+                          >
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Reject & Investigate
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      // Navigate to contact affiliate
+                      window.location.href = `mailto:${sale.affiliate.user.email}`;
+                    }}
+                  >
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Contact Affiliate
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return null;
+}

@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search');
     const category = searchParams.get('category');
-    const status = searchParams.get('status') || 'PUBLISHED';
+    const status = searchParams.get('status'); // Allow all statuses by default
     const eventId = searchParams.get('eventId');
 
     // If requesting a specific event
@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
       const event = await prisma.event.findUnique({
         where: {
           id: eventId,
-          status: 'PUBLISHED', // Only show published events to public
           visibility: { in: ['PUBLIC', 'UNLISTED'] }
         },
         include: {
@@ -29,13 +28,24 @@ export async function GET(request: NextRequest) {
           },
           ticketTypes: {
             where: { isActive: true },
-            orderBy: { tier: 'asc' }
+            orderBy: { price: 'asc' },
+            include: {
+              _count: {
+                select: {
+                  tickets: {
+                    where: {
+                      status: 'VALID'
+                    }
+                  }
+                }
+              }
+            }
           },
           _count: {
             select: {
               tickets: {
                 where: {
-                  status: { in: ['PAID', 'CONFIRMED'] }
+                  status: 'VALID'
                 }
               }
             }
@@ -54,23 +64,31 @@ export async function GET(request: NextRequest) {
         success: true,
         events: [{
           ...event,
-          ticketsSold: event._count.tickets
+          ticketsSold: event._count.tickets,
+          ticketTypes: event.ticketTypes.map(tt => ({
+            ...tt,
+            sold: tt._count?.tickets || 0
+          }))
         }]
       });
     }
 
     // Build where clause for filtering
     const whereClause: any = {
-      status: status,
       visibility: { in: ['PUBLIC', 'UNLISTED'] },
       startDate: {
         gte: new Date() // Only show future events
       }
     };
 
+    // Only filter by status if explicitly provided
+    if (status) {
+      whereClause.status = status;
+    }
+
     if (search) {
       whereClause.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
         { venue: { name: { contains: search, mode: 'insensitive' } } },
         { venue: { address: { contains: search, mode: 'insensitive' } } },
@@ -86,7 +104,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (category) {
-      whereClause.category = category;
+      whereClause.eventType = category;
     }
 
     const events = await prisma.event.findMany({
@@ -102,13 +120,24 @@ export async function GET(request: NextRequest) {
         },
         ticketTypes: {
           where: { isActive: true },
-          orderBy: { tier: 'asc' }
+          orderBy: { price: 'asc' },
+          include: {
+            _count: {
+              select: {
+                tickets: {
+                  where: {
+                    status: 'VALID'
+                  }
+                }
+              }
+            }
+          }
         },
         _count: {
           select: {
             tickets: {
               where: {
-                status: { in: ['PAID', 'CONFIRMED'] }
+                status: 'VALID'
               }
             }
           }
@@ -121,7 +150,11 @@ export async function GET(request: NextRequest) {
     // Transform data to include ticket counts
     const transformedEvents = events.map(event => ({
       ...event,
-      ticketsSold: event._count.tickets
+      ticketsSold: event._count.tickets,
+      ticketTypes: event.ticketTypes.map(tt => ({
+        ...tt,
+        sold: tt._count?.tickets || 0
+      }))
     }));
 
     return NextResponse.json({

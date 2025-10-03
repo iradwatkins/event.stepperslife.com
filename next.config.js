@@ -5,7 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3004'],
+      allowedOrigins: ['localhost:3004', 'events.stepperslife.com'],
     },
   },
   images: {
@@ -15,6 +15,29 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+  },
+  // Force aggressive cache busting for CSS and theme files
+  async headers() {
+    return [
+      {
+        source: '/_next/static/css/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/globals.css',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+    ];
   },
 }
 

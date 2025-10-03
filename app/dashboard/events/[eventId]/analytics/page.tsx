@@ -336,11 +336,9 @@ export default function EventAnalyticsPage() {
                     <YAxis yAxisId="right" orientation="right" />
                     <Tooltip
                       labelFormatter={(value) => format(parseISO(value as string), 'MMM dd, yyyy')}
-                      formatter={[
-                        (value: number, name: string) => [
-                          name === 'revenue' ? formatCurrency(value) : value,
-                          name === 'revenue' ? 'Revenue' : 'Tickets Sold'
-                        ]
+                      formatter={(value: number, name: string) => [
+                        name === 'revenue' ? formatCurrency(value) : value,
+                        name === 'revenue' ? 'Revenue' : 'Tickets Sold'
                       ]}
                     />
                     <Legend />
@@ -384,7 +382,7 @@ export default function EventAnalyticsPage() {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ name, percentage }) => `${name} ${percentage?.toFixed(0)}%`}
+                        label={(entry: any) => `${entry.name} ${entry.percent?.toFixed(0) ?? 0}%`}
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="sold"

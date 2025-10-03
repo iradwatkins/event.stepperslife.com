@@ -5,23 +5,20 @@ const squareConfig = {
   environment: process.env.SQUARE_ENVIRONMENT === 'production'
     ? SquareEnvironment.Production
     : SquareEnvironment.Sandbox,
-  customUrl: undefined,
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  userAgentDetail: 'SteppersLife Events Platform',
-  additionalHeaders: {}
+  token: process.env.SQUARE_ACCESS_TOKEN
 };
 
 // Initialize Square client
 export const squareClient = new SquareClient(squareConfig);
 
 // Export API instances for easy access
-export const paymentsApi = squareClient.paymentsApi;
-export const customersApi = squareClient.customersApi;
-export const ordersApi = squareClient.ordersApi;
-export const locationsApi = squareClient.locationsApi;
-export const catalogApi = squareClient.catalogApi;
-export const subscriptionsApi = squareClient.subscriptionsApi;
-export const webhooksApi = squareClient.webhooksApi;
+export const payments = squareClient.payments;
+export const customers = squareClient.customers;
+export const orders = squareClient.orders;
+export const locations = squareClient.locations;
+export const catalog = squareClient.catalog;
+export const subscriptions = squareClient.subscriptions;
+export const webhooks = squareClient.webhooks;
 
 // Configuration constants
 export const SQUARE_CONFIG = {
@@ -32,7 +29,7 @@ export const SQUARE_CONFIG = {
 } as const;
 
 // Validate required configuration
-if (!squareConfig.accessToken) {
+if (!squareConfig.token) {
   throw new Error('Square access token is required');
 }
 

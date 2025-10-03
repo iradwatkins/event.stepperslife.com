@@ -1,0 +1,2 @@
+This is a placeholder. In production, you should have a default OG image at:
+/public/og-default-event.png (1200x630px)

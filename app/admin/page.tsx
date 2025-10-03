@@ -247,13 +247,17 @@ export default function AdminDashboard() {
                   <CardDescription>Manage user accounts and permissions</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <Button className="w-full" variant="outline">
-                    <Users className="w-4 h-4 mr-2" />
-                    View All Users
+                  <Button className="w-full" variant="outline" asChild>
+                    <Link href="/dashboard/users">
+                      <Users className="w-4 h-4 mr-2" />
+                      View All Users
+                    </Link>
                   </Button>
-                  <Button className="w-full" variant="outline">
-                    <Shield className="w-4 h-4 mr-2" />
-                    Role Management
+                  <Button className="w-full" variant="outline" asChild>
+                    <Link href="/admin/affiliates">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Affiliate Management
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -267,13 +271,17 @@ export default function AdminDashboard() {
                   <CardDescription>Monitor and manage all platform events</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <Button className="w-full" variant="outline">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    All Events
+                  <Button className="w-full" variant="outline" asChild>
+                    <Link href="/dashboard/events">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      All Events
+                    </Link>
                   </Button>
-                  <Button className="w-full" variant="outline">
-                    <AlertTriangle className="w-4 h-4 mr-2" />
-                    Flagged Events
+                  <Button className="w-full" variant="outline" asChild>
+                    <Link href="/dashboard/events/create">
+                      <CalendarPlus className="w-4 h-4 mr-2" />
+                      Create Event
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -287,13 +295,17 @@ export default function AdminDashboard() {
                   <CardDescription>Platform-wide analytics and insights</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <Button className="w-full" variant="outline">
-                    <TrendingUp className="w-4 h-4 mr-2" />
-                    Platform Analytics
+                  <Button className="w-full" variant="outline" asChild>
+                    <Link href="/dashboard/analytics">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Platform Analytics
+                    </Link>
                   </Button>
-                  <Button className="w-full" variant="outline">
-                    <DollarSign className="w-4 h-4 mr-2" />
-                    Revenue Reports
+                  <Button className="w-full" variant="outline" asChild>
+                    <Link href="/admin/theme">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Theme Editor
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>

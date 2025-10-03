@@ -14,7 +14,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="h-9 w-9 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground">
+      <button className="flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground">
         <span className="sr-only">Toggle theme</span>
         <Sun className="h-4 w-4" />
       </button>
@@ -24,7 +24,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="h-9 w-9 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+      className="flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
     >
       <span className="sr-only">Toggle theme</span>
       {theme === 'dark' ? (

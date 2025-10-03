@@ -1,0 +1,515 @@
+/**
+ * Affiliate Fraud Detection Service
+ *
+ * Detects and flags suspicious affiliate sales activity, specifically:
+ * - Staff members selling tickets during events (side-selling)
+ * - Unusual sales patterns
+ * - Geographic anomalies
+ * - High-risk cash transactions
+ */
+
+import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
+
+// ============================================================================
+// TYPES & INTERFACES
+// ============================================================================
+
+export interface FraudDetectionInput {
+  affiliateId: string;
+  eventId: string;
+  orderId: string;
+  saleDate: Date;
+  saleType: 'ONLINE_LINK' | 'CASH_OFFLINE' | 'MANUAL_ENTRY';
+  paymentMethod: string;
+  ipAddress?: string;
+  deviceFingerprint?: string;
+  userAgent?: string;
+  geolocation?: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
+export interface FraudDetectionResult {
+  fraudRiskScore: number; // 0-100
+  fraudFlags: string[];
+  flaggedForReview: boolean;
+  soldDuringEvent: boolean;
+  soldByStaff: boolean;
+  locationMatch: boolean | null;
+  warnings: string[];
+  recommendations: string[];
+}
+
+interface EventStaffCheck {
+  isStaff: boolean;
+  assignedRoles?: string[];
+}
+
+// ============================================================================
+// FRAUD FLAG CONSTANTS
+// ============================================================================
+
+export const FRAUD_FLAGS = {
+  // Critical Flags (High Risk)
+  SOLD_DURING_EVENT_BY_STAFF: 'SOLD_DURING_EVENT_BY_STAFF',
+  CASH_SALE_DURING_EVENT: 'CASH_SALE_DURING_EVENT',
+  LOCATION_MISMATCH_DURING_EVENT: 'LOCATION_MISMATCH_DURING_EVENT',
+
+  // Medium Risk Flags
+  SOLD_BY_STAFF_MEMBER: 'SOLD_BY_STAFF_MEMBER',
+  CASH_SALE_24H_BEFORE_EVENT: 'CASH_SALE_24H_BEFORE_EVENT',
+  MULTIPLE_SALES_SAME_IP: 'MULTIPLE_SALES_SAME_IP',
+  UNUSUAL_SALE_TIME: 'UNUSUAL_SALE_TIME',
+
+  // Low Risk Flags (Informational)
+  MANUAL_ENTRY_SALE: 'MANUAL_ENTRY_SALE',
+  HIGH_TICKET_COUNT: 'HIGH_TICKET_COUNT',
+  LATE_NIGHT_SALE: 'LATE_NIGHT_SALE',
+} as const;
+
+// Risk score weights
+const RISK_WEIGHTS = {
+  [FRAUD_FLAGS.SOLD_DURING_EVENT_BY_STAFF]: 50,
+  [FRAUD_FLAGS.CASH_SALE_DURING_EVENT]: 35,
+  [FRAUD_FLAGS.LOCATION_MISMATCH_DURING_EVENT]: 30,
+  [FRAUD_FLAGS.SOLD_BY_STAFF_MEMBER]: 20,
+  [FRAUD_FLAGS.CASH_SALE_24H_BEFORE_EVENT]: 15,
+  [FRAUD_FLAGS.MULTIPLE_SALES_SAME_IP]: 15,
+  [FRAUD_FLAGS.UNUSUAL_SALE_TIME]: 10,
+  [FRAUD_FLAGS.MANUAL_ENTRY_SALE]: 10,
+  [FRAUD_FLAGS.HIGH_TICKET_COUNT]: 5,
+  [FRAUD_FLAGS.LATE_NIGHT_SALE]: 5,
+};
+
+// Threshold for auto-flagging (0-100)
+const AUTO_FLAG_THRESHOLD = 40;
+
+// ============================================================================
+// MAIN FRAUD DETECTION FUNCTION
+// ============================================================================
+
+/**
+ * Analyzes an affiliate sale for fraud indicators
+ * This should be called during the order creation/completion process
+ */
+export async function detectAffiliateFraud(
+  input: FraudDetectionInput
+): Promise<FraudDetectionResult> {
+  const flags: string[] = [];
+  const warnings: string[] = [];
+  const recommendations: string[] = [];
+  let riskScore = 0;
+
+  // =========================================================================
+  // 1. GET EVENT DETAILS
+  // =========================================================================
+
+  const event = await prisma.event.findUnique({
+    where: { id: input.eventId },
+    select: {
+      id: true,
+      name: true,
+      startDate: true,
+      endDate: true,
+      venue: {
+        select: {
+          latitude: true,
+          longitude: true,
+          address: true,
+          city: true,
+          state: true,
+        }
+      }
+    }
+  });
+
+  if (!event) {
+    throw new Error(`Event ${input.eventId} not found`);
+  }
+
+  // =========================================================================
+  // 2. CHECK IF SALE OCCURRED DURING EVENT
+  // =========================================================================
+
+  const soldDuringEvent = isSaleDuringEvent(
+    input.saleDate,
+    event.startDate,
+    event.endDate
+  );
+
+  // =========================================================================
+  // 3. CHECK IF AFFILIATE IS STAFF FOR THIS EVENT
+  // =========================================================================
+
+  const staffCheck = await isAffiliateStaffForEvent(
+    input.affiliateId,
+    input.eventId
+  );
+
+  const soldByStaff = staffCheck.isStaff;
+
+  // =========================================================================
+  // 4. CRITICAL FLAG: STAFF SELLING DURING EVENT
+  // =========================================================================
+
+  if (soldDuringEvent && soldByStaff) {
+    flags.push(FRAUD_FLAGS.SOLD_DURING_EVENT_BY_STAFF);
+    riskScore += RISK_WEIGHTS[FRAUD_FLAGS.SOLD_DURING_EVENT_BY_STAFF];
+
+    warnings.push(
+      `🚨 CRITICAL: Staff member sold tickets DURING the event (${event.name})`
+    );
+    warnings.push(
+      `Sale time: ${input.saleDate.toLocaleString()} | Event: ${event.startDate.toLocaleString()} - ${event.endDate.toLocaleString()}`
+    );
+
+    recommendations.push(
+      'IMMEDIATE ACTION REQUIRED: Contact this affiliate to verify the sale'
+    );
+    recommendations.push(
+      'Check if tickets were sold at the door vs. pre-event promotional sales'
+    );
+    recommendations.push(
+      'Verify payment was properly processed through the platform'
+    );
+  }
+
+  // =========================================================================
+  // 5. CHECK: STAFF MEMBER (Even if not during event)
+  // =========================================================================
+
+  if (soldByStaff && !soldDuringEvent) {
+    flags.push(FRAUD_FLAGS.SOLD_BY_STAFF_MEMBER);
+    riskScore += RISK_WEIGHTS[FRAUD_FLAGS.SOLD_BY_STAFF_MEMBER];
+
+    warnings.push(
+      `⚠️  This affiliate is assigned as STAFF for this event`
+    );
+    recommendations.push(
+      'Monitor this affiliate for sales patterns near event date'
+    );
+  }
+
+  // =========================================================================
+  // 6. CHECK: CASH SALES DURING EVENT
+  // =========================================================================
+
+  if (soldDuringEvent && input.saleType === 'CASH_OFFLINE') {
+    flags.push(FRAUD_FLAGS.CASH_SALE_DURING_EVENT);
+    riskScore += RISK_WEIGHTS[FRAUD_FLAGS.CASH_SALE_DURING_EVENT];
+
+    warnings.push(
+      `💰 Cash sale recorded DURING event - potential side-selling`
+    );
+    recommendations.push(
+      'Verify cash payment was validated with affiliate PIN'
+    );
+    recommendations.push(
+      'Confirm payment has been or will be remitted to organizer'
+    );
+  }
+
+  // =========================================================================
+  // 7. CHECK: CASH SALES 24H BEFORE EVENT
+  // =========================================================================
+
+  const hoursBeforeEvent = (event.startDate.getTime() - input.saleDate.getTime()) / (1000 * 60 * 60);
+
+  if (hoursBeforeEvent > 0 && hoursBeforeEvent < 24 && input.saleType === 'CASH_OFFLINE') {
+    flags.push(FRAUD_FLAGS.CASH_SALE_24H_BEFORE_EVENT);
+    riskScore += RISK_WEIGHTS[FRAUD_FLAGS.CASH_SALE_24H_BEFORE_EVENT];
+
+    warnings.push(
+      `💰 Cash sale within 24 hours of event start (${hoursBeforeEvent.toFixed(1)}h before)`
+    );
+  }
+
+  // =========================================================================
+  // 8. CHECK: GEOLOCATION MATCH
+  // =========================================================================
+
+  let locationMatch: boolean | null = null;
+
+  if (soldDuringEvent && input.geolocation && event.venue?.latitude && event.venue?.longitude) {
+    const distanceKm = calculateDistance(
+      input.geolocation.latitude,
+      input.geolocation.longitude,
+      event.venue.latitude,
+      event.venue.longitude
+    );
+
+    // If more than 50km away during event, that's suspicious
+    locationMatch = distanceKm < 50;
+
+    if (!locationMatch) {
+      flags.push(FRAUD_FLAGS.LOCATION_MISMATCH_DURING_EVENT);
+      riskScore += RISK_WEIGHTS[FRAUD_FLAGS.LOCATION_MISMATCH_DURING_EVENT];
+
+      warnings.push(
+        `📍 Sale location ${distanceKm.toFixed(1)}km away from venue during event`
+      );
+      recommendations.push(
+        'Investigate if this was a remote/online sale vs. in-person at event'
+      );
+    }
+  }
+
+  // =========================================================================
+  // 9. CHECK: MULTIPLE SALES FROM SAME IP
+  // =========================================================================
+
+  if (input.ipAddress) {
+    const recentSalesFromIp = await prisma.affiliateSale.count({
+      where: {
+        ipAddress: input.ipAddress,
+        affiliateId: input.affiliateId,
+        saleDate: {
+          gte: new Date(Date.now() - 24 * 60 * 60 * 1000) // Last 24 hours
+        }
+      }
+    });
+
+    if (recentSalesFromIp > 5) {
+      flags.push(FRAUD_FLAGS.MULTIPLE_SALES_SAME_IP);
+      riskScore += RISK_WEIGHTS[FRAUD_FLAGS.MULTIPLE_SALES_SAME_IP];
+
+      warnings.push(
+        `🔄 ${recentSalesFromIp} sales from same IP in last 24 hours`
+      );
+    }
+  }
+
+  // =========================================================================
+  // 10. CHECK: UNUSUAL SALE TIME
+  // =========================================================================
+
+  const saleHour = input.saleDate.getHours();
+
+  if (saleHour >= 2 && saleHour < 6) {
+    flags.push(FRAUD_FLAGS.LATE_NIGHT_SALE);
+    riskScore += RISK_WEIGHTS[FRAUD_FLAGS.LATE_NIGHT_SALE];
+
+    warnings.push(
+      `🌙 Sale occurred at unusual time: ${saleHour}:00 (late night/early morning)`
+    );
+  }
+
+  // =========================================================================
+  // 11. CHECK: MANUAL ENTRY
+  // =========================================================================
+
+  if (input.saleType === 'MANUAL_ENTRY') {
+    flags.push(FRAUD_FLAGS.MANUAL_ENTRY_SALE);
+    riskScore += RISK_WEIGHTS[FRAUD_FLAGS.MANUAL_ENTRY_SALE];
+
+    warnings.push(
+      `✍️  Manual entry sale - requires verification`
+    );
+  }
+
+  // =========================================================================
+  // 12. DETERMINE IF SHOULD BE FLAGGED FOR REVIEW
+  // =========================================================================
+
+  const flaggedForReview = riskScore >= AUTO_FLAG_THRESHOLD;
+
+  if (flaggedForReview) {
+    recommendations.unshift(
+      '⚠️  THIS SALE HAS BEEN FLAGGED FOR REVIEW - Please investigate before payout'
+    );
+  }
+
+  // =========================================================================
+  // RETURN FRAUD DETECTION RESULT
+  // =========================================================================
+
+  return {
+    fraudRiskScore: Math.min(riskScore, 100), // Cap at 100
+    fraudFlags: flags,
+    flaggedForReview,
+    soldDuringEvent,
+    soldByStaff,
+    locationMatch,
+    warnings,
+    recommendations
+  };
+}
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Check if sale occurred during the event window
+ */
+function isSaleDuringEvent(
+  saleDate: Date,
+  eventStart: Date,
+  eventEnd: Date
+): boolean {
+  return saleDate >= eventStart && saleDate <= eventEnd;
+}
+
+/**
+ * Check if affiliate is assigned as staff for the event
+ */
+async function isAffiliateStaffForEvent(
+  affiliateId: string,
+  eventId: string
+): Promise<EventStaffCheck> {
+  // Get the user ID from affiliate
+  const affiliate = await prisma.affiliate.findUnique({
+    where: { id: affiliateId },
+    select: { userId: true }
+  });
+
+  if (!affiliate) {
+    return { isStaff: false };
+  }
+
+  // Check if this user is assigned as staff to the event
+  // Note: This requires an EventStaff junction table which may not exist yet
+  // For now, we'll check if the user has STAFF role
+  const user = await prisma.user.findUnique({
+    where: { id: affiliate.userId },
+    select: { role: true }
+  });
+
+  // TODO: When EventStaff table is implemented, check actual assignment:
+  // const staffAssignment = await prisma.eventStaff.findFirst({
+  //   where: { userId: affiliate.userId, eventId }
+  // });
+
+  return {
+    isStaff: user?.role === 'STAFF',
+    assignedRoles: user?.role ? [user.role] : []
+  };
+}
+
+/**
+ * Calculate distance between two coordinates (Haversine formula)
+ * Returns distance in kilometers
+ */
+function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371; // Earth's radius in km
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) *
+    Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+
+  return distance;
+}
+
+function toRad(degrees: number): number {
+  return degrees * (Math.PI / 180);
+}
+
+// ============================================================================
+// UTILITY FUNCTIONS FOR ORGANIZERS
+// ============================================================================
+
+/**
+ * Get all flagged sales for an event
+ */
+export async function getFlaggedSalesForEvent(eventId: string) {
+  return prisma.affiliateSale.findMany({
+    where: {
+      eventId,
+      flaggedForReview: true,
+      reviewedAt: null // Only unreviewed
+    },
+    include: {
+      affiliate: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              role: true
+            }
+          }
+        }
+      },
+      order: {
+        select: {
+          id: true,
+          orderNumber: true,
+          total: true,
+          status: true
+        }
+      }
+    },
+    orderBy: {
+      fraudRiskScore: 'desc'
+    }
+  });
+}
+
+/**
+ * Get fraud summary for an event
+ */
+export async function getEventFraudSummary(eventId: string) {
+  const [
+    totalSales,
+    flaggedSales,
+    duringEventSales,
+    staffSales,
+    criticalFlags
+  ] = await Promise.all([
+    prisma.affiliateSale.count({ where: { eventId } }),
+    prisma.affiliateSale.count({ where: { eventId, flaggedForReview: true } }),
+    prisma.affiliateSale.count({ where: { eventId, soldDuringEvent: true } }),
+    prisma.affiliateSale.count({ where: { eventId, soldByStaff: true } }),
+    prisma.affiliateSale.count({
+      where: {
+        eventId,
+        soldDuringEvent: true,
+        soldByStaff: true
+      }
+    })
+  ]);
+
+  return {
+    totalSales,
+    flaggedSales,
+    duringEventSales,
+    staffSales,
+    criticalFlags,
+    flagRate: totalSales > 0 ? (flaggedSales / totalSales) * 100 : 0
+  };
+}
+
+/**
+ * Mark a sale as reviewed by organizer
+ */
+export async function markSaleAsReviewed(
+  saleId: string,
+  reviewerId: string,
+  notes?: string
+) {
+  return prisma.affiliateSale.update({
+    where: { id: saleId },
+    data: {
+      reviewedBy: reviewerId,
+      reviewedAt: new Date(),
+      reviewNotes: notes
+    }
+  });
+}

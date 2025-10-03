@@ -1,0 +1,194 @@
+'use client';
+
+import { useState, Suspense } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { Loader2, AlertCircle, Mail, Lock } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Logo } from '@/components/ui/logo';
+
+// Validation schema for login
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
+const ERROR_MESSAGES: Record<string, string> = {
+  'CredentialsSignin': 'Invalid email or password',
+  'Configuration': 'There is a problem with the server configuration',
+  'Default': 'An error occurred. Please try again.',
+};
+
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const urlError = searchParams.get('error');
+
+  // CRITICAL: Redirect already-authenticated users
+  if (status === 'authenticated' && session) {
+    window.location.href = callbackUrl;
+    return null;
+  }
+
+  const loginForm = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    }
+  });
+
+  const handleLogin = async (data: LoginFormData) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await signIn('credentials', {
+        email: data.email.toLowerCase(),
+        password: data.password,
+        redirect: false,
+        callbackUrl
+      });
+
+      if (result?.error) {
+        const errorKey = result.error as keyof typeof ERROR_MESSAGES;
+        const errorMessage = (errorKey in ERROR_MESSAGES ? ERROR_MESSAGES[errorKey] : ERROR_MESSAGES.Default) as string;
+        setError(errorMessage);
+        setIsLoading(false);
+        return;
+      }
+
+      // Success - redirect
+      if (result?.ok) {
+        window.location.href = callbackUrl;
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Failed to sign in. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 px-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-6">
+            <Logo width={180} height={54} priority />
+          </div>
+          <CardTitle className="text-2xl">Welcome Back</CardTitle>
+          <CardDescription>
+            Sign in to your account to continue
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {/* Error Alert */}
+          {(error || urlError) && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {error || ERROR_MESSAGES[urlError as keyof typeof ERROR_MESSAGES] || ERROR_MESSAGES.Default}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Login Form */}
+          <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  {...loginForm.register('email')}
+                  className={`pl-9 ${loginForm.formState.errors.email ? 'border-red-500' : ''}`}
+                />
+              </div>
+              {loginForm.formState.errors.email && (
+                <p className="text-sm text-red-600">{loginForm.formState.errors.email.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  {...loginForm.register('password')}
+                  className={`pl-9 ${loginForm.formState.errors.password ? 'border-red-500' : ''}`}
+                />
+              </div>
+              {loginForm.formState.errors.password && (
+                <p className="text-sm text-red-600">{loginForm.formState.errors.password.message}</p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </Button>
+          </form>
+
+          {/* Help Links */}
+          <div className="text-center space-y-2 text-sm text-muted-foreground mt-6">
+            <div>
+              <Link href="/help" className="hover:underline hover:text-primary">
+                Need help?
+              </Link>
+              {' • '}
+              <Link href="/support" className="hover:underline hover:text-primary">
+                Contact Support
+              </Link>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50">
+        <div className="animate-pulse">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  );
+}

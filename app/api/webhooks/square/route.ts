@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { SQUARE_CONFIG } from '@/lib/payments/square.config';
-import { WebhookEvent, PaymentStatus } from 'squareup';
 import crypto from 'crypto';
+
+// Types are not exported from square SDK, define locally
+type WebhookEvent = any;
+type PaymentStatus = string;
 
 /**
  * Verify Square webhook signature
@@ -33,7 +36,7 @@ function verifyWebhookSignature(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text();
-    const headersList = headers();
+    const headersList = await headers();
     const signature = headersList.get('x-square-hmacsha256-signature') || '';
     const url = request.url;
 
@@ -56,17 +59,8 @@ export async function POST(request: NextRequest) {
 
     const event = JSON.parse(body) as WebhookEvent;
 
-    // Log webhook event
-    await prisma.webhookEvent.create({
-      data: {
-        id: event.data?.id || crypto.randomUUID(),
-        type: event.type || 'unknown',
-        source: 'square',
-        payload: event,
-        processed: false,
-        createdAt: new Date()
-      }
-    });
+    // Log webhook event (webhook event logging disabled - table doesn't exist in current schema)
+    // TODO: Add webhookEvent table to schema if webhook logging is needed
 
     // Process the webhook event
     await processWebhookEvent(event);
@@ -135,20 +129,8 @@ async function processWebhookEvent(event: WebhookEvent) {
         console.log('Unhandled webhook event type:', eventType);
     }
 
-    // Mark webhook as processed
-    await prisma.webhookEvent.updateMany({
-      where: {
-        type: eventType,
-        processed: false,
-        createdAt: {
-          gte: new Date(Date.now() - 60000) // Within last minute
-        }
-      },
-      data: {
-        processed: true,
-        processedAt: new Date()
-      }
-    });
+    // Mark webhook as processed (disabled - webhookEvent table doesn't exist)
+    // TODO: Add webhookEvent table to schema if webhook logging is needed
 
   } catch (error) {
     console.error('Webhook event processing error:', error);
@@ -203,8 +185,6 @@ async function handlePaymentUpdated(paymentData: any) {
       where: { squarePaymentId: payment.id },
       data: {
         status: mapPaymentStatus(payment.status),
-        receiptNumber: payment.receipt_number,
-        receiptUrl: payment.receipt_url,
         updatedAt: new Date(payment.updated_at || new Date().toISOString())
       }
     });
@@ -302,7 +282,7 @@ async function handleOrderUpdated(orderData: any) {
   });
 }
 
-function mapPaymentStatus(squareStatus?: string): string {
+function mapPaymentStatus(squareStatus?: string): 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'REFUNDED' {
   switch (squareStatus) {
     case 'APPROVED':
       return 'COMPLETED';
@@ -311,10 +291,10 @@ function mapPaymentStatus(squareStatus?: string): string {
     case 'COMPLETED':
       return 'COMPLETED';
     case 'CANCELED':
-      return 'CANCELLED';
+      return 'FAILED';
     case 'FAILED':
       return 'FAILED';
     default:
-      return 'UNKNOWN';
+      return 'PENDING';
   }
 }

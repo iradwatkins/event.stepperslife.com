@@ -31,8 +31,6 @@ class QRCodeService {
       // Generate QR code as data URL
       const qrCodeDataUrl = await QRCode.toDataURL(checkInUrl, {
         errorCorrectionLevel: 'M',
-        type: 'image/png',
-        quality: 0.92,
         margin: 1,
         color: {
           dark: '#000000',
@@ -63,8 +61,6 @@ class QRCodeService {
 
       const qrCodeDataUrl = await QRCode.toDataURL(qrData, {
         errorCorrectionLevel: 'H',
-        type: 'image/png',
-        quality: 0.92,
         margin: 2,
         color: {
           dark: '#1f2937',
@@ -113,8 +109,6 @@ class QRCodeService {
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(eventUrl, {
         errorCorrectionLevel: 'M',
-        type: 'image/png',
-        quality: 0.92,
         margin: 2,
         color: {
           dark: '#2563eb',

@@ -9,12 +9,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ImageUpload } from '@/components/ui/image-upload';
 import { ArrowLeft, Calendar, MapPin, Clock, DollarSign, Users } from 'lucide-react';
 
 export default function CreateEventPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [coverImage, setCoverImage] = useState<string>('');
 
   if (status === 'loading') {
     return (
@@ -46,7 +48,9 @@ export default function CreateEventPage() {
         venueAddress: formData.get('address') as string,
         ticketPrice: parseFloat(formData.get('price') as string) || 0,
         earlyBirdPrice: parseFloat(formData.get('early-bird') as string) || undefined,
+        earlyBirdEndDate: formData.get('early-bird-end') as string || undefined,
         capacity: parseInt(formData.get('capacity') as string) || 100,
+        coverImage: coverImage || undefined,
         isPublished: false, // Draft by default
         visibility: 'PUBLIC'
       };
@@ -123,18 +127,22 @@ export default function CreateEventPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
+                  <Label htmlFor="category">Category *</Label>
                   <select
                     id="category"
                     name="category"
+                    required
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <option value="SOCIAL">Social Event</option>
                     <option value="WORKSHOP">Workshop</option>
-                    <option value="COMPETITION">Competition</option>
-                    <option value="CLASS">Class</option>
-                    <option value="CRUISE">Cruise</option>
+                    <option value="SETS">Sets</option>
+                    <option value="IN_THE_PARK">In the Park</option>
                     <option value="TRIP">Trip</option>
+                    <option value="CRUISE">Cruise</option>
+                    <option value="HOLIDAY">Holiday</option>
+                    <option value="COMPETITION">Competition</option>
+                    <option value="CLASSES">Classes</option>
+                    <option value="OTHER">Other</option>
                   </select>
                 </div>
               </div>
@@ -146,6 +154,15 @@ export default function CreateEventPage() {
                   name="description"
                   placeholder="Describe your event, what to expect, dress code, etc."
                   className="min-h-[100px]"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Cover Image</Label>
+                <ImageUpload
+                  value={coverImage}
+                  onChange={setCoverImage}
+                  disabled={isLoading}
                 />
               </div>
             </CardContent>
@@ -276,6 +293,21 @@ export default function CreateEventPage() {
                       placeholder="20.00"
                     />
                   </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="early-bird-end">Early Bird End Date</Label>
+                  <Input
+                    id="early-bird-end"
+                    name="early-bird-end"
+                    type="date"
+                    placeholder="When does early bird pricing end?"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Leave blank to end 7 days before event
+                  </p>
                 </div>
               </div>
             </CardContent>

@@ -192,7 +192,7 @@ export async function GET(request: NextRequest) {
           _count: {
             select: {
               tickets: {
-                where: { status: { in: ['VALID', 'PAID'] } }
+                where: { status: 'VALID' }
               },
               reviews: true,
               favorites: true
@@ -210,9 +210,9 @@ export async function GET(request: NextRequest) {
     const transformedEvents = events.map(event => {
       const ticketsSold = event._count.tickets;
       const minPrice = event.ticketTypes.length > 0 ?
-        Math.min(...event.ticketTypes.map(t => t.price)) : 0;
+        Math.min(...event.ticketTypes.map(t => Number(t.price))) : 0;
       const maxPrice = event.ticketTypes.length > 0 ?
-        Math.max(...event.ticketTypes.map(t => t.price)) : 0;
+        Math.max(...event.ticketTypes.map(t => Number(t.price))) : 0;
       const availableTickets = event.ticketTypes.reduce((sum, t) => sum + (t.quantity - t.sold), 0);
 
       return {
@@ -350,11 +350,11 @@ async function generateSearchFacets(baseWhere: any, filters: SearchFilters) {
         }
       },
       _count: {
-        events: true
+        id: true
       },
       orderBy: {
         _count: {
-          events: 'desc'
+          id: 'desc'
         }
       },
       take: 10
@@ -388,7 +388,7 @@ async function generateSearchFacets(baseWhere: any, filters: SearchFilters) {
       locations: locations.map(loc => ({
         city: loc.city,
         state: loc.state,
-        count: loc._count.events
+        count: loc._count.id
       })),
       tags: popularTags
     };

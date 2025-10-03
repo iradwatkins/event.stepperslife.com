@@ -1,9 +1,5 @@
-// SteppersLife Events Platform - Production Database Schema
-// Architecture Version 2.0 - Complete Square Integration & Business Logic
-// Designed for 10,000+ concurrent users, real-time features, and scalability
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["relationJoins"]
 }
 
@@ -12,64 +8,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// =====================================================
-// USER MANAGEMENT & AUTHENTICATION
-// =====================================================
-
 model User {
-  id               String    @id @default(uuid())
-  email            String    @unique
-  emailVerified    DateTime?
-  passwordHash     String?   // For credential auth
-
-  // Profile Information
-  firstName        String
-  lastName         String
-  displayName      String?
-  phone            String?
-  dateOfBirth      DateTime?
-  profileImage     String?
-  bio              String?   @db.Text
-
-  // Account Status
-  role             UserRole  @default(ATTENDEE)
-  status           UserStatus @default(ACTIVE)
-  isVerified       Boolean   @default(false)
-  twoFactorEnabled Boolean   @default(false)
-
-  // Preferences
-  timezone         String    @default("America/New_York")
-  language         String    @default("en")
-  marketingOptIn   Boolean   @default(false)
-
-  // Square Integration
-  squareCustomerId String?   @unique
-
-  // Metadata
-  metadata         Json?     @default("{}")
-  lastLoginAt      DateTime?
-
-  // Timestamps
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  deletedAt        DateTime?
-
-  // Relations
-  accounts         Account[]
-  sessions         Session[]
-  organizerProfile OrganizerProfile?
-
-  // Event Relations
-  eventsCreated    Event[]   @relation("EventOrganizer")
-  orders           Order[]
-  tickets          Ticket[]
-  reviews          Review[]
-  teamMemberships  TeamMember[]
-
-  // Social Relations
-  favorites        EventFavorite[]
-  following        Follow[]  @relation("Follower")
-  followers        Follow[]  @relation("Following")
+  id                 String            @id @default(uuid())
+  email              String            @unique
+  emailVerified      DateTime?
+  passwordHash       String?
+  firstName          String            @default("")
+  lastName           String            @default("")
+  displayName        String?
+  phone              String?
+  dateOfBirth        DateTime?
+  profileImage       String?
+  bio                String?
+  role               UserRole          @default(ATTENDEE)
+  status             UserStatus        @default(ACTIVE)
+  isVerified         Boolean           @default(false)
+  twoFactorEnabled   Boolean           @default(false)
+  timezone           String            @default("America/New_York")
+  language           String            @default("en")
+  marketingOptIn     Boolean           @default(false)
+  squareCustomerId   String?           @unique
+  metadata           Json?             @default("{}")
+  lastLoginAt        DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  deletedAt          DateTime?
+  accounts           Account[]
+  affiliate          Affiliate?
+  billingAccount     BillingAccount?
+  favorites          EventFavorite[]
+  eventsCreated      Event[]           @relation("EventOrganizer")
+  following          Follow[]          @relation("Follower")
+  followers          Follow[]          @relation("Following")
+  orders             Order[]
+  organizerProfile   OrganizerProfile?
+  reviews            Review[]
+  sessions           Session[]
+  teamMemberships    TeamMember[]
+  transfersInitiated TicketTransfer[]  @relation("TransferFrom")
+  transfersReceived  TicketTransfer[]  @relation("TransferTo")
+  tickets            Ticket[]
 
   @@index([email])
   @@index([role])
@@ -79,116 +57,79 @@ model User {
 }
 
 model OrganizerProfile {
-  id               String    @id @default(uuid())
-  userId           String    @unique
-
-  // Business Information
-  businessName     String
-  businessType     BusinessType @default(INDIVIDUAL)
-  taxId            String?
-  website          String?
-  socialMedia      Json?     @default("{}")
-
-  // Square Business Integration
-  squareLocationId String?
-  squareBusinessId String?
-  squareApplication String?
-
-  // Verification Status
-  isVerified       Boolean   @default(false)
-  verifiedAt       DateTime?
-  verificationLevel VerificationLevel @default(BASIC)
-
-  // Settings
-  autoPayoutEnabled Boolean  @default(true)
-  defaultPayoutSchedule PayoutSchedule @default(DAILY)
-
-  // Statistics
-  totalEvents      Int       @default(0)
-  totalRevenue     Decimal   @default(0) @db.Decimal(12, 2)
-  averageRating    Float?
-
-  // Relations
-  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  team             TeamMember[]
-  venues           Venue[]
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id                    String            @id @default(uuid())
+  userId                String            @unique
+  businessName          String
+  businessType          BusinessType      @default(INDIVIDUAL)
+  taxId                 String?
+  website               String?
+  socialMedia           Json?             @default("{}")
+  squareLocationId      String?
+  squareBusinessId      String?
+  squareApplication     String?
+  isVerified            Boolean           @default(false)
+  verifiedAt            DateTime?
+  verificationLevel     VerificationLevel @default(BASIC)
+  autoPayoutEnabled     Boolean           @default(true)
+  defaultPayoutSchedule PayoutSchedule    @default(DAILY)
+  totalEvents           Int               @default(0)
+  totalRevenue          Decimal           @default(0) @db.Decimal(12, 2)
+  averageRating         Float?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team                  TeamMember[]
+  venues                Venue[]
 
   @@map("organizer_profiles")
 }
 
 model TeamMember {
-  id               String    @id @default(uuid())
-  organizerId      String
-  userId           String
-
-  role             TeamRole  @default(STAFF)
-  permissions      String[]  @default([])
-  isActive         Boolean   @default(true)
-
-  // Relations
-  organizer        OrganizerProfile @relation(fields: [organizerId], references: [id], onDelete: Cascade)
-  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id          String           @id @default(uuid())
+  organizerId String
+  userId      String
+  role        TeamRole         @default(STAFF)
+  permissions String[]         @default([])
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  organizer   OrganizerProfile @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([organizerId, userId])
   @@map("team_members")
 }
 
-// =====================================================
-// VENUE MANAGEMENT
-// =====================================================
-
 model Venue {
-  id               String    @id @default(uuid())
-  organizerId      String
-
-  // Basic Information
-  name             String
-  slug             String    @unique
-  description      String?   @db.Text
-
-  // Location
-  address          String
-  city             String
-  state            String
-  zipCode          String
-  country          String    @default("US")
-  latitude         Float?
-  longitude        Float?
-  timezone         String    @default("America/New_York")
-
-  // Capacity & Features
-  maxCapacity      Int
-  hasSeating       Boolean   @default(false)
-  hasParking       Boolean   @default(false)
-  isAccessible     Boolean   @default(true)
-  amenities        String[]  @default([])
-
-  // Contact Information
-  phone            String?
-  email            String?
-  website          String?
-
-  // Images
-  coverImage       String?
-  gallery          String[] @default([])
-
-  // Status
-  isActive         Boolean   @default(true)
-
-  // Relations
-  organizer        OrganizerProfile @relation(fields: [organizerId], references: [id])
-  events           Event[]
-  seatingCharts    SeatingChart[]
-
-  // Timestamps
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id            String           @id @default(uuid())
+  organizerId   String
+  name          String
+  slug          String           @unique
+  description   String?
+  address       String
+  city          String
+  state         String
+  zipCode       String
+  country       String           @default("US")
+  latitude      Float?
+  longitude     Float?
+  timezone      String           @default("America/New_York")
+  maxCapacity   Int
+  hasSeating    Boolean          @default(false)
+  hasParking    Boolean          @default(false)
+  isAccessible  Boolean          @default(true)
+  amenities     String[]         @default([])
+  phone         String?
+  email         String?
+  website       String?
+  coverImage    String?
+  gallery       String[]         @default([])
+  isActive      Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  events        Event[]
+  seatingCharts SeatingChart[]
+  organizer     OrganizerProfile @relation(fields: [organizerId], references: [id])
 
   @@index([organizerId])
   @@index([city, state])
@@ -196,130 +137,90 @@ model Venue {
 }
 
 model SeatingChart {
-  id               String    @id @default(uuid())
-  venueId          String
-
-  name             String
-  description      String?
-  isDefault        Boolean   @default(false)
-
-  // Chart Configuration
-  layout           Json      // SVG/coordinates data
-  sections         Json      // Section definitions
-  totalSeats       Int
-
-  // Relations
-  venue            Venue     @relation(fields: [venueId], references: [id], onDelete: Cascade)
-  seats            Seat[]
-  events           Event[]
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id          String   @id @default(uuid())
+  venueId     String
+  name        String
+  description String?
+  isDefault   Boolean  @default(false)
+  layout      Json
+  sections    Json
+  totalSeats  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  events      Event[]
+  venue       Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  seats       Seat[]
 
   @@index([venueId])
   @@map("seating_charts")
 }
 
 model Seat {
-  id               String    @id @default(uuid())
-  seatingChartId   String
-
-  // Seat Identification
-  section          String
-  row              String
-  number           String
-
-  // Properties
-  seatType         SeatType  @default(STANDARD)
-  isAccessible     Boolean   @default(false)
-
-  // Position
-  x                Float?    // SVG coordinates
-  y                Float?
-
-  // Relations
-  seatingChart     SeatingChart @relation(fields: [seatingChartId], references: [id], onDelete: Cascade)
-  tickets          Ticket[]
+  id             String       @id @default(uuid())
+  seatingChartId String
+  section        String
+  row            String
+  number         String
+  seatType       SeatType     @default(STANDARD)
+  isAccessible   Boolean      @default(false)
+  x              Float?
+  y              Float?
+  seatingChart   SeatingChart @relation(fields: [seatingChartId], references: [id], onDelete: Cascade)
+  tickets        Ticket[]
 
   @@unique([seatingChartId, section, row, number])
   @@index([seatingChartId])
   @@map("seats")
 }
 
-// =====================================================
-// EVENT MANAGEMENT
-// =====================================================
-
 model Event {
-  id               String    @id @default(uuid())
-  organizerId      String
-  venueId          String?
-  seatingChartId   String?
-
-  // Basic Information
-  name             String
-  slug             String    @unique
-  description      String?   @db.Text
-  shortDescription String?
-
-  // Event Details
-  startDate        DateTime
-  endDate          DateTime
-  timezone         String    @default("America/New_York")
-
-  // Event Type & Settings
-  eventType        EventType @default(GENERAL_ADMISSION)
-  isVirtual        Boolean   @default(false)
-  virtualUrl       String?
-
-  // Capacity Management
-  maxCapacity      Int?
-  salesStartDate   DateTime?
-  salesEndDate     DateTime?
-
-  // Status & Visibility
-  status           EventStatus @default(DRAFT)
-  visibility       EventVisibility @default(PUBLIC)
-  isFeatured       Boolean   @default(false)
-
-  // Media
-  coverImage       String?
-  gallery          String[] @default([])
-
-  // SEO & Marketing
-  metaTitle        String?
-  metaDescription  String?
-  tags             String[] @default([])
-
-  // Square Integration
-  squareCatalogId  String?   @unique
-  squareLocationId String?
-
-  // Settings
-  settings         Json      @default("{}")
-
-  // Relations
-  organizer        User      @relation("EventOrganizer", fields: [organizerId], references: [id])
-  venue            Venue?    @relation(fields: [venueId], references: [id])
-  seatingChart     SeatingChart? @relation(fields: [seatingChartId], references: [id])
-
-  categories       EventCategory[]
-  ticketTypes      TicketType[]
-  sessions         EventSession[]
-  orders           Order[]
-  tickets          Ticket[]
-  discounts        Discount[]
-  waitlists        Waitlist[]
-
-  // Social
-  reviews          Review[]
-  favorites        EventFavorite[]
-
-  // Timestamps
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  publishedAt      DateTime?
-  deletedAt        DateTime?
+  id                   String                 @id @default(uuid())
+  organizerId          String
+  venueId              String?
+  seatingChartId       String?
+  name                 String
+  slug                 String                 @unique
+  description          String?
+  shortDescription     String?
+  startDate            DateTime
+  endDate              DateTime
+  timezone             String                 @default("America/New_York")
+  eventType            EventType              @default(SETS)
+  isVirtual            Boolean                @default(false)
+  virtualUrl           String?
+  maxCapacity          Int?
+  salesStartDate       DateTime?
+  salesEndDate         DateTime?
+  status               EventStatus            @default(DRAFT)
+  visibility           EventVisibility        @default(PUBLIC)
+  isFeatured           Boolean                @default(false)
+  coverImage           String?
+  gallery              String[]               @default([])
+  metaTitle            String?
+  metaDescription      String?
+  tags                 String[]               @default([])
+  squareCatalogId      String?                @unique
+  squareLocationId     String?
+  settings             Json                   @default("{}")
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  publishedAt          DateTime?
+  deletedAt            DateTime?
+  EventToEventCategory EventToEventCategory[]
+  affiliateLinks       AffiliateLink[]
+  affiliateSales       AffiliateSale[]
+  discounts            Discount[]
+  favorites            EventFavorite[]
+  sessions             EventSession[]
+  organizer            User                   @relation("EventOrganizer", fields: [organizerId], references: [id])
+  seatingChart         SeatingChart?          @relation(fields: [seatingChartId], references: [id])
+  venue                Venue?                 @relation(fields: [venueId], references: [id])
+  orders               Order[]
+  reviews              Review[]
+  taxExemption         TaxExemption?
+  ticketTypes          TicketType[]
+  tickets              Ticket[]
+  waitlists            Waitlist[]
 
   @@index([organizerId])
   @@index([slug])
@@ -330,92 +231,62 @@ model Event {
 }
 
 model EventCategory {
-  id               String    @id @default(uuid())
-  name             String    @unique
-  slug             String    @unique
-  description      String?
-  color            String?
-  icon             String?
-  sortOrder        Int       @default(0)
-  isActive         Boolean   @default(true)
-
-  // Relations
-  events           Event[]
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id                   String                 @id @default(uuid())
+  name                 String                 @unique
+  slug                 String                 @unique
+  description          String?
+  color                String?
+  icon                 String?
+  sortOrder            Int                    @default(0)
+  isActive             Boolean                @default(true)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  EventToEventCategory EventToEventCategory[]
 
   @@map("event_categories")
 }
 
 model EventSession {
-  id               String    @id @default(uuid())
-  eventId          String
-
-  name             String
-  description      String?
-  startTime        DateTime
-  endTime          DateTime
-
-  // Relations
-  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id          String   @id @default(uuid())
+  eventId     String
+  name        String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
   @@map("event_sessions")
 }
 
-// =====================================================
-// TICKETING SYSTEM
-// =====================================================
-
 model TicketType {
-  id               String    @id @default(uuid())
-  eventId          String
-
-  // Basic Information
-  name             String
-  description      String?
-
-  // Pricing
-  price            Decimal   @db.Decimal(10, 2)
-  currency         String    @default("USD")
-
-  // Inventory
-  quantity         Int
-  sold             Int       @default(0)
-  reserved         Int       @default(0)
-
-  // Sales Rules
-  minPerOrder      Int       @default(1)
-  maxPerOrder      Int       @default(10)
-  salesStartDate   DateTime?
-  salesEndDate     DateTime?
-
-  // Square Integration
-  squareItemId     String?   @unique
-  squareVariationId String?  @unique
-
-  // Seating
-  requiresSeat     Boolean   @default(false)
-  allowedSections  String[] @default([])
-
-  // Rules & Settings
-  rules            Json      @default("{}")
-  metadata         Json?
-
-  // Status
-  isActive         Boolean   @default(true)
-  sortOrder        Int       @default(0)
-
-  // Relations
-  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  tickets          Ticket[]
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id                String    @id @default(uuid())
+  eventId           String
+  name              String
+  description       String?
+  price             Decimal   @db.Decimal(10, 2)
+  currency          String    @default("USD")
+  quantity          Int
+  sold              Int       @default(0)
+  reserved          Int       @default(0)
+  minPerOrder       Int       @default(1)
+  maxPerOrder       Int       @default(10)
+  salesStartDate    DateTime?
+  salesEndDate      DateTime?
+  squareItemId      String?   @unique
+  squareVariationId String?   @unique
+  requiresSeat      Boolean   @default(false)
+  allowedSections   String[]  @default([])
+  rules             Json      @default("{}")
+  metadata          Json?
+  isActive          Boolean   @default(true)
+  sortOrder         Int       @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  event             Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tickets           Ticket[]
 
   @@index([eventId])
   @@index([squareItemId])
@@ -423,54 +294,44 @@ model TicketType {
 }
 
 model Order {
-  id               String    @id @default(uuid())
-  orderNumber      String    @unique
-  eventId          String
-  userId           String?
-
-  // Customer Information
-  email            String
-  firstName        String
-  lastName         String
-  phone            String?
-
-  // Order Details
-  subtotal         Decimal   @db.Decimal(10, 2)
-  fees             Decimal   @db.Decimal(10, 2) @default(0)
-  taxes            Decimal   @db.Decimal(10, 2) @default(0)
-  total            Decimal   @db.Decimal(10, 2)
-  currency         String    @default("USD")
-
-  // Status
-  status           OrderStatus @default(PENDING)
-
-  // Square Payment Integration
-  squareOrderId    String?   @unique
-  squarePaymentId  String?   @unique
-  squareReceiptUrl String?
-  squareReceiptNumber String?
-
-  // Payment Details
-  paymentMethod    String?
-  paymentStatus    PaymentStatus @default(PENDING)
-
-  // Metadata
-  browserInfo      Json?
-  ipAddress        String?
-  source           String?   @default("web")
-
-  // Relations
-  event            Event     @relation(fields: [eventId], references: [id])
-  user             User?     @relation(fields: [userId], references: [id])
-  tickets          Ticket[]
-  payment          Payment?
-  refunds          Refund[]
-  discountUses     DiscountUse[]
-
-  // Timestamps
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  completedAt      DateTime?
+  id                   String                @id @default(uuid())
+  orderNumber          String                @unique
+  eventId              String
+  userId               String?
+  email                String
+  firstName            String
+  lastName             String
+  phone                String?
+  subtotal             Decimal               @db.Decimal(10, 2)
+  fees                 Decimal               @default(0) @db.Decimal(10, 2)
+  taxes                Decimal               @default(0) @db.Decimal(10, 2)
+  total                Decimal               @db.Decimal(10, 2)
+  currency             String                @default("USD")
+  status               OrderStatus           @default(PENDING)
+  squareOrderId        String?               @unique
+  squarePaymentId      String?               @unique
+  squareReceiptUrl     String?
+  squareReceiptNumber  String?
+  paymentMethod        String?
+  paymentStatus        PaymentStatus         @default(PENDING)
+  browserInfo          Json?
+  ipAddress            String?
+  source               String?               @default("web")
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  completedAt          DateTime?
+  taxBreakdown         Json?
+  taxExempt            Boolean               @default(false)
+  taxExemptionId       String?
+  taxRate              Decimal?              @db.Decimal(6, 4)
+  affiliateSale        AffiliateSale?
+  discountUses         DiscountUse[]
+  event                Event                 @relation(fields: [eventId], references: [id])
+  user                 User?                 @relation(fields: [userId], references: [id])
+  payment              Payment?
+  platformTransactions PlatformTransaction[]
+  refunds              Refund[]
+  tickets              Ticket[]
 
   @@index([orderNumber])
   @@index([eventId])
@@ -481,55 +342,38 @@ model Order {
 }
 
 model Ticket {
-  id               String    @id @default(uuid())
-  ticketNumber     String    @unique
-  orderId          String
-  ticketTypeId     String
-  eventId          String
-  userId           String?
-  seatId           String?
-
-  // Ticket Details
-  holderName       String?
-  holderEmail      String?
-
-  // Pricing
-  faceValue        Decimal   @db.Decimal(10, 2)
-  fees             Decimal   @db.Decimal(10, 2) @default(0)
-
-  // Status
-  status           TicketStatus @default(VALID)
-
-  // QR Code & Validation
-  qrCode           String    @unique
-  validationCode   String    @unique
-
-  // Check-in
-  checkedIn        Boolean   @default(false)
-  checkedInAt      DateTime?
-  checkedInBy      String?
-  checkInMethod    CheckInMethod?
-  checkInLocation  String?
-
-  // Transfer & Resale
-  transferrable    Boolean   @default(true)
-  resaleable       Boolean   @default(false)
-  transferredAt    DateTime?
-  transferredTo    String?
-
-  // Metadata
-  metadata         Json?
-
-  // Relations
-  order            Order     @relation(fields: [orderId], references: [id])
-  ticketType       TicketType @relation(fields: [ticketTypeId], references: [id])
-  event            Event     @relation(fields: [eventId], references: [id])
-  user             User?     @relation(fields: [userId], references: [id])
-  seat             Seat?     @relation(fields: [seatId], references: [id])
-
-  // Timestamps
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id              String           @id @default(uuid())
+  ticketNumber    String           @unique
+  orderId         String
+  ticketTypeId    String
+  eventId         String
+  userId          String?
+  seatId          String?
+  holderName      String?
+  holderEmail     String?
+  faceValue       Decimal          @db.Decimal(10, 2)
+  fees            Decimal          @default(0) @db.Decimal(10, 2)
+  status          TicketStatus     @default(VALID)
+  qrCode          String           @unique
+  validationCode  String           @unique
+  checkedIn       Boolean          @default(false)
+  checkedInAt     DateTime?
+  checkedInBy     String?
+  checkInMethod   CheckInMethod?
+  checkInLocation String?
+  transferrable   Boolean          @default(true)
+  resaleable      Boolean          @default(false)
+  transferredAt   DateTime?
+  transferredTo   String?
+  metadata        Json?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  transfers       TicketTransfer[]
+  event           Event            @relation(fields: [eventId], references: [id])
+  order           Order            @relation(fields: [orderId], references: [id])
+  seat            Seat?            @relation(fields: [seatId], references: [id])
+  ticketType      TicketType       @relation(fields: [ticketTypeId], references: [id])
+  user            User?            @relation(fields: [userId], references: [id])
 
   @@index([orderId])
   @@index([ticketTypeId])
@@ -540,54 +384,32 @@ model Ticket {
   @@map("tickets")
 }
 
-// =====================================================
-// PAYMENT PROCESSING
-// =====================================================
-
 model Payment {
-  id               String    @id @default(uuid())
-  orderId          String    @unique
-
-  // Payment Details
-  amount           Decimal   @db.Decimal(10, 2)
-  currency         String    @default("USD")
+  id               String        @id @default(uuid())
+  orderId          String        @unique
+  amount           Decimal       @db.Decimal(10, 2)
+  currency         String        @default("USD")
   method           PaymentMethod
-
-  // Square Integration
-  squarePaymentId  String    @unique
+  squarePaymentId  String        @unique
   squareOrderId    String?
   squareLocationId String?
   squareReceiptUrl String?
-
-  // Status
   status           PaymentStatus @default(PENDING)
-
-  // Card Details (tokenized)
   cardBrand        String?
   cardLast4        String?
   cardExpMonth     Int?
   cardExpYear      Int?
-
-  // Processing Info
-  processorFee     Decimal?  @db.Decimal(10, 2)
-  netAmount        Decimal?  @db.Decimal(10, 2)
-
-  // Risk & Verification
+  processorFee     Decimal?      @db.Decimal(10, 2)
+  netAmount        Decimal?      @db.Decimal(10, 2)
   avsResult        String?
   cvvResult        String?
   riskEvaluation   Json?
-
-  // Square Response
   squareResponse   Json?
-
-  // Relations
-  order            Order     @relation(fields: [orderId], references: [id])
-  refunds          Refund[]
-
-  // Timestamps
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
   processedAt      DateTime?
+  order            Order         @relation(fields: [orderId], references: [id])
+  refunds          Refund[]
 
   @@index([squarePaymentId])
   @@index([status])
@@ -595,75 +417,72 @@ model Payment {
 }
 
 model Refund {
-  id               String    @id @default(uuid())
-  orderId          String
-  paymentId        String?
-
-  // Refund Details
-  amount           Decimal   @db.Decimal(10, 2)
-  reason           RefundReason
-  reasonText       String?   @db.Text
-
-  // Square Integration
-  squareRefundId   String?   @unique
-
-  // Status
-  status           RefundStatus @default(PENDING)
-
-  // Processing
-  processedBy      String?   // Admin user ID
-  processedAt      DateTime?
-
-  // Relations
-  order            Order     @relation(fields: [orderId], references: [id])
-  payment          Payment?  @relation(fields: [paymentId], references: [id])
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id             String       @id @default(uuid())
+  orderId        String
+  paymentId      String?
+  amount         Decimal      @db.Decimal(10, 2)
+  reason         RefundReason
+  reasonText     String?
+  squareRefundId String?      @unique
+  status         RefundStatus @default(PENDING)
+  processedBy    String?
+  processedAt    DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  order          Order        @relation(fields: [orderId], references: [id])
+  payment        Payment?     @relation(fields: [paymentId], references: [id])
 
   @@index([orderId])
   @@index([squareRefundId])
   @@map("refunds")
 }
 
-// =====================================================
-// DISCOUNTS & PROMOTIONS
-// =====================================================
+model TicketTransfer {
+  id          String         @id @default(uuid())
+  ticketId    String
+  fromUserId  String
+  toEmail     String
+  toUserId    String?
+  status      TransferStatus @default(PENDING)
+  message     String?
+  oldQrCode   String
+  newQrCode   String?
+  initiatedAt DateTime       @default(now())
+  acceptedAt  DateTime?
+  declinedAt  DateTime?
+  expiresAt   DateTime
+  fromUser    User           @relation("TransferFrom", fields: [fromUserId], references: [id])
+  ticket      Ticket         @relation(fields: [ticketId], references: [id])
+  toUser      User?          @relation("TransferTo", fields: [toUserId], references: [id])
+
+  @@index([ticketId])
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@index([status])
+  @@map("ticket_transfers")
+}
 
 model Discount {
-  id               String    @id @default(uuid())
-  eventId          String
-
-  // Basic Information
-  code             String    @unique
-  name             String
-  description      String?
-
-  // Discount Configuration
-  type             DiscountType
-  value            Decimal   @db.Decimal(10, 2)
-  isPercentage     Boolean   @default(false)
-
-  // Usage Limits
-  maxUses          Int?
-  maxUsesPerUser   Int?
-  usedCount        Int       @default(0)
-
-  // Validity
-  startDate        DateTime
-  endDate          DateTime
-  isActive         Boolean   @default(true)
-
-  // Restrictions
-  minOrderAmount   Decimal?  @db.Decimal(10, 2)
-  applicableTicketTypes String[] @default([])
-
-  // Relations
-  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  uses             DiscountUse[]
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id                    String        @id @default(uuid())
+  eventId               String
+  code                  String        @unique
+  name                  String
+  description           String?
+  type                  DiscountType
+  value                 Decimal       @db.Decimal(10, 2)
+  isPercentage          Boolean       @default(false)
+  maxUses               Int?
+  maxUsesPerUser        Int?
+  usedCount             Int           @default(0)
+  startDate             DateTime
+  endDate               DateTime
+  isActive              Boolean       @default(true)
+  minOrderAmount        Decimal?      @db.Decimal(10, 2)
+  applicableTicketTypes String[]      @default([])
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  uses                  DiscountUse[]
+  event                 Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
   @@index([code])
@@ -671,81 +490,54 @@ model Discount {
 }
 
 model DiscountUse {
-  id               String    @id @default(uuid())
+  id               String   @id @default(uuid())
   discountId       String
   orderId          String
-
-  amountDiscounted Decimal   @db.Decimal(10, 2)
-
-  // Relations
-  discount         Discount  @relation(fields: [discountId], references: [id])
-  order            Order     @relation(fields: [orderId], references: [id])
-
-  createdAt        DateTime  @default(now())
+  amountDiscounted Decimal  @db.Decimal(10, 2)
+  createdAt        DateTime @default(now())
+  discount         Discount @relation(fields: [discountId], references: [id])
+  order            Order    @relation(fields: [orderId], references: [id])
 
   @@unique([discountId, orderId])
   @@map("discount_uses")
 }
 
-// =====================================================
-// WAITLIST SYSTEM
-// =====================================================
-
 model Waitlist {
-  id               String    @id @default(uuid())
-  eventId          String
-  email            String
-
-  // User Information
-  firstName        String?
-  lastName         String?
-  phone            String?
-
-  // Preferences
-  ticketQuantity   Int       @default(1)
-  maxPrice         Decimal?  @db.Decimal(10, 2)
-
-  // Status
-  status           WaitlistStatus @default(WAITING)
-  notifiedAt       DateTime?
-
-  // Relations
-  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id             String         @id @default(uuid())
+  eventId        String
+  email          String
+  firstName      String?
+  lastName       String?
+  phone          String?
+  ticketQuantity Int            @default(1)
+  maxPrice       Decimal?       @db.Decimal(10, 2)
+  status         WaitlistStatus @default(WAITING)
+  notifiedAt     DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  event          Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@unique([eventId, email])
   @@index([eventId, status])
   @@map("waitlists")
 }
 
-// =====================================================
-// SOCIAL FEATURES
-// =====================================================
-
 model Review {
-  id               String    @id @default(uuid())
-  eventId          String
-  userId           String
-
-  rating           Int       // 1-5 stars
-  title            String?
-  comment          String?   @db.Text
-  isPublic         Boolean   @default(true)
-  isVerified       Boolean   @default(false)
-
-  // Moderation
-  isModerated      Boolean   @default(false)
-  moderatedBy      String?
-  moderatedAt      DateTime?
-
-  // Relations
-  event            Event     @relation(fields: [eventId], references: [id])
-  user             User      @relation(fields: [userId], references: [id])
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id          String    @id @default(uuid())
+  eventId     String
+  userId      String
+  rating      Int
+  title       String?
+  comment     String?
+  isPublic    Boolean   @default(true)
+  isVerified  Boolean   @default(false)
+  isModerated Boolean   @default(false)
+  moderatedBy String?
+  moderatedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  event       Event     @relation(fields: [eventId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
 
   @@unique([eventId, userId])
   @@index([eventId])
@@ -753,60 +545,41 @@ model Review {
 }
 
 model EventFavorite {
-  id               String    @id @default(uuid())
-  userId           String
-  eventId          String
-
-  // Relations
-  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  event            Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-
-  createdAt        DateTime  @default(now())
+  id        String   @id @default(uuid())
+  userId    String
+  eventId   String
+  createdAt DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, eventId])
   @@map("event_favorites")
 }
 
 model Follow {
-  id               String    @id @default(uuid())
-  followerId       String
-  followingId      String
-
-  // Relations
-  follower         User      @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
-  following        User      @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
-
-  createdAt        DateTime  @default(now())
+  id          String   @id @default(uuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
   @@map("follows")
 }
 
-// =====================================================
-// SYSTEM & ANALYTICS
-// =====================================================
-
 model AuditLog {
-  id               String    @id @default(uuid())
-
-  // Event Details
-  action           String
-  entityType       String
-  entityId         String
-
-  // User Information
-  userId           String?
-  ipAddress        String?
-  userAgent        String?
-
-  // Changes
-  oldValues        Json?
-  newValues        Json?
-
-  // Metadata
-  metadata         Json?
-
-  createdAt        DateTime  @default(now())
+  id         String   @id @default(uuid())
+  action     String
+  entityType String
+  entityId   String
+  userId     String?
+  ipAddress  String?
+  userAgent  String?
+  oldValues  Json?
+  newValues  Json?
+  metadata   Json?
+  createdAt  DateTime @default(now())
 
   @@index([entityType, entityId])
   @@index([userId])
@@ -815,26 +588,18 @@ model AuditLog {
 }
 
 model SystemMetrics {
-  id               String    @id @default(uuid())
-
-  metricType       String
-  metricName       String
-  value            Float
-  unit             String?
-
-  // Dimensions
-  dimensions       Json?
-
-  timestamp        DateTime  @default(now())
+  id         String   @id @default(uuid())
+  metricType String
+  metricName String
+  value      Float
+  unit       String?
+  dimensions Json?
+  timestamp  DateTime @default(now())
 
   @@index([metricType, metricName])
   @@index([timestamp])
   @@map("system_metrics")
 }
-
-// =====================================================
-// AUTHENTICATION MODELS
-// =====================================================
 
 model Account {
   id                String  @id @default(uuid())
@@ -842,15 +607,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -861,7 +625,6 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
@@ -876,14 +639,414 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-// =====================================================
-// ENUMS
-// =====================================================
+model BillingAccount {
+  id                 String                  @id @default(uuid())
+  userId             String                  @unique
+  platformFeeFixed   Decimal                 @default(0.75) @db.Decimal(10, 2)
+  platformFeePercent Decimal                 @default(0.00) @db.Decimal(5, 2)
+  negotiatedRate     Boolean                 @default(false)
+  rateEffectiveDate  DateTime?
+  creditBalance      Decimal                 @default(0) @db.Decimal(10, 2)
+  lifetimeCredits    Decimal                 @default(0) @db.Decimal(10, 2)
+  payoutSchedule     PayoutSchedule          @default(DAILY)
+  minimumPayout      Decimal                 @default(25.00) @db.Decimal(10, 2)
+  pendingBalance     Decimal                 @default(0) @db.Decimal(10, 2)
+  availableBalance   Decimal                 @default(0) @db.Decimal(10, 2)
+  status             BillingAccountStatus    @default(ACTIVE)
+  suspendedAt        DateTime?
+  suspensionReason   String?
+  totalRevenue       Decimal                 @default(0) @db.Decimal(12, 2)
+  totalFees          Decimal                 @default(0) @db.Decimal(12, 2)
+  totalPayouts       Decimal                 @default(0) @db.Decimal(12, 2)
+  transactionCount   Int                     @default(0)
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  user               User                    @relation(fields: [userId], references: [id])
+  creditPurchases    CreditPurchase[]
+  payouts            PayoutRecord[]
+  transactions       PlatformTransaction[]
+  subscription       WhitelabelSubscription?
+
+  @@index([userId])
+  @@index([status])
+  @@map("billing_accounts")
+}
+
+model PlatformTransaction {
+  id               String            @id @default(uuid())
+  billingAccountId String
+  type             TransactionType
+  amount           Decimal           @db.Decimal(10, 2)
+  currency         String            @default("USD")
+  description      String?
+  orderId          String?
+  ticketId         String?
+  eventId          String?
+  squarePaymentId  String?
+  creditUsed       Boolean           @default(false)
+  creditAmount     Decimal?          @db.Decimal(10, 2)
+  status           TransactionStatus @default(COMPLETED)
+  processedAt      DateTime          @default(now())
+  fiscalMonth      String
+  fiscalQuarter    String
+  metadata         Json?             @default("{}")
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  billingAccount   BillingAccount    @relation(fields: [billingAccountId], references: [id])
+  order            Order?            @relation(fields: [orderId], references: [id])
+
+  @@index([billingAccountId])
+  @@index([type])
+  @@index([status])
+  @@index([fiscalMonth])
+  @@index([eventId])
+  @@map("platform_transactions")
+}
+
+model PayoutRecord {
+  id               String         @id @default(uuid())
+  billingAccountId String
+  payoutNumber     String         @unique
+  amount           Decimal        @db.Decimal(10, 2)
+  currency         String         @default("USD")
+  squarePayoutId   String?        @unique
+  squareBatchId    String?
+  status           PayoutStatus   @default(PENDING)
+  scheduledFor     DateTime
+  initiatedAt      DateTime?
+  completedAt      DateTime?
+  failedAt         DateTime?
+  failureReason    String?
+  retryCount       Int            @default(0)
+  maxRetries       Int            @default(3)
+  periodStart      DateTime
+  periodEnd        DateTime
+  fiscalMonth      String
+  transactionCount Int            @default(0)
+  totalSales       Decimal        @default(0) @db.Decimal(12, 2)
+  totalFees        Decimal        @default(0) @db.Decimal(12, 2)
+  metadata         Json?          @default("{}")
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  billingAccount   BillingAccount @relation(fields: [billingAccountId], references: [id])
+
+  @@index([billingAccountId])
+  @@index([status])
+  @@index([scheduledFor])
+  @@index([fiscalMonth])
+  @@map("payout_records")
+}
+
+model CreditPurchase {
+  id               String         @id @default(uuid())
+  billingAccountId String
+  packageAmount    Decimal        @db.Decimal(10, 2)
+  purchasePrice    Decimal        @db.Decimal(10, 2)
+  discountPercent  Decimal        @db.Decimal(5, 2)
+  squarePaymentId  String         @unique
+  squareOrderId    String?
+  status           PurchaseStatus @default(COMPLETED)
+  creditsUsed      Decimal        @default(0) @db.Decimal(10, 2)
+  creditsRemaining Decimal        @db.Decimal(10, 2)
+  expiresAt        DateTime?
+  purchasedAt      DateTime       @default(now())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  billingAccount   BillingAccount @relation(fields: [billingAccountId], references: [id])
+
+  @@index([billingAccountId])
+  @@index([status])
+  @@map("credit_purchases")
+}
+
+model WhitelabelSubscription {
+  id                   String                @id @default(uuid())
+  billingAccountId     String                @unique
+  planType             WhitelabelPlan        @default(BASIC)
+  monthlyPrice         Decimal               @default(10.00) @db.Decimal(10, 2)
+  status               SubscriptionStatus    @default(ACTIVE)
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  squareSubscriptionId String?               @unique
+  squareCustomerId     String?
+  billingDay           Int                   @default(1)
+  lastBilledAt         DateTime?
+  nextBillingAt        DateTime
+  cancelledAt          DateTime?
+  cancellationReason   String?
+  endsAt               DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  failedPaymentCount   Int                   @default(0)
+  lastFailedAt         DateTime?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  payments             SubscriptionPayment[]
+  billingAccount       BillingAccount        @relation(fields: [billingAccountId], references: [id])
+
+  @@index([billingAccountId])
+  @@index([status])
+  @@index([nextBillingAt])
+  @@map("whitelabel_subscriptions")
+}
+
+model SubscriptionPayment {
+  id              String                 @id @default(uuid())
+  subscriptionId  String
+  amount          Decimal                @db.Decimal(10, 2)
+  currency        String                 @default("USD")
+  squarePaymentId String?                @unique
+  squareInvoiceId String?
+  status          PaymentStatus          @default(PENDING)
+  periodStart     DateTime
+  periodEnd       DateTime
+  dueDate         DateTime
+  paidAt          DateTime?
+  failedAt        DateTime?
+  failureReason   String?
+  retryCount      Int                    @default(0)
+  nextRetryAt     DateTime?
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  subscription    WhitelabelSubscription @relation(fields: [subscriptionId], references: [id])
+
+  @@index([subscriptionId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("subscription_payments")
+}
+
+model TaxRate {
+  id            String    @id @default(uuid())
+  state         String
+  county        String?
+  city          String?
+  zipCode       String?
+  stateTaxRate  Decimal   @db.Decimal(6, 4)
+  localTaxRate  Decimal   @default(0) @db.Decimal(6, 4)
+  combinedRate  Decimal   @db.Decimal(6, 4)
+  effectiveDate DateTime  @default(now())
+  expiresAt     DateTime?
+  source        String?
+  notes         String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([state])
+  @@index([state, city])
+  @@index([zipCode])
+  @@index([effectiveDate])
+  @@map("tax_rates")
+}
+
+model TaxExemption {
+  id                String           @id @default(uuid())
+  eventId           String           @unique
+  exemptionType     TaxExemptionType
+  certificateNumber String?
+  issuingAuthority  String?
+  documentUrl       String?
+  verificationNotes String?
+  approved          Boolean          @default(false)
+  approvedBy        String?
+  approvedAt        DateTime?
+  effectiveDate     DateTime         @default(now())
+  expiresAt         DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  event             Event            @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@index([exemptionType])
+  @@index([approved])
+  @@map("tax_exemptions")
+}
+
+model Affiliate {
+  id               String                @id @default(uuid())
+  userId           String                @unique
+  businessName     String?
+  taxId            String?
+  w9Submitted      Boolean               @default(false)
+  w9DocumentUrl    String?
+  cashPinHash      String?
+  pinLastChanged   DateTime?
+  status           AffiliateStatus       @default(PENDING)
+  approvedBy       String?
+  approvedAt       DateTime?
+  suspendedAt      DateTime?
+  suspensionReason String?
+  payoutMethod     PayoutMethod          @default(BANK_TRANSFER)
+  bankAccountLast4 String?
+  stripeConnectId  String?               @unique
+  totalSales       Int                   @default(0)
+  totalRevenue     Decimal               @default(0) @db.Decimal(12, 2)
+  totalCommission  Decimal               @default(0) @db.Decimal(12, 2)
+  totalPaidOut     Decimal               @default(0) @db.Decimal(12, 2)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  taxRecords       Affiliate1099Record[]
+  affiliateLinks   AffiliateLink[]
+  payouts          AffiliatePayout[]
+  sales            AffiliateSale[]
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([stripeConnectId])
+  @@map("affiliates")
+}
+
+model AffiliateLink {
+  id              String          @id @default(uuid())
+  affiliateId     String
+  eventId         String
+  linkCode        String          @unique
+  trackingUrl     String          @unique
+  commissionType  CommissionType  @default(PERCENTAGE)
+  commissionValue Decimal         @db.Decimal(10, 2)
+  clicks          Int             @default(0)
+  conversions     Int             @default(0)
+  totalSales      Decimal         @default(0) @db.Decimal(12, 2)
+  isActive        Boolean         @default(true)
+  expiresAt       DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  affiliate       Affiliate       @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  event           Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  sales           AffiliateSale[]
+
+  @@index([affiliateId])
+  @@index([eventId])
+  @@index([linkCode])
+  @@map("affiliate_links")
+}
+
+model AffiliateSale {
+  id                String           @id @default(uuid())
+  affiliateId       String
+  affiliateLinkId   String?
+  eventId           String
+  orderId           String           @unique
+  saleType          SaleType
+  ticketCount       Int
+  ticketPrice       Decimal          @db.Decimal(10, 2)
+  subtotal          Decimal          @db.Decimal(10, 2)
+  fees              Decimal          @default(0) @db.Decimal(10, 2)
+  taxes             Decimal          @default(0) @db.Decimal(10, 2)
+  total             Decimal          @db.Decimal(10, 2)
+  commissionType    CommissionType
+  commissionValue   Decimal          @db.Decimal(10, 2)
+  commissionAmount  Decimal          @db.Decimal(10, 2)
+  paymentMethod     PaymentMethod
+  cashValidatedBy   String?
+  cashPinValidated  Boolean          @default(false)
+  cashValidatedAt   DateTime?
+  wholesaleOwed     Decimal?         @db.Decimal(10, 2)
+  settlementStatus  SettlementStatus @default(UNSETTLED)
+  settledAt         DateTime?
+  squarePaymentId   String?
+  stripePaymentId   String?
+  payoutId          String?
+  saleDate          DateTime         @default(now())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  deviceFingerprint String?
+  flaggedForReview  Boolean          @default(false)
+  fraudFlags        String[]         @default([])
+  fraudRiskScore    Int              @default(0)
+  ipAddress         String?
+  locationMatch     Boolean?
+  reviewNotes       String?
+  reviewedAt        DateTime?
+  reviewedBy        String?
+  soldByStaff       Boolean          @default(false)
+  soldDuringEvent   Boolean          @default(false)
+  affiliate         Affiliate        @relation(fields: [affiliateId], references: [id])
+  affiliateLink     AffiliateLink?   @relation(fields: [affiliateLinkId], references: [id])
+  event             Event            @relation(fields: [eventId], references: [id])
+  order             Order            @relation(fields: [orderId], references: [id])
+  payout            AffiliatePayout? @relation("SalePayout", fields: [payoutId], references: [id])
+
+  @@index([affiliateId])
+  @@index([eventId])
+  @@index([orderId])
+  @@index([settlementStatus])
+  @@index([saleDate])
+  @@index([soldDuringEvent, soldByStaff])
+  @@index([flaggedForReview])
+  @@index([fraudRiskScore])
+  @@map("affiliate_sales")
+}
+
+model AffiliatePayout {
+  id               String          @id @default(uuid())
+  affiliateId      String
+  payoutNumber     String          @unique
+  amount           Decimal         @db.Decimal(10, 2)
+  currency         String          @default("USD")
+  periodStart      DateTime
+  periodEnd        DateTime
+  salesCount       Int
+  totalCommission  Decimal         @db.Decimal(10, 2)
+  platformFee      Decimal         @default(0) @db.Decimal(10, 2)
+  netPayout        Decimal         @db.Decimal(10, 2)
+  status           PayoutStatus    @default(PENDING)
+  scheduledFor     DateTime
+  processedAt      DateTime?
+  payoutMethod     PayoutMethod
+  stripeTransferId String?         @unique
+  bankTransferId   String?
+  failureReason    String?
+  retryCount       Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  affiliate        Affiliate       @relation(fields: [affiliateId], references: [id])
+  sales            AffiliateSale[] @relation("SalePayout")
+
+  @@index([affiliateId])
+  @@index([status])
+  @@index([scheduledFor])
+  @@map("affiliate_payouts")
+}
+
+model Affiliate1099Record {
+  id                String    @id @default(uuid())
+  affiliateId       String
+  taxYear           Int
+  totalEarnings     Decimal   @db.Decimal(12, 2)
+  totalCommissions  Decimal   @db.Decimal(12, 2)
+  totalPayouts      Decimal   @db.Decimal(12, 2)
+  taxIdProvided     Boolean   @default(false)
+  w9Submitted       Boolean   @default(false)
+  form1099Required  Boolean
+  form1099Generated Boolean   @default(false)
+  form1099SentAt    DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  affiliate         Affiliate @relation(fields: [affiliateId], references: [id])
+
+  @@unique([affiliateId, taxYear])
+  @@index([affiliateId])
+  @@index([taxYear])
+  @@map("affiliate_1099_records")
+}
+
+model EventToEventCategory {
+  A                String
+  B                String
+  events           Event         @relation(fields: [A], references: [id], onDelete: Cascade)
+  event_categories EventCategory @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@id([A, B], map: "_EventToEventCategory_AB_pkey")
+  @@index([B], map: "_EventToEventCategory_B_index")
+  @@map("_EventToEventCategory")
+}
 
 enum UserRole {
   ATTENDEE
   ORGANIZER
-  STAFF
   ADMIN
   SUPER_ADMIN
 }
@@ -925,6 +1088,7 @@ enum PayoutSchedule {
   WEEKLY
   MONTHLY
   ON_DEMAND
+  BIWEEKLY
 }
 
 enum SeatType {
@@ -936,16 +1100,15 @@ enum SeatType {
 }
 
 enum EventType {
-  GENERAL_ADMISSION
-  RESERVED_SEATING
-  FESTIVAL
-  CONFERENCE
   WORKSHOP
-  CONCERT
-  SPORTS
-  THEATER
-  VIRTUAL
-  HYBRID
+  SETS
+  IN_THE_PARK
+  TRIP
+  CRUISE
+  HOLIDAY
+  COMPETITION
+  CLASSES
+  OTHER
 }
 
 enum EventStatus {
@@ -962,6 +1125,15 @@ enum EventVisibility {
   PRIVATE
   UNLISTED
   INVITE_ONLY
+}
+
+enum TaxExemptionType {
+  NON_PROFIT
+  GOVERNMENT
+  EDUCATIONAL
+  RELIGIOUS
+  CHARITY
+  OTHER
 }
 
 enum OrderStatus {
@@ -1029,6 +1201,14 @@ enum RefundStatus {
   CANCELLED
 }
 
+enum TransferStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  CANCELLED
+}
+
 enum DiscountType {
   FIXED_AMOUNT
   PERCENTAGE
@@ -1043,4 +1223,90 @@ enum WaitlistStatus {
   PURCHASED
   EXPIRED
   REMOVED
+}
+
+enum BillingAccountStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+enum TransactionType {
+  PLATFORM_FEE
+  REFUND
+  CREDIT_PURCHASE
+  CREDIT_DEDUCTION
+  PAYOUT
+  SUBSCRIPTION_PAYMENT
+  ADJUSTMENT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PayoutStatus {
+  PENDING
+  SCHEDULED
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum WhitelabelPlan {
+  BASIC
+  PREMIUM
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+  TRIAL
+}
+
+enum AffiliateStatus {
+  PENDING
+  APPROVED
+  SUSPENDED
+  BANNED
+  INACTIVE
+}
+
+enum CommissionType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  TIERED
+}
+
+enum SaleType {
+  ONLINE_LINK
+  CASH_OFFLINE
+  MANUAL_ENTRY
+}
+
+enum SettlementStatus {
+  UNSETTLED
+  SETTLED
+  WRITTEN_OFF
+}
+
+enum PayoutMethod {
+  BANK_TRANSFER
+  STRIPE_CONNECT
+  CHECK
 }
