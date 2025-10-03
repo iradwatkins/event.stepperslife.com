@@ -905,6 +905,146 @@ class EmailService {
     });
   }
 
+  /**
+   * Send event status change notification to organizer
+   */
+  async sendEventStatusChangeEmail(data: {
+    organizerEmail: string;
+    organizerName: string;
+    eventName: string;
+    oldStatus: string;
+    newStatus: string;
+    eventDate: string;
+    eventTime: string;
+    venueName: string;
+    dashboardUrl: string;
+  }): Promise<boolean> {
+    let statusColor = '#667eea';
+    let statusMessage = '';
+    let nextSteps = '';
+
+    if (data.newStatus === 'PUBLISHED') {
+      statusColor = '#10b981';
+      statusMessage = 'Your event has been successfully published and is now visible to the public!';
+      nextSteps = `
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 8px 0;">✓ Your event is now live on the platform</li>
+          <li style="padding: 8px 0;">✓ Users can browse and purchase tickets</li>
+          <li style="padding: 8px 0;">✓ You'll receive notifications for new ticket sales</li>
+          <li style="padding: 8px 0;">✓ Monitor sales and analytics in your dashboard</li>
+        </ul>
+      `;
+    } else if (data.newStatus === 'DRAFT') {
+      statusColor = '#f59e0b';
+      statusMessage = 'Your event has been moved back to draft status and is no longer visible to the public.';
+      nextSteps = `
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 8px 0;">✓ Your event is now hidden from public view</li>
+          <li style="padding: 8px 0;">✓ You can make edits and changes</li>
+          <li style="padding: 8px 0;">✓ Republish when you're ready</li>
+        </ul>
+      `;
+    } else if (data.newStatus === 'CANCELLED') {
+      statusColor = '#ef4444';
+      statusMessage = 'Your event has been cancelled. Refunds are being processed for all ticket holders.';
+      nextSteps = `
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 8px 0;">✓ Automatic refunds initiated for all tickets</li>
+          <li style="padding: 8px 0;">✓ Attendees have been notified of the cancellation</li>
+          <li style="padding: 8px 0;">✓ Refunds typically process within 5-10 business days</li>
+          <li style="padding: 8px 0;">✓ You can view refund status in your dashboard</li>
+        </ul>
+      `;
+    }
+
+    const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>${this.getEmailStyles()}</style></head>
+<body>
+  <div class="container">
+    <div class="header" style="background: ${statusColor};"><h1>Event Status Update</h1></div>
+    <div class="content">
+      <p>Hi ${data.organizerName},</p>
+      <p>${statusMessage}</p>
+      <div class="info-box" style="border-color: ${statusColor};">
+        <h2 style="color: ${statusColor}; margin: 0 0 15px 0;">${data.eventName}</h2>
+        <p style="margin: 5px 0;"><strong>Status Changed:</strong> ${data.oldStatus} → ${data.newStatus}</p>
+        <p style="margin: 5px 0;"><strong>Date:</strong> ${data.eventDate}</p>
+        <p style="margin: 5px 0;"><strong>Time:</strong> ${data.eventTime}</p>
+        <p style="margin: 5px 0;"><strong>Venue:</strong> ${data.venueName}</p>
+      </div>
+      <h3>Next Steps</h3>
+      ${nextSteps}
+      <a href="${data.dashboardUrl}" class="button" style="background: ${statusColor};">View Event Dashboard</a>
+    </div>
+    <div class="footer"><p>© 2024 SteppersLife Events</p></div>
+  </div>
+</body>
+</html>`;
+
+    return await this.sendEmail({
+      to: data.organizerEmail,
+      subject: `Event ${data.newStatus}: ${data.eventName}`,
+      html,
+      text: this.stripHtml(html)
+    });
+  }
+
+  /**
+   * Send new event published notification to interested users
+   */
+  async sendEventPublishedNotification(data: {
+    recipientEmail: string;
+    recipientName: string;
+    organizerName: string;
+    eventName: string;
+    eventDescription: string;
+    eventDate: string;
+    eventTime: string;
+    venueName: string;
+    venueAddress: string;
+    ticketPriceRange: string;
+    eventUrl: string;
+    imageUrl?: string;
+  }): Promise<boolean> {
+    const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>${this.getEmailStyles()}</style></head>
+<body>
+  <div class="container">
+    <div class="header"><h1>New Event from ${data.organizerName}</h1></div>
+    <div class="content">
+      <p>Hi ${data.recipientName},</p>
+      <p>Great news! ${data.organizerName} just published a new event that you might be interested in:</p>
+      ${data.imageUrl ? `<img src="${data.imageUrl}" alt="${data.eventName}" style="width: 100%; max-width: 560px; height: auto; border-radius: 8px; margin: 20px 0;" />` : ''}
+      <div class="info-box" style="border-color: #667eea;">
+        <h2 style="color: #667eea; margin: 0 0 15px 0;">${data.eventName}</h2>
+        <p style="margin: 15px 0;">${data.eventDescription}</p>
+        <div style="margin: 20px 0; padding: 15px; background: #f9fafb; border-radius: 6px;">
+          <p style="margin: 5px 0;"><strong>📅 Date:</strong> ${data.eventDate}</p>
+          <p style="margin: 5px 0;"><strong>🕐 Time:</strong> ${data.eventTime}</p>
+          <p style="margin: 5px 0;"><strong>📍 Venue:</strong> ${data.venueName}</p>
+          <p style="margin: 5px 0;"><strong>🎫 Tickets:</strong> ${data.ticketPriceRange}</p>
+        </div>
+      </div>
+      <p style="text-align: center; margin: 30px 0;">
+        <a href="${data.eventUrl}" class="button">View Event & Get Tickets</a>
+      </p>
+      <p style="font-size: 14px; color: #6b7280;">You're receiving this because you've favorited events by this organizer.</p>
+    </div>
+    <div class="footer"><p>© 2024 SteppersLife Events</p></div>
+  </div>
+</body>
+</html>`;
+
+    return await this.sendEmail({
+      to: data.recipientEmail,
+      subject: `New Event: ${data.eventName}`,
+      html,
+      text: this.stripHtml(html)
+    });
+  }
+
   private getEmailStyles(): string {
     return `
       body {
