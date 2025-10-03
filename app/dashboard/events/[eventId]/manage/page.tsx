@@ -135,12 +135,25 @@ export default function EventManagementPage() {
       const totalCapacity = event.maxCapacity || event.ticketTypes.reduce((sum: number, tt: TicketType) =>
         sum + tt.quantity, 0);
 
+      // Fetch check-in statistics
+      let checkInRate = 0;
+      try {
+        const checkinResponse = await fetch(`/api/events/${eventId}/checkin`);
+        if (checkinResponse.ok) {
+          const checkinResult = await checkinResponse.json();
+          checkInRate = checkinResult.stats?.checkInRate || 0;
+        }
+      } catch (checkinError) {
+        console.error('Failed to fetch check-in stats:', checkinError);
+        // Continue with checkInRate = 0
+      }
+
       setStats({
         totalRevenue,
         ticketsSold,
         totalCapacity,
         ordersCount: event._count?.orders || 0,
-        checkInRate: 0, // TODO: Calculate from actual check-in data
+        checkInRate,
         averageOrderValue: event._count?.orders > 0 ? totalRevenue / event._count.orders : 0
       });
 
