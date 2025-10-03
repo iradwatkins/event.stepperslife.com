@@ -59,13 +59,44 @@ export async function POST(request: NextRequest) {
 
     const event = JSON.parse(body) as WebhookEvent;
 
-    // Log webhook event (webhook event logging disabled - table doesn't exist in current schema)
-    // TODO: Add webhookEvent table to schema if webhook logging is needed
+    // Log webhook event
+    const webhookLog = await prisma.webhookEvent.create({
+      data: {
+        source: 'square',
+        eventType: event.type,
+        eventId: event.event_id,
+        payload: event as any,
+        signature: signature,
+        status: 'PROCESSING'
+      }
+    });
 
-    // Process the webhook event
-    await processWebhookEvent(event);
+    try {
+      // Process the webhook event
+      await processWebhookEvent(event);
 
-    return NextResponse.json({ success: true });
+      // Mark as processed
+      await prisma.webhookEvent.update({
+        where: { id: webhookLog.id },
+        data: {
+          status: 'PROCESSED',
+          processedAt: new Date()
+        }
+      });
+
+      return NextResponse.json({ success: true });
+    } catch (processingError) {
+      // Mark as failed
+      await prisma.webhookEvent.update({
+        where: { id: webhookLog.id },
+        data: {
+          status: 'FAILED',
+          errorMessage: processingError instanceof Error ? processingError.message : String(processingError),
+          retryCount: { increment: 1 }
+        }
+      });
+      throw processingError; // Re-throw to trigger the outer catch
+    }
 
   } catch (error) {
     console.error('Square webhook error:', error);
@@ -129,8 +160,7 @@ async function processWebhookEvent(event: WebhookEvent) {
         console.log('Unhandled webhook event type:', eventType);
     }
 
-    // Mark webhook as processed (disabled - webhookEvent table doesn't exist)
-    // TODO: Add webhookEvent table to schema if webhook logging is needed
+    // Webhook status is managed in the main POST handler
 
   } catch (error) {
     console.error('Webhook event processing error:', error);

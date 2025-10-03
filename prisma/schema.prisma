@@ -1332,3 +1332,34 @@ model PlatformSettings {
   @@index([id])
   @@map("platform_settings")
 }
+
+// Webhook Event Logging
+model WebhookEvent {
+  id              String                @id @default(uuid())
+  source          String                // e.g., 'square', 'stripe'
+  eventType       String                // e.g., 'payment.created'
+  eventId         String?               // External event ID from webhook provider
+  payload         Json                  // Full webhook payload
+  signature       String?               // Webhook signature for verification
+  status          WebhookEventStatus    @default(PENDING)
+  processedAt     DateTime?
+  errorMessage    String?
+  retryCount      Int                   @default(0)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([source])
+  @@index([eventType])
+  @@index([status])
+  @@index([createdAt])
+  @@index([eventId])
+  @@map("webhook_events")
+}
+
+enum WebhookEventStatus {
+  PENDING
+  PROCESSING
+  PROCESSED
+  FAILED
+  SKIPPED
+}
