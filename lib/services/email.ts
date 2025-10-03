@@ -775,6 +775,64 @@ class EmailService {
     });
   }
 
+  /**
+   * Send notification when a ticket transfer is declined
+   */
+  async sendTransferDeclinedEmail(data: {
+    senderEmail: string;
+    senderName: string;
+    recipientEmail: string;
+    recipientName: string;
+    eventName: string;
+    eventDate: string;
+    eventTime: string;
+    venueName: string;
+    ticketNumber: string;
+    reason?: string;
+  }): Promise<boolean> {
+    const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>${this.getEmailStyles()}</style></head>
+<body>
+  <div class="container">
+    <div class="header" style="background: #f59e0b;"><h1>Ticket Transfer Declined</h1></div>
+    <div class="content">
+      <p>Hi ${data.senderName},</p>
+      <p><strong>${data.recipientName}</strong> (${data.recipientEmail}) has declined the ticket transfer you initiated.</p>
+      <div class="info-box" style="border-color: #f59e0b;">
+        <h2 style="color: #f59e0b; margin: 0 0 15px 0;">${data.eventName}</h2>
+        <p style="margin: 5px 0;"><strong>Date:</strong> ${data.eventDate}</p>
+        <p style="margin: 5px 0;"><strong>Time:</strong> ${data.eventTime}</p>
+        <p style="margin: 5px 0;"><strong>Venue:</strong> ${data.venueName}</p>
+        <p style="margin: 5px 0;"><strong>Ticket:</strong> #${data.ticketNumber}</p>
+      </div>
+      ${data.reason ? `<div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;"><p style="margin: 0;"><strong>Reason:</strong> ${data.reason}</p></div>` : ''}
+      <h3>What happens now?</h3>
+      <div style="background: #f9fafb; padding: 15px; border-radius: 6px; margin: 15px 0;">
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li style="margin: 8px 0;">The ticket has been returned to you</li>
+          <li style="margin: 8px 0;">You can transfer it to someone else</li>
+          <li style="margin: 8px 0;">You can use it yourself for the event</li>
+          <li style="margin: 8px 0;">Or you can request a refund if the event policy allows</li>
+        </ul>
+      </div>
+      <p style="text-align: center; margin: 30px 0;">
+        <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3004'}/dashboard/tickets" class="button">View My Tickets</a>
+      </p>
+    </div>
+    <div class="footer"><p>© 2024 SteppersLife Events</p></div>
+  </div>
+</body>
+</html>`;
+
+    return await this.sendEmail({
+      to: data.senderEmail,
+      subject: `Ticket Transfer Declined: ${data.eventName}`,
+      html,
+      text: this.stripHtml(html)
+    });
+  }
+
   async sendTransferAcceptedToRecipient(data: {
     recipientEmail: string;
     recipientName: string;

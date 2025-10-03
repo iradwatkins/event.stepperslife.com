@@ -40,15 +40,35 @@ async function handleDeclineTransfer(request: NextRequest, context: any) {
     });
 
     // Send notification to original owner
-    // TODO: Implement sendTransferDeclinedEmail in email service
     try {
       const fromUser = await prisma.user.findUnique({
         where: { id: transferData.fromUserId }
       });
 
-      if (fromUser && ticket) {
-        console.log(`Transfer declined: ${fromUser.email} was notified that ${user.email} declined ticket for ${ticket.order.event.name}`);
-        // await emailService.sendTransferDeclinedEmail(...) - to be implemented
+      if (fromUser && ticket && ticket.order?.event) {
+        const eventDate = new Date(ticket.order.event.startDate).toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        const eventTime = new Date(ticket.order.event.startDate).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit'
+        });
+
+        await emailService.sendTransferDeclinedEmail({
+          senderEmail: fromUser.email,
+          senderName: `${fromUser.firstName} ${fromUser.lastName}`.trim() || fromUser.email,
+          recipientEmail: user.email || '',
+          recipientName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'Recipient',
+          eventName: ticket.order.event.name,
+          eventDate,
+          eventTime,
+          venueName: ticket.order.event.venue?.name || 'TBD',
+          ticketNumber: ticket.ticketNumber,
+          reason: 'Declined by recipient'
+        });
       }
     } catch (emailError) {
       console.error('Failed to send decline notification:', emailError);
