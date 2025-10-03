@@ -289,8 +289,38 @@ async function handlePurchaseTickets(request: NextRequest, context: any) {
     // Send notification to event organizer
     try {
       if (result.event.organizer.email) {
-        // TODO: Create organizer notification template
-        console.log(`New ticket purchase for ${result.event.name} - notify ${result.event.organizer.email}`);
+        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3004';
+        const organizerName = `${result.event.organizer.firstName} ${result.event.organizer.lastName}`.trim() || 'Organizer';
+
+        // Calculate platform fee and organizer payout
+        const subtotal = Number(result.order.subtotal);
+        const total = Number(result.order.total);
+        const platformFee = Number(result.order.platformFee) || 0;
+        const organizerPayout = subtotal - platformFee;
+
+        await emailService.sendOrganizerTicketSaleNotification({
+          organizerEmail: result.event.organizer.email,
+          organizerName,
+          buyerName: validatedData.buyerName,
+          buyerEmail: validatedData.buyerEmail,
+          eventName: result.event.name,
+          eventDate: new Date(result.event.startDate).toLocaleString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+          }),
+          ticketCount: result.tickets.length,
+          ticketTypeName: result.ticketType.name,
+          orderNumber: result.order.orderNumber,
+          totalAmount: total,
+          subtotal,
+          platformFee,
+          organizerPayout,
+          dashboardUrl: `${baseUrl}/dashboard/events/${eventId}`
+        });
       }
     } catch (error) {
       console.error('Failed to send organizer notification:', error);

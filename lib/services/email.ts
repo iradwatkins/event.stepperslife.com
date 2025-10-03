@@ -991,6 +991,83 @@ class EmailService {
   }
 
   /**
+   * Send ticket purchase notification to event organizer
+   */
+  async sendOrganizerTicketSaleNotification(data: {
+    organizerEmail: string;
+    organizerName: string;
+    buyerName: string;
+    buyerEmail: string;
+    eventName: string;
+    eventDate: string;
+    ticketCount: number;
+    ticketTypeName: string;
+    orderNumber: string;
+    totalAmount: number;
+    subtotal: number;
+    platformFee: number;
+    organizerPayout: number;
+    dashboardUrl: string;
+  }): Promise<boolean> {
+    const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><style>${this.getEmailStyles()}</style></head>
+<body>
+  <div class="container">
+    <div class="header" style="background: #10b981;"><h1>New Ticket Sale! 🎉</h1></div>
+    <div class="content">
+      <p>Hi ${data.organizerName},</p>
+      <p>Great news! You just sold ${data.ticketCount} ticket${data.ticketCount > 1 ? 's' : ''} for your event.</p>
+      <div class="info-box" style="border-color: #10b981;">
+        <h2 style="color: #10b981; margin: 0 0 15px 0;">${data.eventName}</h2>
+        <p style="margin: 5px 0;"><strong>Event Date:</strong> ${data.eventDate}</p>
+        <p style="margin: 5px 0;"><strong>Order Number:</strong> #${data.orderNumber}</p>
+      </div>
+      <h3>Purchase Details</h3>
+      <div style="background: #f9fafb; padding: 15px; border-radius: 6px; margin: 15px 0;">
+        <p style="margin: 5px 0;"><strong>Buyer:</strong> ${data.buyerName}</p>
+        <p style="margin: 5px 0;"><strong>Email:</strong> ${data.buyerEmail}</p>
+        <p style="margin: 5px 0;"><strong>Ticket Type:</strong> ${data.ticketTypeName}</p>
+        <p style="margin: 5px 0;"><strong>Quantity:</strong> ${data.ticketCount}</p>
+      </div>
+      <h3>Payment Breakdown</h3>
+      <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 8px 0;">Ticket Sales</td>
+          <td style="text-align: right; padding: 8px 0;">$${data.subtotal.toFixed(2)}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 8px 0;">Platform Fee</td>
+          <td style="text-align: right; padding: 8px 0; color: #6b7280;">-$${data.platformFee.toFixed(2)}</td>
+        </tr>
+        <tr style="border-bottom: 2px solid #10b981;">
+          <td style="padding: 8px 0;"><strong>Your Payout</strong></td>
+          <td style="text-align: right; padding: 8px 0;"><strong style="color: #10b981;">$${data.organizerPayout.toFixed(2)}</strong></td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0;">Buyer Total</td>
+          <td style="text-align: right; padding: 8px 0;">$${data.totalAmount.toFixed(2)}</td>
+        </tr>
+      </table>
+      <p style="text-align: center; margin: 30px 0;">
+        <a href="${data.dashboardUrl}" class="button" style="background: #10b981;">View Order in Dashboard</a>
+      </p>
+      <p style="font-size: 14px; color: #6b7280;">Payouts are processed according to your payout schedule. View payout details in your dashboard.</p>
+    </div>
+    <div class="footer"><p>© 2024 SteppersLife Events</p></div>
+  </div>
+</body>
+</html>`;
+
+    return await this.sendEmail({
+      to: data.organizerEmail,
+      subject: `New Sale: ${data.ticketCount} ticket${data.ticketCount > 1 ? 's' : ''} for ${data.eventName}`,
+      html,
+      text: this.stripHtml(html)
+    });
+  }
+
+  /**
    * Send new event published notification to interested users
    */
   async sendEventPublishedNotification(data: {
