@@ -103,3 +103,4 @@ npm run lint
 ## Development Notes
 - This is a test file to verify CLAUDE.md functionality
 - Port 3000 is forbidden - use port 3004 for this project
+- momery you are forbidden to hard code anything.

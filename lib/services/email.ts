@@ -817,7 +817,7 @@ class EmailService {
         </ul>
       </div>
       <p style="text-align: center; margin: 30px 0;">
-        <a href="${process.env.NEXTAUTH_URL || 'http://localhost:3004'}/dashboard/tickets" class="button">View My Tickets</a>
+        <a href="${process.env.NEXTAUTH_URL || 'https://events.stepperslife.com'}/dashboard/tickets" class="button">View My Tickets</a>
       </p>
     </div>
     <div class="footer"><p>© 2024 SteppersLife Events</p></div>

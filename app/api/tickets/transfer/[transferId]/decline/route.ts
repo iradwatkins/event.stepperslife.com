@@ -33,7 +33,11 @@ async function handleDeclineTransfer(request: NextRequest, context: any) {
       include: {
         order: {
           include: {
-            event: true
+            event: {
+              include: {
+                venue: true
+              }
+            }
           }
         }
       }

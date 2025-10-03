@@ -20,7 +20,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
+      <SessionProvider 
+        basePath="/api/auth"
+        refetchInterval={0}
+        refetchOnWindowFocus={false}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

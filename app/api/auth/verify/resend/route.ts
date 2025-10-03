@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Build verification URL
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3004';
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://events.stepperslife.com';
     const verificationUrl = `${baseUrl}/auth/verify?token=${token}`;
 
     // Send verification email

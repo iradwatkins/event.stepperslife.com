@@ -14,3 +14,7 @@ out/
 *.pack.old
 
 .env.local
+.AAAAAAA/
+mcp-cli-config.js
+.env.production.local
+.env.test.local

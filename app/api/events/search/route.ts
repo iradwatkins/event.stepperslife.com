@@ -171,11 +171,15 @@ export async function GET(request: NextRequest) {
               displayName: true
             }
           },
-          categories: {
-            select: {
-              name: true,
-              slug: true,
-              color: true
+          EventToEventCategory: {
+            include: {
+              event_categories: {
+                select: {
+                  name: true,
+                  slug: true,
+                  color: true
+                }
+              }
             }
           },
           ticketTypes: {
@@ -234,7 +238,7 @@ export async function GET(request: NextRequest) {
           firstName: event.organizer.firstName,
           lastName: event.organizer.lastName
         },
-        categories: event.categories,
+        categories: event.EventToEventCategory.map(etc => etc.event_categories),
         pricing: {
           minPrice,
           maxPrice,
@@ -311,10 +315,11 @@ async function generateSearchFacets(baseWhere: any, filters: SearchFilters) {
     // Get category facets
     const categories = await prisma.eventCategory.findMany({
       where: {
-        events: {
+        EventToEventCategory: {
           some: {
-            ...baseWhere,
-            categories: undefined // Remove category filter for facet generation
+            events: {
+              ...baseWhere
+            }
           }
         }
       },
@@ -323,9 +328,7 @@ async function generateSearchFacets(baseWhere: any, filters: SearchFilters) {
         slug: true,
         _count: {
           select: {
-            events: {
-              where: baseWhere
-            }
+            EventToEventCategory: true
           }
         }
       },
@@ -382,7 +385,7 @@ async function generateSearchFacets(baseWhere: any, filters: SearchFilters) {
       categories: categories.map(cat => ({
         name: cat.name,
         slug: cat.slug,
-        count: cat._count.events
+        count: cat._count.EventToEventCategory
       })),
       priceRanges,
       locations: locations.map(loc => ({

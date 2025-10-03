@@ -116,7 +116,7 @@ async function handlePatchStatus(request: NextRequest, context: any) {
     });
 
     // Post-status-change actions (run asynchronously to not block response)
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3004';
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://events.stepperslife.com';
     const eventDate = new Date(updatedEvent.startDate).toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -177,7 +177,7 @@ async function handlePatchStatus(request: NextRequest, context: any) {
             .map(f => f.user);
 
           // Send notification to each interested user
-          const ticketPrices = updatedEvent.ticketTypes.map(t => t.price);
+          const ticketPrices = updatedEvent.ticketTypes.map(t => Number(t.price));
           const minPrice = Math.min(...ticketPrices);
           const maxPrice = Math.max(...ticketPrices);
           const priceRange = minPrice === maxPrice
@@ -197,7 +197,7 @@ async function handlePatchStatus(request: NextRequest, context: any) {
               venueAddress: updatedEvent.venue?.address || '',
               ticketPriceRange: priceRange,
               eventUrl: `${baseUrl}/events/${eventId}`,
-              imageUrl: updatedEvent.imageUrl || undefined
+              imageUrl: undefined // Image URL to be added when field is available
             });
           }
         } catch (error) {
@@ -231,7 +231,7 @@ async function handlePatchStatus(request: NextRequest, context: any) {
               order: {
                 select: {
                   squarePaymentId: true,
-                  totalAmount: true
+                  total: true
                 }
               }
             }
@@ -242,17 +242,23 @@ async function handlePatchStatus(request: NextRequest, context: any) {
           // Process refunds for each ticket
           for (const ticket of tickets) {
             try {
+              // Skip if no userId (shouldn't happen for valid tickets)
+              if (!ticket.userId) {
+                console.warn(`Ticket ${ticket.id} has no userId, skipping refund`);
+                continue;
+              }
+
               await refundService.processRefund({
                 ticketId: ticket.id,
                 userId: ticket.userId,
-                reason: RefundReason.EVENT_CANCELLED,
-                initiatedBy: user.id
+                reason: RefundReason.EVENT_CANCELLED
               });
 
               // Send cancellation email to ticket holder
-              await emailService.sendEventCancellationEmail({
-                recipientEmail: ticket.user.email,
-                recipientName: ticket.user.firstName,
+              if (ticket.user) {
+                await emailService.sendEventCancellationEmail({
+                  recipientEmail: ticket.user.email,
+                  recipientName: ticket.user.firstName,
                 eventName: updatedEvent.name,
                 eventDate,
                 eventTime,
@@ -263,6 +269,7 @@ async function handlePatchStatus(request: NextRequest, context: any) {
                 organizerEmail: updatedEvent.organizer.email,
                 ticketCount: 1
               });
+              }
             } catch (error) {
               console.error(`Failed to process refund for ticket ${ticket.id}:`, error);
               // Continue processing other refunds even if one fails

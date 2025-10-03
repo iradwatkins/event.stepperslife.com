@@ -289,13 +289,13 @@ async function handlePurchaseTickets(request: NextRequest, context: any) {
     // Send notification to event organizer
     try {
       if (result.event.organizer.email) {
-        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3004';
+        const baseUrl = process.env.NEXTAUTH_URL || 'https://events.stepperslife.com';
         const organizerName = `${result.event.organizer.firstName} ${result.event.organizer.lastName}`.trim() || 'Organizer';
 
         // Calculate platform fee and organizer payout
         const subtotal = Number(result.order.subtotal);
         const total = Number(result.order.total);
-        const platformFee = Number(result.order.platformFee) || 0;
+        const platformFee = 0; // Platform fee calculation to be implemented
         const organizerPayout = subtotal - platformFee;
 
         await emailService.sendOrganizerTicketSaleNotification({

@@ -93,7 +93,19 @@ export function isValidUrl(url: string): boolean {
 
 export function getBaseUrl() {
   if (typeof window !== 'undefined') return ''
+  
+  // PRODUCTION: Always use events.stepperslife.com in production
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://events.stepperslife.com'
+  }
+  
+  // Use NEXTAUTH_URL if explicitly set
+  if (process.env.NEXTAUTH_URL) return process.env.NEXTAUTH_URL
+  
+  // Vercel deployment
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
+  
+  // Local development ONLY
   return `http://localhost:${process.env.PORT ?? 3004}`
 }
 

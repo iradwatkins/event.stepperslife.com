@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 import { UserRole } from '@prisma/client';
 import { sendMagicLinkEmail } from '@/lib/services/email';
@@ -16,6 +17,7 @@ const ADMIN_EMAILS: string[] = [];
 
 export const authOptions: NextAuthConfig = {
   trustHost: true,
+  adapter: PrismaAdapter(prisma),
 
   providers: [
     // Google OAuth Provider
