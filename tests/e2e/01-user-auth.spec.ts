@@ -80,8 +80,8 @@ test.describe('User Authentication Flow (FOUNDATION)', () => {
 
     expect(createdUser).toBeTruthy();
     expect(createdUser?.email).toBe(user.email);
-    expect(createdUser?.name).toBe(user.name);
-    expect(createdUser?.role).toBe('USER');
+    expect(createdUser?.firstName).toBe(user.name.split(' ')[0]);
+    expect(createdUser?.role).toBe('ATTENDEE');
     expect(createdUser?.status).toBe('ACTIVE');
 
     console.log(`✅ User created in database: ${createdUser?.id}`);

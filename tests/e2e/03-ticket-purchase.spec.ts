@@ -42,7 +42,7 @@ test.describe('Ticket Purchase Flow (CRITICAL MVP)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'PUBLISHED',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -103,7 +103,7 @@ test.describe('Ticket Purchase Flow (CRITICAL MVP)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'PUBLISHED',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -174,7 +174,7 @@ test.describe('Ticket Purchase Flow (CRITICAL MVP)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'PUBLISHED',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -289,7 +289,7 @@ test.describe('Ticket Purchase Flow (CRITICAL MVP)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'PUBLISHED',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -357,7 +357,7 @@ test.describe('Ticket Purchase Flow (CRITICAL MVP)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'PUBLISHED',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -414,7 +414,7 @@ test.describe('Ticket Purchase Flow (CRITICAL MVP)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'PUBLISHED',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -470,7 +470,7 @@ test.describe('Ticket Purchase Flow (CRITICAL MVP)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'PUBLISHED',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });

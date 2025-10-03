@@ -190,7 +190,7 @@ test.describe('Event Creation Flow (ORGANIZER)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'DRAFT',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -258,7 +258,7 @@ test.describe('Event Creation Flow (ORGANIZER)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'DRAFT', // Draft status
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -327,7 +327,7 @@ test.describe('Event Creation Flow (ORGANIZER)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'DRAFT',
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -393,7 +393,7 @@ test.describe('Event Creation Flow (ORGANIZER)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'DRAFT', // Must be draft to delete
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -454,7 +454,7 @@ test.describe('Event Creation Flow (ORGANIZER)', () => {
         startDate: testData.generateEvent().startDate,
         endDate: testData.generateEvent().endDate,
         status: 'PUBLISHED', // Published
-        eventType: 'GENERAL_ADMISSION',
+        eventType: 'WORKSHOP',
         organizerId: createdOrganizer.id,
       },
     });
@@ -539,7 +539,7 @@ test.describe('Event Creation Flow (ORGANIZER)', () => {
           startDate: testData.generateEvent().startDate,
           endDate: testData.generateEvent().endDate,
           status: i === 0 ? 'PUBLISHED' : 'DRAFT',
-          eventType: 'GENERAL_ADMISSION',
+          eventType: 'WORKSHOP',
           organizerId: createdOrganizer.id,
         },
       });
