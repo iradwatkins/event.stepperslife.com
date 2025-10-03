@@ -1310,3 +1310,25 @@ enum PayoutMethod {
   STRIPE_CONNECT
   CHECK
 }
+
+// Platform Settings (Singleton pattern - only one row with id='1')
+model PlatformSettings {
+  id                  String   @id @default("1")
+  platformName        String   @default("Stepperslife Events")
+  platformDomain      String   @default("events.stepperslife.com")
+  platformDescription String   @default("Your premier destination for discovering and hosting amazing events in the stepping community.")
+  primaryColor        String   @default("#3b82f6")
+  secondaryColor      String   @default("#06b6d4")
+  logoUrl             String?
+  faviconUrl          String?
+  platformFeePercent  Decimal  @default(2.5) @db.Decimal(5, 2)
+  emailFromName       String   @default("Stepperslife Events")
+  emailFromAddress    String   @default("noreply@stepperslife.com")
+  emailReplyTo        String?
+  metadata            Json?    @default("{}")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([id])
+  @@map("platform_settings")
+}

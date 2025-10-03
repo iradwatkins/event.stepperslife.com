@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,6 +27,21 @@ import {
   Trash2
 } from 'lucide-react';
 
+// Platform settings interface
+interface PlatformSettings {
+  platformName: string;
+  platformDomain: string;
+  platformDescription: string;
+  primaryColor: string;
+  secondaryColor: string;
+  logoUrl?: string;
+  faviconUrl?: string;
+  platformFeePercent: number;
+  emailFromName: string;
+  emailFromAddress: string;
+  emailReplyTo?: string;
+}
+
 export default function SettingsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -35,6 +50,44 @@ export default function SettingsPage() {
   const [deleteConfirmEmail, setDeleteConfirmEmail] = useState('');
   const [deleteReason, setDeleteReason] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Settings state
+  const [settings, setSettings] = useState<PlatformSettings>({
+    platformName: 'Stepperslife Events',
+    platformDomain: 'events.stepperslife.com',
+    platformDescription: 'Your premier destination for discovering and hosting amazing events in the stepping community.',
+    primaryColor: '#3b82f6',
+    secondaryColor: '#06b6d4',
+    platformFeePercent: 2.5,
+    emailFromName: 'Stepperslife Events',
+    emailFromAddress: 'noreply@stepperslife.com',
+  });
+  const [originalSettings, setOriginalSettings] = useState<PlatformSettings>(settings);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+
+  // Load settings on mount
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const response = await fetch('/api/settings');
+        if (response.ok) {
+          const data = await response.json();
+          setSettings(data);
+          setOriginalSettings(data);
+        }
+      } catch (error) {
+        console.error('Error loading settings:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadSettings();
+  }, []);
+
+  // Check if settings have changed
+  const hasChanges = JSON.stringify(settings) !== JSON.stringify(originalSettings);
 
   if (status === 'loading') {
     return (
@@ -58,8 +111,33 @@ export default function SettingsPage() {
   ];
 
   const handleSave = async () => {
-    // TODO: Implement save functionality
-    alert('Settings save functionality will be implemented in Sprint 2!');
+    setIsSaving(true);
+    setSaveMessage('');
+
+    try {
+      const response = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSaveMessage('Settings saved successfully!');
+        setOriginalSettings(settings); // Update original to match current
+        setTimeout(() => setSaveMessage(''), 3000);
+      } else {
+        setSaveMessage(data.error || 'Failed to save settings');
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      setSaveMessage('An error occurred while saving settings');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -111,10 +189,22 @@ export default function SettingsPage() {
                 <p className="text-gray-600">Configure system-wide settings and preferences</p>
               </div>
             </div>
-            <Button onClick={handleSave}>
-              <Save className="w-4 h-4 mr-2" />
-              Save Changes
-            </Button>
+            <div className="flex items-center gap-3">
+              {saveMessage && (
+                <span className={`text-sm font-medium ${
+                  saveMessage.includes('success') ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {saveMessage}
+                </span>
+              )}
+              <Button
+                onClick={handleSave}
+                disabled={!hasChanges || isSaving || isLoading}
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {isSaving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -166,14 +256,16 @@ export default function SettingsPage() {
                         <Label htmlFor="platform-name">Platform Name</Label>
                         <Input
                           id="platform-name"
-                          defaultValue="Stepperslife Events"
+                          value={settings.platformName}
+                          onChange={(e) => setSettings({ ...settings, platformName: e.target.value })}
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="platform-domain">Domain</Label>
                         <Input
                           id="platform-domain"
-                          defaultValue="events.stepperslife.com"
+                          value={settings.platformDomain}
+                          onChange={(e) => setSettings({ ...settings, platformDomain: e.target.value })}
                         />
                       </div>
                     </div>
@@ -181,7 +273,8 @@ export default function SettingsPage() {
                       <Label htmlFor="platform-description">Description</Label>
                       <Textarea
                         id="platform-description"
-                        defaultValue="Your premier destination for discovering and hosting amazing events in the stepping community."
+                        value={settings.platformDescription}
+                        onChange={(e) => setSettings({ ...settings, platformDescription: e.target.value })}
                       />
                     </div>
                   </CardContent>
@@ -205,10 +298,15 @@ export default function SettingsPage() {
                           <Input
                             id="primary-color"
                             type="color"
-                            defaultValue="#3b82f6"
+                            value={settings.primaryColor}
+                            onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
                             className="w-16 h-10"
                           />
-                          <Input defaultValue="#3b82f6" className="flex-1" />
+                          <Input
+                            value={settings.primaryColor}
+                            onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
+                            className="flex-1"
+                          />
                         </div>
                       </div>
                       <div className="space-y-2">
@@ -217,10 +315,15 @@ export default function SettingsPage() {
                           <Input
                             id="secondary-color"
                             type="color"
-                            defaultValue="#06b6d4"
+                            value={settings.secondaryColor}
+                            onChange={(e) => setSettings({ ...settings, secondaryColor: e.target.value })}
                             className="w-16 h-10"
                           />
-                          <Input defaultValue="#06b6d4" className="flex-1" />
+                          <Input
+                            value={settings.secondaryColor}
+                            onChange={(e) => setSettings({ ...settings, secondaryColor: e.target.value })}
+                            className="flex-1"
+                          />
                         </div>
                       </div>
                     </div>
@@ -278,8 +381,9 @@ export default function SettingsPage() {
                         type="number"
                         step="0.1"
                         min="0"
-                        max="10"
-                        defaultValue="2.5"
+                        max="100"
+                        value={settings.platformFeePercent}
+                        onChange={(e) => setSettings({ ...settings, platformFeePercent: parseFloat(e.target.value) || 0 })}
                       />
                       <p className="text-xs text-gray-500">Platform fee percentage on ticket sales</p>
                     </div>
@@ -312,14 +416,17 @@ export default function SettingsPage() {
                         <Label htmlFor="from-email">From Email</Label>
                         <Input
                           id="from-email"
-                          defaultValue="noreply@events.stepperslife.com"
+                          type="email"
+                          value={settings.emailFromAddress}
+                          onChange={(e) => setSettings({ ...settings, emailFromAddress: e.target.value })}
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="from-name">From Name</Label>
                         <Input
                           id="from-name"
-                          defaultValue="Stepperslife Events"
+                          value={settings.emailFromName}
+                          onChange={(e) => setSettings({ ...settings, emailFromName: e.target.value })}
                         />
                       </div>
                     </div>
