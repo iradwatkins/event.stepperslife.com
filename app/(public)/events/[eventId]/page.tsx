@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -90,7 +90,7 @@ export default function PublicEventDetailsPage() {
 
   useEffect(() => {
     fetchEvent();
-  }, [eventId]);
+  }, [fetchEvent]);
 
   useEffect(() => {
     if (session?.user) {
@@ -102,7 +102,7 @@ export default function PublicEventDetailsPage() {
     }
   }, [session]);
 
-  const fetchEvent = async () => {
+  const fetchEvent = useCallback(async () => {
     try {
       const response = await fetch(`/api/events/public?eventId=${eventId}`);
       const result = await response.json();
@@ -131,7 +131,7 @@ export default function PublicEventDetailsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [eventId]);
 
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
