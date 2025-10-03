@@ -216,12 +216,35 @@ function VerifyPageContent() {
   const handleResendVerification = async () => {
     setIsResending(true);
 
-    // TODO: Implement resend verification API
     try {
-      // For now, just show a message
-      alert('Verification email resend functionality will be implemented next. Please contact support for now.');
+      // Get email from URL params if available, otherwise user needs to use login page
+      const searchParams = new URLSearchParams(window.location.search);
+      const email = searchParams.get('email');
+
+      if (!email) {
+        alert('Please return to the login page to request a new verification email.');
+        setIsResending(false);
+        return;
+      }
+
+      const response = await fetch('/api/auth/verify/resend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert(data.message || 'Verification email sent successfully! Please check your inbox.');
+      } else {
+        alert(data.error || 'Failed to send verification email. Please try again.');
+      }
     } catch (error) {
       console.error('Resend error:', error);
+      alert('An error occurred while sending the verification email. Please try again later.');
     } finally {
       setIsResending(false);
     }
