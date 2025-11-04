@@ -82,8 +82,8 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Product image uploaded: ${filename} (saved ${savedPercent}%)`);
 
-    // Return public URL (served via Next.js API route)
-    const publicUrl = `https://events.stepperslife.com/api/product-images/${filename}`;
+    // Return relative URL (served via Next.js API route)
+    const publicUrl = `/api/product-images/${filename}`;
 
     return NextResponse.json({
       success: true,
