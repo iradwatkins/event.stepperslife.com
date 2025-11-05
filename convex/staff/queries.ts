@@ -147,6 +147,9 @@ export const getStaffDashboard = query({
           referralCode: staff.referralCode,
           commissionType: staff.commissionType,
           commissionValue: staff.commissionValue,
+          hierarchyLevel: staff.hierarchyLevel,
+          canAssignSubSellers: staff.canAssignSubSellers,
+          canScan: staff.canScan,
         };
       })
     );
