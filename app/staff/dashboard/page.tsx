@@ -25,7 +25,7 @@ export default function StaffDashboardPage() {
   if (!staffPositions) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
@@ -61,7 +61,7 @@ export default function StaffDashboardPage() {
           </div>
           <Link
             href="/staff/my-team"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition font-semibold"
           >
             <Users className="w-5 h-5" />
             My Default Team
@@ -75,8 +75,8 @@ export default function StaffDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <Ticket className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                <Ticket className="w-6 h-6 text-primary" />
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Total Tickets Sold</p>
@@ -123,8 +123,8 @@ export default function StaffDashboardPage() {
         {/* Events List */}
         {staffPositions.length === 0 ? (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-blue-600" />
+            <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="w-8 h-8 text-primary" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">No Active Positions</h3>
             <p className="text-gray-600">
@@ -158,7 +158,7 @@ export default function StaffDashboardPage() {
                           {/* Role Badge */}
                           <span className={`px-3 py-1 text-xs font-bold rounded-full ${
                             position.role === "SELLER"
-                              ? "bg-blue-600 text-white"
+                              ? "bg-primary text-white"
                               : "bg-gray-600 text-white"
                           }`}>
                             {position.role === "SELLER" ? "🎫 SELLER" : "📱 SCANNER"}
@@ -220,20 +220,20 @@ export default function StaffDashboardPage() {
 
                   {/* Commission Structure */}
                   {position.role === "SELLER" && (
-                    <div className="px-6 py-4 border-b bg-blue-50">
+                    <div className="px-6 py-4 border-b bg-accent">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           {position.commissionType === "PERCENTAGE" ? (
                             <>
-                              <Percent className="w-4 h-4 text-blue-600" />
-                              <span className="text-sm font-semibold text-blue-900">
+                              <Percent className="w-4 h-4 text-primary" />
+                              <span className="text-sm font-semibold text-foreground">
                                 {position.commissionValue}% commission per ticket
                               </span>
                             </>
                           ) : (
                             <>
-                              <DollarSign className="w-4 h-4 text-blue-600" />
-                              <span className="text-sm font-semibold text-blue-900">
+                              <DollarSign className="w-4 h-4 text-primary" />
+                              <span className="text-sm font-semibold text-foreground">
                                 ${((position.commissionValue || 0) / 100).toFixed(2)} per ticket
                               </span>
                             </>
@@ -241,7 +241,7 @@ export default function StaffDashboardPage() {
                         </div>
                         <Link
                           href={`/staff/sales-history/${position._id}`}
-                          className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:underline"
+                          className="text-sm text-primary hover:text-primary font-medium hover:underline"
                         >
                           View Sales History →
                         </Link>
@@ -277,7 +277,7 @@ export default function StaffDashboardPage() {
                           </div>
                           <button
                             onClick={() => handleCopyReferralCode(position.referralCode)}
-                            className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                            className="px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
                           >
                             {copiedCode === position.referralCode ? (
                               <>

@@ -1423,7 +1423,7 @@ export default function SeatingTemplates({
   onClose,
 }: SeatingTemplatesProps) {
   const categories = [
-    { id: "theater", name: "Theater", color: "bg-blue-100 text-blue-700" },
+    { id: "theater", name: "Theater", color: "bg-accent text-primary" },
     { id: "stadium", name: "Stadium", color: "bg-purple-100 text-purple-700" },
     { id: "concert", name: "Concert", color: "bg-pink-100 text-pink-700" },
     { id: "conference", name: "Conference", color: "bg-red-100 text-red-700" },
@@ -1464,10 +1464,10 @@ export default function SeatingTemplates({
                   }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="bg-white border-2 border-gray-200 rounded-lg p-6 text-left hover:border-blue-500 hover:shadow-lg transition-all group"
+                  className="bg-white border-2 border-gray-200 rounded-lg p-6 text-left hover:border-primary hover:shadow-lg transition-all group"
                 >
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="p-3 bg-blue-100 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <div className="p-3 bg-accent rounded-lg text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                       {template.icon}
                     </div>
                     <div className="flex-1">
@@ -1486,7 +1486,7 @@ export default function SeatingTemplates({
                     <div className="text-gray-500">
                       <span className="font-semibold">{template.sections.length}</span> sections
                     </div>
-                    <div className="text-blue-600 font-semibold">
+                    <div className="text-primary font-semibold">
                       ~{template.estimatedCapacity} capacity
                     </div>
                   </div>

@@ -157,7 +157,7 @@ export const updateStaffMember = mutation({
       console.warn("[updateStaffMember] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -235,7 +235,7 @@ export const registerCashSale = mutation({
       console.warn("[registerCashSale] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -331,7 +331,7 @@ export const createCashSale = mutation({
       console.warn("[createCashSale] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -550,7 +550,7 @@ export const removeStaffMember = mutation({
       console.warn("[removeStaffMember] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -618,7 +618,7 @@ export const updateStaffPermissions = mutation({
       console.warn("[updateStaffPermissions] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -685,7 +685,7 @@ export const assignSubSeller = mutation({
       console.warn("[assignSubSeller] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -878,7 +878,7 @@ export const addGlobalStaff = mutation({
       console.warn("[addGlobalStaff] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -983,7 +983,7 @@ export const toggleStaffAutoAssign = mutation({
       console.warn("[toggleStaffAutoAssign] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -1044,7 +1044,7 @@ export const addGlobalSubSeller = mutation({
       console.warn("[addGlobalSubSeller] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db

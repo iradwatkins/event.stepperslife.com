@@ -58,7 +58,7 @@ export default function PricingZoneSelector({
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
       <div className="flex items-center gap-2 mb-3">
-        <DollarSign className="w-5 h-5 text-blue-600" />
+        <DollarSign className="w-5 h-5 text-primary" />
         <h3 className="font-semibold text-gray-900">Dynamic Pricing Zones</h3>
       </div>
 
@@ -77,7 +77,7 @@ export default function PricingZoneSelector({
               onClick={() => onZoneSelect(zone.id)}
               className={`w-full text-left p-3 rounded-lg border-2 transition-all ${
                 isSelected
-                  ? "border-blue-600 bg-blue-50 shadow-sm"
+                  ? "border-primary bg-accent shadow-sm"
                   : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
               }`}
             >
@@ -116,7 +116,7 @@ export default function PricingZoneSelector({
                       zone.multiplier > 1.0
                         ? "text-green-600"
                         : zone.multiplier < 1.0
-                        ? "text-blue-600"
+                        ? "text-primary"
                         : "text-gray-500"
                     }`}
                   >
@@ -127,8 +127,8 @@ export default function PricingZoneSelector({
               </div>
 
               {isSelected && (
-                <div className="mt-2 pt-2 border-t border-blue-200">
-                  <p className="text-xs text-blue-700">
+                <div className="mt-2 pt-2 border-t border-border">
+                  <p className="text-xs text-primary">
                     ✓ Click tables to apply this pricing zone
                   </p>
                 </div>

@@ -76,7 +76,7 @@ export default function CheckoutPage() {
   if (isLoading || !eventDetails) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
@@ -356,7 +356,7 @@ export default function CheckoutPage() {
           >
             <Link
               href="/my-tickets"
-              className="block w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="block w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
             >
               View My Tickets
             </Link>
@@ -422,17 +422,17 @@ export default function CheckoutPage() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.3 }}
-                className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-6"
+                className="bg-accent border-2 border-border rounded-lg p-4 mb-6"
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <UserCheck className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center flex-shrink-0">
+                    <UserCheck className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-900 mb-1">
+                    <h4 className="font-semibold text-foreground mb-1">
                       Referred by {staffMemberInfo.name}
                     </h4>
-                    <p className="text-sm text-blue-700">
+                    <p className="text-sm text-primary">
                       Your purchase will be credited to this staff member
                     </p>
                   </div>
@@ -456,7 +456,7 @@ export default function CheckoutPage() {
                         }}
                         className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
                           purchaseType === 'tier'
-                            ? 'bg-white text-blue-600 shadow-sm'
+                            ? 'bg-white text-primary shadow-sm'
                             : 'text-gray-600 hover:text-gray-900'
                         }`}
                       >
@@ -508,7 +508,7 @@ export default function CheckoutPage() {
                                 selectedTierId === tier._id
                                   ? showEarlyBird
                                     ? "border-amber-500 bg-amber-50"
-                                    : "border-blue-600 bg-blue-50"
+                                    : "border-primary bg-accent"
                                   : isSoldOut
                                   ? "border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
                                   : "border-gray-200 hover:border-gray-300"
@@ -681,8 +681,8 @@ export default function CheckoutPage() {
                     {/* Ballroom Event - Interactive Visual Seating Chart */}
                     {eventDetails.eventType === "BALLROOM_EVENT" ? (
                       <div>
-                        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                          <p className="text-sm text-blue-800">
+                        <div className="mb-4 p-3 bg-accent border border-border rounded-lg">
+                          <p className="text-sm text-accent-foreground">
                             🎫 Click on available seats to select them. Selected seats: <strong>{selectedSeats.length}</strong> / {quantity}
                           </p>
                         </div>
@@ -792,7 +792,7 @@ export default function CheckoutPage() {
                           />
                           <button
                             onClick={handleApplyDiscount}
-                            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
+                            className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium whitespace-nowrap"
                           >
                             Apply
                           </button>
@@ -839,7 +839,7 @@ export default function CheckoutPage() {
                       onClick={() => setPaymentMethod('card')}
                       className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
                         paymentMethod === 'card'
-                          ? 'border-blue-600 bg-blue-50 text-blue-900 font-semibold'
+                          ? 'border-primary bg-accent text-foreground font-semibold'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -987,7 +987,7 @@ export default function CheckoutPage() {
                       disabled={!buyerEmail || !buyerName}
                       className={`w-full px-6 py-4 rounded-lg font-semibold transition-all ${
                         buyerEmail && buyerName
-                          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg"
+                          ? "bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg"
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
                       }`}
                     >

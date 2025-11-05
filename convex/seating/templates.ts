@@ -30,7 +30,7 @@ export const saveSeatingChartAsTemplate = mutation({
       console.warn("[saveSeatingChartAsTemplate] TESTING MODE - No authentication");
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
       if (!user) {
         throw new Error("Test user not found");
@@ -198,7 +198,7 @@ export const getMyTemplates = query({
       console.warn("[getMyTemplates] TESTING MODE - No authentication");
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
       if (!user) {
         return [];
@@ -239,7 +239,7 @@ export const deleteTemplate = mutation({
       console.warn("[deleteTemplate] TESTING MODE - No authentication");
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
       if (!user) {
         throw new Error("Test user not found");
@@ -299,7 +299,7 @@ export const updateTemplate = mutation({
       console.warn("[updateTemplate] TESTING MODE - No authentication");
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
       if (!user) {
         throw new Error("Test user not found");
@@ -354,7 +354,7 @@ export const bulkDeleteTemplates = mutation({
       console.warn("[bulkDeleteTemplates] TESTING MODE - No authentication");
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
       if (!user) {
         throw new Error("Test user not found");

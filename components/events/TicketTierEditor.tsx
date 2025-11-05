@@ -64,7 +64,7 @@ export function TicketTierEditor({ tiers, onChange }: TicketTierEditorProps) {
         <button
           type="button"
           onClick={addTier}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add Tier
@@ -81,7 +81,7 @@ export function TicketTierEditor({ tiers, onChange }: TicketTierEditorProps) {
           <button
             type="button"
             onClick={addTier}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
           >
             <Plus className="w-4 h-4" />
             Add First Tier
@@ -258,7 +258,7 @@ export function TicketTierEditor({ tiers, onChange }: TicketTierEditorProps) {
         <button
           type="button"
           onClick={addTier}
-          className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-600 hover:text-blue-600 transition-colors"
+          className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-primary hover:text-primary transition-colors"
         >
           <Plus className="w-4 h-4 inline mr-2" />
           Add Another Tier

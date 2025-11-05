@@ -1,0 +1,1106 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Product Options 2.5.0\n"
+"Report-Msgid-Bugs-To: https://barn2.com/support-center/\n"
+"Last-Translator: Barn2 Plugins <support@barn2.com>\n"
+"Language-Team: Barn2 Plugins <support@barn2.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-07-07T00:00:00+00:00\n"
+"PO-Revision-Date: 2025-09-10 16:26+0000\n"
+"Language: ru-RU\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: woocommerce-product-options\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. Plugin Name of the plugin
+#: woocommerce-product-options.php
+msgid "WooCommerce Product Options"
+msgstr "WooCommerce Product Options"
+
+#. Plugin URI of the plugin
+#: woocommerce-product-options.php
+msgid "https://barn2.com/wordpress-plugins/woocommerce-product-options/"
+msgstr "https://barn2.com/wordpress-plugins/woocommerce-product-options/"
+
+#. Description of the plugin
+#: woocommerce-product-options.php
+msgid "Add extra options to your WooCommerce products, with over 14 option types, optional fees for each option, min/max quantities, and conditional logic."
+msgstr "Добавьте дополнительные опции к вашим товарам WooCommerce, с более чем 14 типами опций, необязательными сборами за каждую опцию, минимальными/максимальными количествами и условной логикой."
+
+#. Author of the plugin
+#: woocommerce-product-options.php
+msgid "Barn2 Plugins"
+msgstr "Barn2 Plugins"
+
+#. Author URI of the plugin
+#: woocommerce-product-options.php
+msgid "https://barn2.com"
+msgstr "https://barn2.com"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_API_Helper.php:154
+msgid "[View page]"
+msgstr "[Просмотреть страницу]"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_API_Helper.php:615
+#: dependencies/barn2/barn2-lib/src/WooCommerce/Admin/Custom_Settings_Fields.php:138
+msgid "Size"
+msgstr "Размер"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_Util.php:70
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/admin/wpo-settings-page.js:32
+msgid "Documentation"
+msgstr "Документация"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_Util.php:70
+msgid "Support"
+msgstr "Поддержка"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:38
+#: src/Admin/Settings_Tab/General.php:43
+msgid "Settings"
+msgstr "Настройки"
+
+#. translators: %s: The plugin name
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:54
+msgid "View %s documentation"
+msgstr "Просмотреть документацию %s"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:55
+msgid "Docs"
+msgstr "Документы"
+
+#. translators: 1: licence key link start, 2: license key link end
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Plugin_Updater.php:155
+msgid "Activate %1$syour license key%2$s to enable updates."
+msgstr "Активируйте %1$syour license key%2$s для включения обновлений."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Plugin_Updater.php:210
+msgid "Auto-updates unavailable."
+msgstr "Автообновления недоступны."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:59
+msgid "License key successfully activated."
+msgstr "Ключ лицензии успешно активирован."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:59
+msgid "There was an error activating your license key."
+msgstr "Произошла ошибка при активации вашего ключа лицензии."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:63
+msgid "License key successfully deactivated."
+msgstr "Ключ лицензии успешно деактивирован."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:63
+msgid "There was an error deactivating your license key, please try again."
+msgstr "Произошла ошибка при деактивации вашего ключа лицензии, пожалуйста, попробуйте еще раз."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:66
+msgid "The license key looks good!"
+msgstr "Ключ лицензии выглядит хорошо!"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:66
+msgid "There's a problem with your license key."
+msgstr "С вашим ключом лицензии возникла проблема."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:108
+msgid "License key"
+msgstr "Ключ лицензии"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:110
+msgid "The licence key is contained in your order confirmation email."
+msgstr "Ключ лицензии содержится в вашем электронном письме с подтверждением заказа."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:113
+msgid "License Key"
+msgstr "Ключ лицензии"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Check"
+msgstr "Проверить"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Activate"
+msgstr "Активировать"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Deactivate"
+msgstr "Деактивировать"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:140
+msgid "License key deactivated."
+msgstr "Ключ лицензии деактивирован."
+
+#. translators: 1: the plugin name, 2: settings link start, 3: settings link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:84
+msgid "Thank you for installing %1$s. To get started, please %2$s enter your license key%3$s."
+msgstr "Спасибо за установку %1$s. Чтобы начать, пожалуйста, %2$s введите ваш ключ лицензии%3$s."
+
+#. translators: 1: the plugin name, 2: renewal link start, 3: renewal link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:109
+msgid "Your license key for %1$s has expired. %2$sClick here to renew for 20%% discount%3$s."
+msgstr "Ваш ключ лицензии для %1$s истек. %2$sНажмите здесь, чтобы продлить со скидкой 20%% %3$s."
+
+#. translators: 1: the plugin name, 2: renewal link start, 3: renewal link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:134
+msgid "You no longer have a valid license for %1$s. Please %2$spurchase a new license key%3$s to continue using the plugin."
+msgstr "У вас больше нет действующей лицензии для %1$s. Пожалуйста, %2$спокупите новый ключ лицензии%3$s, чтобы продолжить использование плагина."
+
+#. translators: 1: the plugin name, 2: settings link start, 3: settings link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:162
+msgid "%1$s - your site has moved to a new domain. Please %2$sreactivate your license key%3$s."
+msgstr "%1$s - ваш сайт был перемещен на новый домен. Пожалуйста, %2$sреактивируйте ваш ключ лицензии%3$s."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/EDD_Licensing.php:170
+msgid "An error has occurred, please try again."
+msgstr "Произошла ошибка, пожалуйста, попробуйте снова."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:93
+msgid "Your license key is active."
+msgstr "Ваш ключ лицензии активен."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:113
+msgid "Please enter your license key."
+msgstr "Пожалуйста, введите ваш ключ лицензии."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:115
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:393
+msgid "Your license key is invalid."
+msgstr "Ваш ключ лицензии недействителен."
+
+#. translators: 1: account page link start, 2: account page link end
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:337
+msgid "Invalid license key - please check your order confirmation email or %1$sAccount%2$s."
+msgstr "Недействительный ключ лицензии - пожалуйста, проверьте ваше электронное письмо с подтверждением заказа или %1$sАккаунт%2$s."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:343
+msgid "No URL was supplied for activation, please contact support."
+msgstr "Не был предоставлен URL для активации, пожалуйста, свяжитесь с поддержкой."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:346
+msgid "License key mismatch, please contact support."
+msgstr "Несоответствие ключа лицензии, пожалуйста, свяжитесь с поддержкой."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:349
+msgid "This license is for a bundled product and cannot be activated."
+msgstr "Эта лицензия предназначена для комплектного продукта и не может быть активирована."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:353
+msgid "Your license key is not valid for this plugin."
+msgstr "Ваш ключ лицензии недействителен для этого плагина."
+
+#. translators: %s: The number of sites the license is activated on
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:359
+msgid "%s site active"
+msgid_plural "%s sites active"
+msgstr[0] "активен %s сайт"
+msgstr[1] "активно %s сайта"
+msgstr[2] "активно %s сайтов"
+
+#. translators: %s: The sites active description, e.g. '2 sites active'
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:362
+msgid "Your license key has reached its activation limit (%s)."
+msgstr "Ваш ключ лицензии достиг предела активации (%s)."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:363
+#: dependencies/barn2/barn2-lib/src/Util.php:35
+msgid "Read more"
+msgstr "Читать далее"
+
+#. translators: support for RTL, 1: the license error, 2: a link
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:365
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:383
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#. translators: %s: The license expiry date
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:378
+msgid "Your license key expired on %s."
+msgstr "Ваш ключ лицензии истек %s."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:381
+msgid "Renew now for 20% discount."
+msgstr "Продлите сейчас со скидкой 20%."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:584
+msgid "Your license key is not active. Please reactivate or save the settings."
+msgstr "Ваш ключ лицензии неактивен. Пожалуйста, повторно активируйте или сохраните настройки."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:588
+msgid "Your license key has expired."
+msgstr "Ваш ключ лицензии истек."
+
+#. translators: 1: purchase link start, 2: purchase link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:594
+msgid "Your license key has been disabled. Please %1$spurchase a new license key%2$s to continue using the plugin."
+msgstr "Ваш ключ лицензии был отключен. Пожалуйста, %1$spurchase a new license key%2$s, чтобы продолжить использовать плагин."
+
+#. translators: %1$s: Plugin name. %2$s: PHP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:103
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:112
+msgid "%1$s requires PHP %2$s or greater. Please update the PHP version used by your web server."
+msgstr "%1$s требует PHP %2$s или выше. Пожалуйста, обновите версию PHP, используемую вашим веб-сервером."
+
+#. translators: %1$s: Plugin name. %2$s: WP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:136
+msgid "%1$s requires WordPress %2$s or greater. Please update your WordPress installation."
+msgstr "%1$s требует WordPress %2$s или выше. Пожалуйста, обновите вашу установку WordPress."
+
+#. translators: %1$s: Plugin name. %2$s: Update Core <a> tag open. %3$s: <a> tag close. %4$s: WP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:146
+msgid "%1$s requires WordPress %4$s or greater. Please %2$supdate%3$s your WordPress installation."
+msgstr "%1$s требует WordPress %4$s или выше. Пожалуйста, %2$sобновите%3$s вашу установку WordPress."
+
+#. translators: %1$s: Plugin name.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:169
+msgid "%1$s requires WooCommerce to be installed and active."
+msgstr "%1$s требует, чтобы WooCommerce был установлен и активен."
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce link. %3$s Install/Upgrade/Activate WooCommerce link.
+#. translators: %1$s: Plugin name. %2$s: EDD link. %3$s Install/Upgrade/Activate EDD link.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:175
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:224
+msgid "%1$s requires %2$s to be installed and active.%3$s"
+msgstr "%1$s требует, чтобы %2$s был установлен и активен.%3$s"
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:189
+msgid "%1$s requires WooCommerce %2$s or greater. Please update your WooCommerce setup first."
+msgstr "%1$s требует WooCommerce %2$s или выше. Пожалуйста, сначала обновите вашу настройку WooCommerce."
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce link. %3$s WooCommerce version required. %4$s Install/Upgrade/Activate WooCommerce link.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:195
+msgid "%1$s requires %2$s %3$s or greater. Please %4$s your WooCommerce setup first."
+msgstr "%1$s требует %2$s %3$s или выше. Пожалуйста, %4$s сначала настройте WooCommerce."
+
+#. translators: %1$s: Plugin name.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:218
+msgid "%1$s requires Easy Digital Downloads to be installed and active."
+msgstr "%1$s требует, чтобы Easy Digital Downloads был установлен и активен."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Simple_Plugin.php:102
+msgid "%1$s could not complete its first activation because the following error occurred:<br>%2$s"
+msgstr "%1$s не смог завершить свою первую активацию, потому что произошла следующая ошибка:<br>%2$s"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "%1$s database update required"
+msgstr "%1$s требуется обновление базы данных"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "<p>%1$s has been updated! To keep things running smoothly, we have to update your database to the newest version. The database update process runs in the background and may take a little while, so please be patient.</p>"
+msgstr "<p>%1$s был обновлен! Чтобы все работало без сбоев, нам нужно обновить вашу базу данных до самой новой версии. Процесс обновления базы данных происходит в фоновом режиме и может занять некоторое время, поэтому, пожалуйста, наберитесь терпения.</p>"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "%1$s database update done"
+msgstr "%1$s обновление базы данных завершено"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "<p>%1$s database update complete. Thank you for updating to the latest version!</p>"
+msgstr "<p>%1$s обновление базы данных завершено. Спасибо за обновление до последней версии!</p>"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:288
+msgid "You do not have sufficient permissions to perform this action."
+msgstr "У вас недостаточно прав для выполнения этого действия."
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:292
+msgid "An upgrade is already in progress. Please wait until it completes."
+msgstr "Обновление уже выполняется. Пожалуйста, подождите, пока оно завершится."
+
+#: dependencies/barn2/barn2-lib/src/Util.php:549
+msgid "Unable to connect to the filesystem. Please confirm your credentials."
+msgstr "Не удалось подключиться к файловой системе. Пожалуйста, подтвердите свои учетные данные."
+
+#: dependencies/barn2/barn2-lib/src/Util.php:574
+msgid "You don't have permission to activate the plugin."
+msgstr "У вас нет разрешения на активацию плагина."
+
+#: dependencies/barn2/setup-wizard/src/Api.php:151
+msgid "Could not find the appropriate step."
+msgstr "Не удалось найти соответствующий шаг."
+
+#: dependencies/barn2/setup-wizard/src/Api.php:196
+msgid "Please enter a license key."
+msgstr "Пожалуйста, введите ключ лицензии."
+
+#: dependencies/barn2/setup-wizard/src/Api.php:199
+msgid "Invalid action requested."
+msgstr "Запрошено неверное действие."
+
+#. translators: %s: The name of the plugin.
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:344
+msgid "%s setup wizard"
+msgstr "%s мастер настройки"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:434
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:507
+msgid "Warning: This will overwrite your existing settings for %s. Are you sure you want to continue?"
+msgstr "Внимание: это перезапишет ваши существующие настройки для %s. Вы уверены, что хотите продолжить?"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:484
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:492
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:541
+msgid "Setup wizard"
+msgstr "Мастер настройки"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:487
+msgid "If you need to access the setup wizard again, please click on the button below."
+msgstr "Если вам нужно снова получить доступ к мастеру настройки, пожалуйста, нажмите кнопку ниже."
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:23
+msgid "More"
+msgstr "Больше"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:24
+msgid "Extra features"
+msgstr "Дополнительные функции"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:25
+msgid "Enhance your site with these fantastic plugins from Barn2."
+msgstr "Улучшите свой сайт этими фантастическими плагинами от Barn2."
+
+#: dependencies/barn2/setup-wizard/src/Steps/Ready.php:23
+#: src/Admin/Wizard/Steps/Completed.php:21
+msgid "Ready"
+msgstr "Готово"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Ready.php:24
+msgid "Setup Complete"
+msgstr "Настройка завершена"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Welcome.php:25
+#: dependencies/barn2/setup-wizard/src/Steps/Welcome_Free.php:24
+#: src/Admin/Wizard/Steps/License_Verification.php:21
+msgid "Welcome"
+msgstr "Добро пожаловать"
+
+#: dependencies/barn2/setup-wizard/src/Util.php:28
+#: src/Fields/Select.php:40
+#: src/Fields/Select.php:41
+#: src/Fields/Select.php:73
+#: assets/js/modules/attribute-options.js:1
+#: assets/js/modules/dropdown.js:1
+msgid "Select an option"
+msgstr "Выберите вариант"
+
+#: src/Admin/Admin_Controller.php:87
+msgid "Security error"
+msgstr "Ошибка безопасности"
+
+#: src/Admin/Admin_Controller.php:88
+msgid "The authorization to perform this action expired. Please reload the page and try again"
+msgstr "Срок авторизации для выполнения этого действия истек. Пожалуйста, перезагрузите страницу и попробуйте снова"
+
+#: src/Admin/Admin_Controller.php:123
+msgid "Permission error"
+msgstr "Ошибка разрешения"
+
+#: src/Admin/Admin_Controller.php:124
+msgid "You do not have permission to install plugins."
+msgstr "У вас нет разрешения на установку плагинов."
+
+#: src/Admin/Admin_Controller.php:140
+msgid "Already installed"
+msgstr "Уже установлено"
+
+#: src/Admin/Admin_Controller.php:141
+msgid "The WooCommerce Live Preview plugin is already installed."
+msgstr "Плагин WooCommerce Live Preview уже установлен."
+
+#: src/Admin/Admin_Controller.php:172
+msgid "License error"
+msgstr "Ошибка лицензии"
+
+#: src/Admin/Admin_Controller.php:173
+msgid "Your license doesn't include WooCommerce Live Preview. Please go to the settings page and check your license. Then try again."
+msgstr "Ваша лицензия не включает WooCommerce Live Preview. Пожалуйста, перейдите на страницу настроек и проверьте свою лицензию. Затем попробуйте снова."
+
+#: src/Admin/Admin_Controller.php:191
+msgid "Successfully installed"
+msgstr "Установлено успешно"
+
+#. translators: %s is the link to the product options page
+#: src/Admin/Admin_Controller.php:194
+msgid "The WooCommerce Live Preview plugin has been successfully installed. Now go to %s and enable live preview for each option that you wish to use it for."
+msgstr "Плагин WooCommerce Live Preview был успешно установлен. Теперь перейдите на %s и включите режим живого предварительного просмотра для каждой опции, для которой вы хотите его использовать."
+
+#: src/Admin/Admin_Controller.php:195
+#: src/Admin/Settings_Page.php:164
+#: src/Admin/Settings_Page.php:165
+#: src/Admin/Settings_Page.php:182
+#: src/Admin/Settings_Tab/Product_Options.php:41
+#: src/Plugin_Setup.php:121
+msgid "Product Options"
+msgstr "Опции продукта"
+
+#: src/Admin/Admin_Controller.php:210
+msgid "Installation error"
+msgstr "Ошибка установки"
+
+#. translators: %s is the link to the downloads page
+#: src/Admin/Admin_Controller.php:215
+msgid "An error occurred while installing or activating WooCommerce Live Preview (Error code: %1$s).<br>Please reload the page and try again. If the error persists, please go to your %2$s and try to manually install the plugin."
+msgstr "Произошла ошибка при установке или активации WooCommerce Live Preview (Код ошибки: %1$s).<br>Пожалуйста, перезагрузите страницу и попробуйте снова. Если ошибка повторяется, пожалуйста, перейдите на вашу %2$s и попробуйте установить плагин вручную."
+
+#: src/Admin/Admin_Controller.php:217
+msgid "Barn2 downloads page"
+msgstr "Страница загрузки Barn2"
+
+#: src/Admin/Admin_Controller.php:399
+msgid "Product Attributes"
+msgstr "Атрибуты продукта"
+
+#: src/Admin/Admin_Controller.php:403
+msgid "Invetory properties"
+msgstr "Свойства инвентаря"
+
+#: src/Admin/Admin_Controller.php:407
+msgid "Shipping properties"
+msgstr "Свойства доставки"
+
+#: src/Admin/Attribute_Term.php:106
+msgid "The attribute has associated attribute based options in <strong>WooCommerce Product Options</strong>, however this term is not configured. Please configure the term in the following options: <br/><br/> %s"
+msgstr "У атрибута есть связанные опции на основе атрибутов в <strong>Опциях продуктов WooCommerce</strong>, однако этот термин не настроен. Пожалуйста, настройте термин в следующих опциях: <br/><br/> %s"
+
+#: src/Admin/Settings_Page.php:81
+msgid "PHP Intl extension required"
+msgstr "Требуется расширение PHP Intl"
+
+#: src/Admin/Settings_Page.php:82
+msgid "The PHP Intl extension is required for the WooCommerce Product Options plugin to work correctly. Please ask your hosting provider to enable this extension."
+msgstr "Для корректной работы плагина WooCommerce Product Options требуется расширение PHP Intl. Пожалуйста, попросите вашего хостинг-провайдера включить это расширение."
+
+#: src/Admin/Settings_Page.php:92
+#: src/Admin/Settings_Page.php:99
+msgid "Install WooCommerce Live Preview"
+msgstr "Установить WooCommerce Live Preview"
+
+#. translators: %s: Link to install the bonus plugin.
+#: src/Admin/Settings_Page.php:95
+msgid "Thanks for adding the Live Preview add-on to WooCommerce Product Options. Please install it and then enable it on the product options that you wish to use it for. %s"
+msgstr "Спасибо за добавление дополнительного модуля Live Preview к параметрам продуктов WooCommerce. Пожалуйста, установите его, а затем активируйте в тех параметрах продуктов, для которых вы хотите его использовать. %s"
+
+#: src/Admin/Settings_Page.php:214
+msgid "This tab doesn't exist."
+msgstr "Эта вкладка не существует."
+
+#: src/Admin/Settings_Tab/General.php:62
+msgid "General"
+msgstr "Общие"
+
+#: src/Admin/Settings_Tab/General.php:65
+msgid "The following options control the WooCommerce Product Options extension."
+msgstr "Следующие параметры управляют расширением параметров продуктов WooCommerce."
+
+#: src/Admin/Settings_Tab/General.php:104
+msgid "Settings saved."
+msgstr "Настройки сохранены."
+
+#: src/Admin/Settings_Tab/General.php:117
+msgid "Uninstall"
+msgstr "Удалить"
+
+#: src/Admin/Settings_Tab/General.php:120
+msgid "The following options control the uninstallation of the WooCommerce Product Options extension."
+msgstr "Следующие параметры управляют удалением расширения параметров продуктов WooCommerce."
+
+#: src/Admin/Settings_Tab/General.php:125
+msgid "Delete data"
+msgstr "Удалить данные"
+
+#. translators: %s is the plugin name.
+#: src/Admin/Settings_Tab/General.php:130
+msgid "Permanently delete all %s settings and data when uninstalling the plugin."
+msgstr "Постоянно удалить все настройки и данные %s при удалении плагина."
+
+#: src/Admin/Settings_Tab/Import_Export.php:42
+msgid "Import/Export"
+msgstr "Импорт/Экспорт"
+
+#: src/Admin/Version_Updater.php:116
+msgid "All price formulas have been successfully converted. Please double-check that everything works as expected."
+msgstr "Все формулы цен были успешно преобразованы. Пожалуйста, дважды проверьте, что все работает как ожидалось."
+
+#. translators: %1$s: link to backup database page
+#: src/Admin/Version_Updater.php:131
+msgid "Your price formulas will be upgraded to the new version.<br>We strongly recommend you %1$s now and export of all your option groups before updating your formulas."
+msgstr "Ваши формулы цен будут обновлены до новой версии.<br>Мы настоятельно рекомендуем вам %1$s сейчас и экспортировать все ваши группы параметров перед обновлением ваших формул."
+
+#: src/Admin/Version_Updater.php:132
+msgid "backup your database"
+msgstr "создать резервную копию вашей базы данных"
+
+#: src/Admin/Version_Updater.php:138
+msgid "Export option groups"
+msgstr "Экспортировать группы параметров"
+
+#: src/Admin/Version_Updater.php:143
+msgid "Update price formulas"
+msgstr "Обновить формулы цен"
+
+#: src/Admin/Wizard/Steps/Completed.php:22
+msgid "Complete Setup"
+msgstr "Завершить установку"
+
+#: src/Admin/Wizard/Steps/Completed.php:35
+msgid "Congratulations, you have finished setting up the plugin. Now it’s time to start adding options to your products."
+msgstr "Поздравляем, вы завершили настройку плагина. Теперь пришло время начать добавлять параметры к вашим продуктам."
+
+#: src/Admin/Wizard/Steps/License_Verification.php:22
+msgid "Welcome to WooCommerce Product Options."
+msgstr "Добро пожаловать в параметры продуктов WooCommerce."
+
+#: src/Admin/Wizard/Steps/License_Verification.php:23
+msgid "Use this setup wizard to activate your license key and choose any complementary plugins. After that, you’ll be ready to start creating product options!"
+msgstr "Используйте этот мастер настройки, чтобы активировать ваш лицензионный ключ и выбрать любые дополнительные плагины. После этого вы будете готовы начать создавать параметры продуктов!"
+
+#. translators: %1$s: Option name %2$s: Product name
+#. translators: %s: Option name
+#. translators: %1: Option name %2: Product name
+#: src/Fields/Abstract_Field.php:228
+#: src/Fields/Checkboxes.php:56
+#: src/Fields/Date_Picker.php:73
+#: src/Fields/File.php:83
+msgid "\"%1$s\" is a required field for \"%2$s\"."
+msgstr "\"%1$s\" является обязательным полем для \"%2$s\"."
+
+#. translators: %1$s: Option name %2$s: Product name
+#. translators: %s: Option name
+#: src/Fields/Abstract_Field.php:238
+#: src/Fields/Checkboxes.php:68
+msgid "Invalid option choice for \"%1$s\" on \"%2$s\"."
+msgstr "Неверный выбор опции для \"%1$s\" на \"%2$s\"."
+
+#. translators: %1$s: A space or an empty string, %2$s: Option choice percentage increase
+#: src/Fields/Abstract_Field.php:784
+msgid "+%1$s%2$s%1$s%%"
+msgstr "+%1$s%2$s%1$s%%"
+
+#. translators: %1$s: A space or an empty string, %2$s: Option choice percentage decrease
+#: src/Fields/Abstract_Field.php:788
+msgid "-%1$s%2$s%1$s%%"
+msgstr "-%1$s%2$s%1$s%%"
+
+#. translators: %s: Option choice price per character
+#: src/Fields/Abstract_Field.php:795
+msgid "%s per character"
+msgstr "%s за символ"
+
+#. translators: %s: Option choice price per character
+#: src/Fields/Abstract_Field.php:799
+msgid "%s per uploaded file"
+msgstr "%s за загруженный файл"
+
+#. translators: %1$s: Min quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Checkboxes.php:85
+msgid "You must select at least %1$d option for \"%2$s\" on \"%3$s\"."
+msgid_plural "You must select at least %1$d options for \"%2$s\" on \"%3$s\"."
+msgstr[0] "Вы должны выбрать как минимум %1$d опцию для \"%2$s\" на \"%3$s\"."
+msgstr[1] "Вы должны выбрать как минимум %1$d опции для \"%2$s\" на \"%3$s\"."
+msgstr[2] ""
+
+#. translators: %1$s: Max quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Checkboxes.php:103
+msgid "You can only select up to %1$d option for \"%2$s\" on \"%3$s\"."
+msgid_plural "You can only select up to %1$d options for \"%2$s\" on \"%3$s\"."
+msgstr[0] "Вы можете выбрать не более %1$d опцию для \"%2$s\" на \"%3$s\"."
+msgstr[1] "Вы можете выбрать не более %1$d опции для \"%2$s\" на \"%3$s\"."
+msgstr[2] ""
+
+#: src/Fields/Date_Picker.php:86
+msgid "\"%1$s\" is not a valid date for \"%2$s\"."
+msgstr "\"%1$s\" не является действительной датой для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:101
+msgid "Invalid minimum date for \"%1$s\"."
+msgstr "Неверная минимальная дата для \"%1$s\"."
+
+#: src/Fields/Date_Picker.php:105
+msgid "\"%1$s\" is before the minimum date for \"%2$s\"."
+msgstr "\"%1$s\" раньше минимальной даты для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:119
+msgid "Invalid maximum date for \"%1$s\"."
+msgstr "Неверная максимальная дата для \"%1$s\"."
+
+#: src/Fields/Date_Picker.php:126
+msgid "\"%1$s\" is after the maximum date for \"%2$s\"."
+msgstr "\"%1$s\" позже максимальной даты для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:143
+msgid "Invalid disabled date for \"%1$s\"."
+msgstr "Неверная отключенная дата для \"%1$s\"."
+
+#: src/Fields/Date_Picker.php:147
+msgid "\"%1$s\" is an excluded date for \"%2$s\"."
+msgstr "\"%1$s\" является исключенной датой для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:154
+msgid "\"%1$s\" is a disabled past date for \"%2$s\"."
+msgstr "\"%1$s\" является отключенной прошедшей датой для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:159
+msgid "\"%1$s\" is a disabled future date for \"%2$s\"."
+msgstr "\"%1$s\" является отключенной будущей датой для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:166
+msgid "\"%1$s\" is a disabled date for \"%2$s\"."
+msgstr "\"%1$s\" является отключенной датой для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:179
+msgid "\"%1$s\" is a disabled day for \"%2$s\"."
+msgstr "\"%1$s\" является отключенным днем для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:190
+msgid "\"%1$s\" is before the minimum time for \"%2$s\"."
+msgstr "\"%1$s\" раньше минимального времени для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:199
+msgid "\"%1$s\" is after the maximum time for \"%2$s\"."
+msgstr "\"%1$s\" превышает максимальное время для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:210
+msgid "\"%1$s\" is not a valid hour increment for \"%2$s\"."
+msgstr "\"%1$s\" не является допустимым увеличением часа для \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:221
+msgid "\"%1$s\" is not a valid minute increment for \"%2$s\"."
+msgstr "\"%1$s\" не является допустимым увеличением минуты для \"%2$s\"."
+
+#. translators: %1: Maxmimum number of files %2: Option name %3: Product name
+#: src/Fields/File.php:98
+msgid "You can only upload up to %1$d files(s) for \"%2$s\" on \"%3$s\"."
+msgstr "Вы можете загрузить не более %1$d файла(ов) для \"%2$s\" на \"%3$s\"."
+
+#: src/Fields/File.php:217
+#: assets/js/modules/file-upload.js:1
+msgid "Drop files here to upload"
+msgstr "Перетащите файлы сюда для загрузки"
+
+#: src/Fields/Number.php:78
+msgid "Please enter a valid number."
+msgstr "Пожалуйста, введите допустимое число."
+
+#. translators: %s: minimum number
+#: src/Fields/Number.php:85
+msgid "Please enter a number greater than or equal to %s."
+msgstr "Пожалуйста, введите число, большее или равное %s."
+
+#. translators: %s: maximum number
+#: src/Fields/Number.php:92
+msgid "Please enter a number less than or equal to %s."
+msgstr "Пожалуйста, введите число, меньшее или равное %s."
+
+#. translators: %s: step value
+#: src/Fields/Number.php:103
+msgid "Please enter a valid number. The value must be in steps of %1$s, starting from %2$s."
+msgstr "Пожалуйста, введите допустимое число. Значение должно быть кратно %1$s, начиная с %2$s."
+
+#: src/Fields/Products.php:247
+#: src/Fields/Products.php:537
+msgid "Add to cart"
+msgstr "Добавить в корзину"
+
+#: src/Fields/Products.php:374
+#: src/Fields/Products.php:377
+msgid "Select a product"
+msgstr "Выберите продукт"
+
+#: src/Fields/Products.php:818
+#: src/Fields/Products.php:824
+msgid "The selected product is not valid."
+msgstr "Выбранный продукт недействителен."
+
+#. translators: %1$d: Min quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Text.php:111
+msgid "You must input at least %1$d character for \"%2$s\" on \"%3$s\"."
+msgid_plural "You must input at least %1$d characters for \"%2$s\" on \"%3$s\"."
+msgstr[0] "Вы должны ввести как минимум %1$d символ для \"%2$s\" на \"%3$s\".|Вы должны ввести как минимум %1$d символа для \"%2$s\" на \"%3$s\".|Вы должны ввести как минимум %1$d символов для \"%2$s\" на \"%3$s\"."
+msgstr[1] ""
+msgstr[2] ""
+
+#. translators: %1$d: Max quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Text.php:126
+msgid "You can only input up to %1$d character for \"%2$s\" on \"%3$s\"."
+msgid_plural "You can only input up to %1$d characters for \"%2$s\" on \"%3$s\"."
+msgstr[0] "Вы можете ввести не более %1$d символ для \"%2$s\" на \"%3$s\".|Вы можете ввести не более %1$d символа для \"%2$s\" на \"%3$s\".|Вы можете ввести не более %1$d символов для \"%2$s\" на \"%3$s\"."
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/Handlers/Add_To_Cart.php:94
+#: src/Handlers/Add_To_Cart.php:102
+msgid "Select options"
+msgstr "Выберите параметры"
+
+#: src/Handlers/Add_To_Cart.php:96
+msgid "This product has options that may be chosen on the product page"
+msgstr "У этого продукта есть параметры, которые можно выбрать на странице продукта"
+
+#: src/Handlers/Add_To_Cart.php:210
+msgid "%1$s &times; %2$s"
+msgstr "%1$s &times; %2$s"
+
+#. translators: %1$s: link to the shop/cart, %2$s: product title, %3$s: list of additional products
+#: src/Handlers/Add_To_Cart.php:226
+msgid "%1$s has been added to your cart, together with the following additional products: %2$s"
+msgstr "%1$s был добавлен в вашу корзину вместе со следующими дополнительными продуктами: %2$s"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:98
+msgid "Group %1$s, option %2$s, name"
+msgstr "Группа %1$s, опция %2$s, название"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:104
+msgid "Group %1$s, option %2$s, description"
+msgstr "Группа %1$s, опция %2$s, описание"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:111
+msgid "Group %1$s, option %2$s, content"
+msgstr "Группа %1$s, опция %2$s, содержимое"
+
+#. translators: %s is the group name, %s is the option name, %d is the choice index
+#: src/Integration/WPML.php:119
+msgid "Group %1$s, option %2$s, label %3$d"
+msgstr "Группа %1$s, опция %2$s, метка %3$d"
+
+#: src/Rest/Routes/File_Upload.php:58
+#: src/Rest/Routes/File_Upload.php:62
+#: src/Rest/Routes/Formula.php:66
+msgid "Insufficient data supplied."
+msgstr "Недостаточно данных."
+
+#: src/Rest/Routes/File_Upload.php:68
+#: src/Rest/Routes/File_Upload.php:72
+msgid "Insufficient data supplied"
+msgstr "Недостаточно данных"
+
+#: src/Rest/Routes/File_Upload.php:76
+msgid "File type is not allowed."
+msgstr "Тип файла не разрешен."
+
+#: src/Rest/Routes/Formula.php:78
+msgid "Invalid option ID."
+msgstr "Недействительный идентификатор опции."
+
+#: src/Rest/Routes/Group.php:59
+msgid "An array of group IDs."
+msgstr "Массив идентификаторов групп."
+
+#: src/Rest/Routes/Group.php:105
+#: src/Rest/Routes/Group.php:127
+#: src/Rest/Routes/Group.php:1741
+msgid "The unique identifier for the group."
+msgstr "Уникальный идентификатор группы."
+
+#: src/Rest/Routes/Group.php:156
+msgid "An array of group_id => menu_order data."
+msgstr "Массив данных group_id => menu_order."
+
+#: src/Rest/Routes/Group.php:203
+msgid "An array of product IDs."
+msgstr "Массив идентификаторов продуктов."
+
+#: src/Rest/Routes/Group.php:208
+msgid "A search to filter products by name or SKU."
+msgstr "Поиск для фильтрации продуктов по имени или SKU."
+
+#: src/Rest/Routes/Group.php:228
+msgid "An array of category IDs."
+msgstr "Массив идентификаторов категорий."
+
+#: src/Rest/Routes/Group.php:250
+#: src/Rest/Routes/Group.php:280
+#: src/Rest/Routes/Group.php:1507
+msgid "No groups"
+msgstr "Нет групп"
+
+#: src/Rest/Routes/Group.php:460
+msgid "No group"
+msgstr "Нет группы"
+
+#: src/Rest/Routes/Group.php:486
+msgid "Something went wrong while creating the group"
+msgstr "Что-то пошло не так при создании группы"
+
+#: src/Rest/Routes/Group.php:504
+#: src/Rest/Routes/Group.php:1300
+msgid "Something went wrong: could not create an option."
+msgstr "Что-то пошло не так: не удалось создать опцию."
+
+#: src/Rest/Routes/Group.php:541
+msgid "Something went wrong while duplicating the group"
+msgstr "Что-то пошло не так при дублировании группы"
+
+#: src/Rest/Routes/Group.php:969
+#: src/Rest/Routes/Group.php:1042
+msgid "Something went wrong: could not update the selected group"
+msgstr "Что-то пошло не так: не удалось обновить выбранную группу"
+
+#: src/Rest/Routes/Group.php:996
+msgid "Something went wrong: could not update an option."
+msgstr "Что-то пошло не так: не удалось обновить опцию."
+
+#: src/Rest/Routes/Group.php:1071
+msgid "Something went wrong: could not find the group"
+msgstr "Что-то пошло не так: не удалось найти группу"
+
+#: src/Rest/Routes/Group.php:1094
+#: src/Rest/Routes/Option.php:295
+msgid "Something went wrong with reodering."
+msgstr "Что-то пошло не так с переупорядочиванием."
+
+#. translators: 1: option name, 2: formula name
+#: src/Rest/Routes/Group.php:1166
+msgid "The option \"%1$s\" no longer exists. Please update the formula \"%2$s\"."
+msgstr "Опция \"%1$s\" больше не существует. Пожалуйста, обновите формулу \"%2$s\"."
+
+#: src/Rest/Routes/Group.php:1585
+msgid "Missing parameters. Please provide either \"include\" or \"search\" parameter."
+msgstr "Отсутствуют параметры. Пожалуйста, предоставьте либо параметр \"include\", либо параметр \"search\"."
+
+#: src/Rest/Routes/Group.php:1607
+msgid "No products"
+msgstr "Нет продуктов"
+
+#: src/Rest/Routes/Group.php:1653
+msgid "No search term provided"
+msgstr "Не предоставлен поисковый запрос"
+
+#: src/Rest/Routes/Group.php:1713
+msgid "No categories"
+msgstr "Нет категорий"
+
+#: src/Rest/Routes/Group.php:1746
+msgid "The menu order for the group."
+msgstr "Порядок меню для группы."
+
+#: src/Rest/Routes/Group.php:1751
+msgid "The name for the group."
+msgstr "Название для группы."
+
+#: src/Rest/Routes/Group.php:1756
+msgid "Indicates whether the group name should be displayed."
+msgstr "Указывает, должно ли отображаться имя группы."
+
+#: src/Rest/Routes/Group.php:1761
+msgid "The visiblity status for the group."
+msgstr "Статус видимости для группы."
+
+#: src/Rest/Routes/Group.php:1769
+msgid "The products for the group."
+msgstr "Продукты для группы."
+
+#: src/Rest/Routes/Group.php:1777
+msgid "The products to exclude for for the group."
+msgstr "Продукты, которые нужно исключить для группы."
+
+#: src/Rest/Routes/Group.php:1785
+msgid "The categories for the group."
+msgstr "Категории для группы."
+
+#: src/Rest/Routes/Group.php:1793
+msgid "The categories to exclude for the group."
+msgstr "Категории, которые нужно исключить для группы."
+
+#: src/Rest/Routes/Group.php:1798
+msgid "The options for the group."
+msgstr "Опции для группы."
+
+#: src/Rest/Routes/Group.php:1805
+#: src/Rest/Routes/Option.php:80
+#: src/Rest/Routes/Option.php:128
+#: src/Rest/Routes/Option.php:324
+msgid "The unique identifier for the option."
+msgstr "Уникальный идентификатор для опции."
+
+#: src/Rest/Routes/Group.php:1810
+#: src/Rest/Routes/Option.php:329
+msgid "The Group ID to which the option belongs."
+msgstr "ID группы, к которой принадлежит опция."
+
+#: src/Rest/Routes/Group.php:1815
+#: src/Rest/Routes/Option.php:334
+msgid "The menu order for the option."
+msgstr "Порядок меню для опции."
+
+#: src/Rest/Routes/Group.php:1820
+#: src/Rest/Routes/Option.php:339
+msgid "The name for the option."
+msgstr "Название для опции."
+
+#: src/Rest/Routes/Group.php:1825
+#: src/Rest/Routes/Option.php:344
+msgid "The visiblity status for the option."
+msgstr "Статус видимости для опции."
+
+#: src/Rest/Routes/Group.php:1830
+#: src/Rest/Routes/Option.php:349
+msgid "The field type for the option."
+msgstr "Тип поля для параметра."
+
+#: src/Rest/Routes/Group.php:1835
+#: src/Rest/Routes/Option.php:354
+msgid "The choices for the option."
+msgstr "Выборы для параметра."
+
+#: src/Rest/Routes/Group.php:1840
+#: src/Rest/Routes/Option.php:359
+msgid "Indicates whether the option is required."
+msgstr "Указывает, требуется ли параметр."
+
+#: src/Rest/Routes/Group.php:1845
+#: src/Rest/Routes/Option.php:364
+msgid "Indicates whether the option name should be displayed."
+msgstr "Указывает, должно ли имя параметра отображаться."
+
+#: src/Rest/Routes/Group.php:1850
+msgid "Any specific extra settings for the option."
+msgstr "Любые специфические дополнительные настройки для параметра."
+
+#: src/Rest/Routes/Group.php:1855
+msgid "Settings for the datepicker"
+msgstr "Настройки для выбора даты"
+
+#: src/Rest/Routes/Group.php:1860
+msgid "The choice type for the option."
+msgstr "Тип выбора для параметра."
+
+#: src/Rest/Routes/Group.php:1865
+msgid "The selected attribute for the option."
+msgstr "Выбранный атрибут для параметра."
+
+#: src/Rest/Routes/Group.php:1870
+msgid "The date format for the option."
+msgstr "Формат даты для параметра."
+
+#: src/Rest/Routes/Group.php:1875
+msgid "The minimum date for the option."
+msgstr "Минимальная дата для параметра."
+
+#: src/Rest/Routes/Group.php:1880
+msgid "The maximum date for the option."
+msgstr "Максимальная дата для параметра."
+
+#: src/Rest/Routes/Group.php:1885
+msgid "The days to disable for the option."
+msgstr "Дни, которые следует отключить для параметра."
+
+#: src/Rest/Routes/Group.php:1893
+msgid "The dates to disable for the option."
+msgstr "Даты, которые следует отключить для параметра."
+
+#: src/Rest/Routes/Group.php:1898
+msgid "Indicates whether past dates should be disabled for the option."
+msgstr "Указывает, должны ли прошлые даты быть отключены для параметра."
+
+#: src/Rest/Routes/Group.php:1903
+msgid "Indicates whether future dates should be disabled for the option."
+msgstr "Указывает, должны ли будущие даты быть отключены для параметра."
+
+#: src/Rest/Routes/Group.php:1908
+msgid "Indicates whether the time should be enabled for the option."
+msgstr "Указывает, должно ли время быть включено для параметра."
+
+#: src/Rest/Routes/Group.php:1913
+msgid "The minimum time for the option."
+msgstr "Минимальное время для параметра."
+
+#: src/Rest/Routes/Group.php:1918
+msgid "The maximum time for the option."
+msgstr "Максимальное время для параметра."
+
+#: src/Rest/Routes/Group.php:1925
+msgid "The minute increment for the option."
+msgstr "Увеличение минуты для параметра."
+
+#: src/Rest/Routes/Group.php:1932
+msgid "The hour increment for the option."
+msgstr "Увеличение часа для параметра."
+
+#: src/Rest/Routes/Option.php:60
+msgid "The unique identifier for the parent group."
+msgstr "Уникальный идентификатор родительской группы."
+
+#: src/Rest/Routes/Option.php:148
+msgid "An array of option_id => menu_order data."
+msgstr "Массив данных option_id => menu_order."
+
+#: src/Rest/Routes/Option.php:170
+#: src/Rest/Routes/Option.php:188
+msgid "No options"
+msgstr "Нет опций"
+
+#: src/Rest/Routes/Option.php:206
+msgid "No option"
+msgstr "Нет опции"
+
+#: src/Rest/Routes/Option.php:230
+msgid "Something went wrong while creating the option"
+msgstr "Произошла ошибка при создании опции"
+
+#: src/Rest/Routes/Option.php:253
+msgid "Something went wrong: could not update the selected option"
+msgstr "Произошла ошибка: не удалось обновить выбранную опцию"
+
+#: src/Rest/Routes/Option.php:274
+msgid "Something went wrong: could not find the option"
+msgstr "Произошла ошибка: не удалось найти опцию"
+
+#: src/Upload_Directory.php:37
+msgid "The files uploaded via WooCommerce Product Options are not currently protected."
+msgstr "Файлы, загруженные через WooCommerce Product Options, в настоящее время не защищены."
+
+#: src/Upload_Directory.php:38
+msgid "To protect them, you must add this <a href=\"https://barn2.com/kb/\">NGINX redirect rule</a>. If you have already done this, or it does not apply to your site, you may permanently dismiss this notice."
+msgstr "Для защиты их необходимо добавить это <a href=\"https://barn2.com/kb/\">правило перенаправления NGINX</a>. Если вы уже сделали это или это не относится к вашему сайту, вы можете навсегда закрыть это уведомление."
+
+#. translators: %s: option name
+#: src/Util/Cart.php:80
+msgid "The option \"%s\" is not supported."
+msgstr "Опция \"%s\" не поддерживается."
+
+#: src/Util/Display.php:128
+msgid "Total: "
+msgstr "Итого: "
+
+#: src/Util/Util.php:186
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Weight"
+msgstr "Вес"
+
+#: src/Util/Util.php:190
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Length"
+msgstr "Длина"
+
+#: src/Util/Util.php:194
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Width"
+msgstr "Ширина"
+
+#: src/Util/Util.php:198
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Height"
+msgstr "Высота"
+
+#: src/Fields/Abstract_Field.php:780
+msgctxt "one-time fee"
+msgid "%s"
+msgstr "%s"
+
+#: src/Fields/Abstract_Field.php:791
+msgctxt "quantity-based fee"
+msgid "%s"
+msgstr "%s"
+
+#: src/Handlers/Add_To_Cart.php:222
+msgctxt "Item name in quotes"
+msgid "&ldquo;%s&rdquo;"
+msgstr "&ldquo;%s&rdquo;"

@@ -157,7 +157,7 @@ export function TestPaymentForm({
         className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-lg font-semibold transition-all ${
           isProcessing
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-            : "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg"
+            : "bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg"
         }`}
       >
         {isProcessing ? (

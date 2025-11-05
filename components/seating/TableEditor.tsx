@@ -312,9 +312,9 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
           </div>
 
           {/* Table Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-blue-900 mb-2">Table Info</h3>
-            <div className="space-y-1 text-xs text-blue-800">
+          <div className="bg-accent border border-border rounded-lg p-4">
+            <h3 className="text-sm font-semibold text-foreground mb-2">Table Info</h3>
+            <div className="space-y-1 text-xs text-accent-foreground">
               <div className="flex items-center justify-between">
                 <span>Shape:</span>
                 <span className="font-medium">{table.shape}</span>

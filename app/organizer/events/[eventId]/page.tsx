@@ -113,7 +113,7 @@ export default function EventDashboardPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
           <p className="text-gray-600">You don't have permission to access this page.</p>
-          <Link href="/" className="mt-4 inline-block text-blue-600 hover:underline">
+          <Link href="/" className="mt-4 inline-block text-primary hover:underline">
             Go to Homepage
           </Link>
         </div>
@@ -124,7 +124,7 @@ export default function EventDashboardPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
@@ -147,19 +147,13 @@ export default function EventDashboardPage() {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(eventUrl);
-      alert("Event link copied to clipboard!");
     }
   };
 
   const handlePublish = async () => {
-    if (!confirm("Are you sure you want to publish this event? It will be visible to the public.")) {
-      return;
-    }
-
     setIsPublishing(true);
     try {
       await publishEvent({ eventId });
-      alert("Event published successfully! It will now appear on the homepage.");
       router.refresh();
     } catch (error: any) {
       alert(error.message || "Failed to publish event");
@@ -243,7 +237,6 @@ export default function EventDashboardPage() {
         applicableToTierIds: [],
       });
       setShowCreateDiscount(false);
-      alert("Discount code created successfully!");
     } catch (error: any) {
       alert(error.message || "Failed to create discount code");
     }
@@ -261,26 +254,16 @@ export default function EventDashboardPage() {
   };
 
   const handleDeleteDiscount = async (discountCodeId: Id<"discountCodes">) => {
-    if (!confirm("Are you sure you want to delete this discount code? This cannot be undone.")) {
-      return;
-    }
-
     try {
       await deleteDiscountCode({ discountCodeId });
-      alert("Discount code deleted successfully");
     } catch (error: any) {
       alert(error.message || "Failed to delete discount code");
     }
   };
 
   const handleNotifyWaitlist = async (waitlistId: Id<"eventWaitlist">, email: string) => {
-    if (!confirm(`Notify ${email} that tickets are available? This will mark them as notified.`)) {
-      return;
-    }
-
     try {
       await notifyWaitlistEntry({ waitlistId });
-      alert(`${email} has been marked as notified. You should send them a follow-up email with ticket purchase instructions.`);
     } catch (error: any) {
       alert(error.message || "Failed to notify waitlist entry");
     }
@@ -309,7 +292,7 @@ export default function EventDashboardPage() {
                   {event.status}
                 </span>
                 {isUpcoming && (
-                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-accent text-accent-foreground">
                     Upcoming
                   </span>
                 )}
@@ -367,7 +350,7 @@ export default function EventDashboardPage() {
               </Link>
               <Link
                 href={`/organizer/events/${eventId}/edit`}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
               >
                 <Edit className="w-4 h-4" />
                 Edit Event
@@ -394,7 +377,7 @@ export default function EventDashboardPage() {
             onClick={() => setActiveTab("overview")}
             className={`px-6 py-3 font-medium transition-colors relative ${
               activeTab === "overview"
-                ? "text-blue-600 border-b-2 border-blue-600"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -404,7 +387,7 @@ export default function EventDashboardPage() {
             onClick={() => setActiveTab("orders")}
             className={`px-6 py-3 font-medium transition-colors relative ${
               activeTab === "orders"
-                ? "text-blue-600 border-b-2 border-blue-600"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -414,7 +397,7 @@ export default function EventDashboardPage() {
             onClick={() => setActiveTab("attendees")}
             className={`px-6 py-3 font-medium transition-colors relative ${
               activeTab === "attendees"
-                ? "text-blue-600 border-b-2 border-blue-600"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -425,7 +408,7 @@ export default function EventDashboardPage() {
               onClick={() => setActiveTab("seating")}
               className={`px-6 py-3 font-medium transition-colors relative ${
                 activeTab === "seating"
-                  ? "text-blue-600 border-b-2 border-blue-600"
+                  ? "text-primary border-b-2 border-primary"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
@@ -436,7 +419,7 @@ export default function EventDashboardPage() {
             onClick={() => setActiveTab("staff")}
             className={`px-6 py-3 font-medium transition-colors relative ${
               activeTab === "staff"
-                ? "text-blue-600 border-b-2 border-blue-600"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -446,7 +429,7 @@ export default function EventDashboardPage() {
             onClick={() => setActiveTab("discounts")}
             className={`px-6 py-3 font-medium transition-colors relative ${
               activeTab === "discounts"
-                ? "text-blue-600 border-b-2 border-blue-600"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -456,7 +439,7 @@ export default function EventDashboardPage() {
             onClick={() => setActiveTab("bundles")}
             className={`px-6 py-3 font-medium transition-colors relative ${
               activeTab === "bundles"
-                ? "text-blue-600 border-b-2 border-blue-600"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -466,7 +449,7 @@ export default function EventDashboardPage() {
             onClick={() => setActiveTab("waitlist")}
             className={`px-6 py-3 font-medium transition-colors relative ${
               activeTab === "waitlist"
-                ? "text-blue-600 border-b-2 border-blue-600"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -505,7 +488,7 @@ export default function EventDashboardPage() {
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-600">Tickets Sold</span>
-                  <Ticket className="w-5 h-5 text-blue-600" />
+                  <Ticket className="w-5 h-5 text-primary" />
                 </div>
                 <p className="text-3xl font-bold text-gray-900">
                   {statistics.totalTicketsSold}
@@ -519,7 +502,7 @@ export default function EventDashboardPage() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                      className="bg-primary h-2 rounded-full transition-all duration-500"
                       style={{ width: `${Math.min(statistics.percentageSold, 100)}%` }}
                     ></div>
                   </div>
@@ -585,7 +568,7 @@ export default function EventDashboardPage() {
                     </Link>
                     <Link
                       href={`/organizer/events/${eventId}/tickets/setup`}
-                      className="text-sm text-blue-600 hover:underline"
+                      className="text-sm text-primary hover:underline"
                     >
                       Manage Tiers
                     </Link>
@@ -625,7 +608,7 @@ export default function EventDashboardPage() {
 
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                          className="bg-primary h-2 rounded-full transition-all duration-500"
                           style={{ width: `${Math.min(tier.percentageSold, 100)}%` }}
                         ></div>
                       </div>
@@ -647,7 +630,7 @@ export default function EventDashboardPage() {
                   <h2 className="text-xl font-bold text-gray-900">Recent Orders</h2>
                   <button
                     onClick={() => setActiveTab("orders")}
-                    className="text-sm text-blue-600 hover:underline"
+                    className="text-sm text-primary hover:underline"
                   >
                     View All Orders
                   </button>
@@ -696,7 +679,7 @@ export default function EventDashboardPage() {
                 </p>
                 <button
                   onClick={handleShare}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
                 >
                   <Share2 className="w-5 h-5" />
                   Share Event
@@ -865,7 +848,7 @@ export default function EventDashboardPage() {
                               ticket.status === "VALID"
                                 ? "bg-green-100 text-green-800"
                                 : ticket.status === "SCANNED"
-                                ? "bg-blue-100 text-blue-800"
+                                ? "bg-accent text-accent-foreground"
                                 : ticket.status === "CANCELLED"
                                 ? "bg-red-100 text-red-800"
                                 : "bg-gray-100 text-gray-800"
@@ -910,7 +893,7 @@ export default function EventDashboardPage() {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-gray-600">Total Assigned Seats</span>
-                      <Users className="w-5 h-5 text-blue-600" />
+                      <Users className="w-5 h-5 text-primary" />
                     </div>
                     <p className="text-3xl font-bold text-gray-900">{tableAssignments.totalAssignedSeats}</p>
                     <p className="text-xs text-gray-500 mt-1">Seats with attendees</p>
@@ -996,8 +979,8 @@ export default function EventDashboardPage() {
                                   <div key={seatIndex} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
                                     <div className="flex-1">
                                       <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                          <span className="text-sm font-medium text-blue-600">
+                                        <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+                                          <span className="text-sm font-medium text-primary">
                                             {seat.seatNumber}
                                           </span>
                                         </div>
@@ -1034,8 +1017,8 @@ export default function EventDashboardPage() {
                                   <div key={seatIndex} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
                                     <div className="flex-1">
                                       <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                          <span className="text-sm font-medium text-blue-600">
+                                        <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+                                          <span className="text-sm font-medium text-primary">
                                             {seat.seatNumber}
                                           </span>
                                         </div>
@@ -1101,7 +1084,7 @@ export default function EventDashboardPage() {
                         a.click();
                         URL.revokeObjectURL(url);
                       }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-2"
                     >
                       <Download className="w-4 h-4" />
                       Export as CSV
@@ -1146,7 +1129,7 @@ export default function EventDashboardPage() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-600">Total Staff</span>
-                    <Users className="w-5 h-5 text-blue-600" />
+                    <Users className="w-5 h-5 text-primary" />
                   </div>
                   <p className="text-3xl font-bold text-gray-900">{staffSummary.totalStaff}</p>
                   <p className="text-xs text-gray-500 mt-1">Active team members</p>
@@ -1207,7 +1190,7 @@ export default function EventDashboardPage() {
                   <h2 className="text-xl font-bold text-gray-900">Staff Members</h2>
                   <Link
                     href={`/organizer/events/${eventId}/staff`}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
                   >
                     <Users className="w-4 h-4" />
                     Manage Staff
@@ -1221,14 +1204,14 @@ export default function EventDashboardPage() {
                     <div key={staff._id} className="p-6 hover:bg-gray-50 transition-colors">
                       <div className="flex items-start justify-between">
                         <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <Users className="w-6 h-6 text-blue-600" />
+                          <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center flex-shrink-0">
+                            <Users className="w-6 h-6 text-primary" />
                           </div>
                           <div>
                             <h3 className="text-lg font-bold text-gray-900">{staff.name}</h3>
                             <p className="text-sm text-gray-600">{staff.email}</p>
                             <div className="flex items-center gap-3 mt-2">
-                              <span className="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
+                              <span className="px-3 py-1 text-xs font-semibold bg-accent text-primary rounded-full">
                                 {staff.role}
                               </span>
                               {staff.commissionType && (
@@ -1276,7 +1259,7 @@ export default function EventDashboardPage() {
                   </p>
                   <Link
                     href={`/organizer/events/${eventId}/staff`}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
                   >
                     <Users className="w-5 h-5" />
                     Add Staff Members
@@ -1301,7 +1284,7 @@ export default function EventDashboardPage() {
                       className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                        <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm">
                           #{index + 1}
                         </div>
                         <div>
@@ -1330,7 +1313,7 @@ export default function EventDashboardPage() {
             <div className="flex justify-end">
               <button
                 onClick={() => setShowCreateDiscount(!showCreateDiscount)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
               >
                 <Plus className="w-4 h-4" />
                 {showCreateDiscount ? "Cancel" : "Create Discount Code"}
@@ -1359,7 +1342,7 @@ export default function EventDashboardPage() {
                         value={newDiscount.code}
                         onChange={(e) => setNewDiscount({ ...newDiscount, code: e.target.value.toUpperCase() })}
                         placeholder="SUMMER2024"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent uppercase"
                       />
                       <p className="text-xs text-gray-500 mt-1">Letters and numbers only, automatically converted to uppercase</p>
                     </div>
@@ -1371,7 +1354,7 @@ export default function EventDashboardPage() {
                       <select
                         value={newDiscount.discountType}
                         onChange={(e) => setNewDiscount({ ...newDiscount, discountType: e.target.value as "PERCENTAGE" | "FIXED_AMOUNT" })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                       >
                         <option value="PERCENTAGE">Percentage (%)</option>
                         <option value="FIXED_AMOUNT">Fixed Amount ($)</option>
@@ -1393,7 +1376,7 @@ export default function EventDashboardPage() {
                           value={newDiscount.discountValue || ""}
                           onChange={(e) => setNewDiscount({ ...newDiscount, discountValue: parseInt(e.target.value) || 0 })}
                           placeholder="20"
-                          className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                         />
                       )}
                       {newDiscount.discountType === "FIXED_AMOUNT" && (
@@ -1404,7 +1387,7 @@ export default function EventDashboardPage() {
                           value={newDiscount.discountValue ? (newDiscount.discountValue / 100).toFixed(2) : ""}
                           onChange={(e) => setNewDiscount({ ...newDiscount, discountValue: Math.round(parseFloat(e.target.value) * 100) || 0 })}
                           placeholder="10.00"
-                          className="w-full px-4 py-2 pl-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-4 py-2 pl-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                         />
                       )}
                       {newDiscount.discountType === "PERCENTAGE" ? (
@@ -1432,7 +1415,7 @@ export default function EventDashboardPage() {
                         value={newDiscount.maxUses || ""}
                         onChange={(e) => setNewDiscount({ ...newDiscount, maxUses: e.target.value ? parseInt(e.target.value) : undefined })}
                         placeholder="Unlimited"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                       <p className="text-xs text-gray-500 mt-1">Total number of times this code can be used</p>
                     </div>
@@ -1447,7 +1430,7 @@ export default function EventDashboardPage() {
                         value={newDiscount.maxUsesPerUser || ""}
                         onChange={(e) => setNewDiscount({ ...newDiscount, maxUsesPerUser: e.target.value ? parseInt(e.target.value) : undefined })}
                         placeholder="Unlimited"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                       <p className="text-xs text-gray-500 mt-1">Max times each customer can use this code</p>
                     </div>
@@ -1463,7 +1446,7 @@ export default function EventDashboardPage() {
                         type="datetime-local"
                         value={newDiscount.validFrom ? new Date(newDiscount.validFrom).toISOString().slice(0, 16) : ""}
                         onChange={(e) => setNewDiscount({ ...newDiscount, validFrom: e.target.value ? new Date(e.target.value).getTime() : undefined })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                       <p className="text-xs text-gray-500 mt-1">When this code becomes valid</p>
                     </div>
@@ -1476,7 +1459,7 @@ export default function EventDashboardPage() {
                         type="datetime-local"
                         value={newDiscount.validUntil ? new Date(newDiscount.validUntil).toISOString().slice(0, 16) : ""}
                         onChange={(e) => setNewDiscount({ ...newDiscount, validUntil: e.target.value ? new Date(e.target.value).getTime() : undefined })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                       <p className="text-xs text-gray-500 mt-1">When this code expires</p>
                     </div>
@@ -1495,7 +1478,7 @@ export default function EventDashboardPage() {
                         value={newDiscount.minPurchaseAmount ? (newDiscount.minPurchaseAmount / 100).toFixed(2) : ""}
                         onChange={(e) => setNewDiscount({ ...newDiscount, minPurchaseAmount: e.target.value ? Math.round(parseFloat(e.target.value) * 100) : undefined })}
                         placeholder="0.00"
-                        className="w-full px-4 py-2 pl-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 pl-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                       <span className="absolute left-4 top-2.5 text-gray-500">$</span>
                     </div>
@@ -1514,7 +1497,7 @@ export default function EventDashboardPage() {
                             type="checkbox"
                             checked={newDiscount.applicableToTierIds.length === 0}
                             onChange={() => setNewDiscount({ ...newDiscount, applicableToTierIds: [] })}
-                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                           />
                           <span className="font-medium">All Ticket Tiers</span>
                         </label>
@@ -1530,7 +1513,7 @@ export default function EventDashboardPage() {
                                   setNewDiscount({ ...newDiscount, applicableToTierIds: newDiscount.applicableToTierIds.filter((id) => id !== tier._id) });
                                 }
                               }}
-                              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                             />
                             <span>{tier.name} - ${(tier.price / 100).toFixed(2)}</span>
                           </label>
@@ -1544,7 +1527,7 @@ export default function EventDashboardPage() {
                   <div className="flex items-center gap-3 pt-4">
                     <button
                       onClick={handleCreateDiscount}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                      className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
                     >
                       Create Discount Code
                     </button>
@@ -1598,7 +1581,7 @@ export default function EventDashboardPage() {
                                   </span>
                                 )}
                                 {isNotStarted && (
-                                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                                  <span className="px-2 py-1 bg-accent text-accent-foreground text-xs font-medium rounded-full">
                                     Scheduled
                                   </span>
                                 )}
@@ -1695,7 +1678,7 @@ export default function EventDashboardPage() {
                   </p>
                   <button
                     onClick={() => setShowCreateDiscount(true)}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
                   >
                     <Plus className="w-5 h-5" />
                     Create Your First Discount Code
@@ -1787,7 +1770,7 @@ export default function EventDashboardPage() {
                                 entry.status === "ACTIVE"
                                   ? "bg-green-100 text-green-800"
                                   : entry.status === "NOTIFIED"
-                                  ? "bg-blue-100 text-blue-800"
+                                  ? "bg-accent text-accent-foreground"
                                   : "bg-gray-100 text-gray-800"
                               }`}
                             >
@@ -1800,7 +1783,7 @@ export default function EventDashboardPage() {
                             {entry.status === "ACTIVE" && (
                               <button
                                 onClick={() => handleNotifyWaitlist(entry._id, entry.email)}
-                                className="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs font-medium"
+                                className="inline-flex items-center gap-1 px-3 py-1 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-xs font-medium"
                               >
                                 <Mail className="w-3 h-3" />
                                 Notify
@@ -1833,13 +1816,13 @@ export default function EventDashboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="bg-blue-50 border border-blue-200 rounded-lg p-6"
+              className="bg-accent border border-border rounded-lg p-6"
             >
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <AlertCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-blue-900 mb-2">How the Waitlist Works</h3>
-                  <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                  <h3 className="font-semibold text-foreground mb-2">How the Waitlist Works</h3>
+                  <ul className="text-sm text-accent-foreground space-y-1 list-disc list-inside">
                     <li>Customers can join the waitlist when all tickets are sold out</li>
                     <li>Waitlist entries are shown in order of when they joined (first-in, first-out)</li>
                     <li>Click "Notify" to mark an entry as notified (you should then contact them via email)</li>

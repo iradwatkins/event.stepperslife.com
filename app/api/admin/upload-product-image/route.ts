@@ -5,7 +5,21 @@ import path from "path";
 import sharp from "sharp";
 import crypto from "crypto";
 
-const PRODUCT_IMAGE_STORAGE_PATH = "/root/websites/events-stepperslife/STEPFILES/product-images";
+// Get storage path at RUNTIME, not compile time
+function getStoragePath() {
+  // First check if explicitly set
+  if (process.env.PRODUCT_IMAGE_STORAGE_PATH) {
+    return process.env.PRODUCT_IMAGE_STORAGE_PATH;
+  }
+
+  // Then check NODE_ENV at runtime
+  if (process.env.NODE_ENV === 'production') {
+    return "/root/websites/events-stepperslife/STEPFILES/product-images";
+  }
+
+  // Default to local development path
+  return path.join(process.cwd(), "STEPFILES", "product-images");
+}
 
 // Calculate file hash for duplicate detection
 async function calculateFileHash(buffer: Buffer): Promise<string> {
@@ -14,6 +28,7 @@ async function calculateFileHash(buffer: Buffer): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
+    const storagePath = getStoragePath();
     const formData = await request.formData();
     const file = formData.get("file") as File;
 
@@ -49,11 +64,12 @@ export async function POST(request: NextRequest) {
     const fileHash = await calculateFileHash(buffer);
     const timestamp = Date.now();
     console.log(`📸 Uploading product image: ${file.name} (hash: ${fileHash})`);
+    console.log(`📁 Storage path: ${storagePath}`);
 
     // Ensure storage directory exists
-    if (!existsSync(PRODUCT_IMAGE_STORAGE_PATH)) {
-      await mkdir(PRODUCT_IMAGE_STORAGE_PATH, { recursive: true });
-      console.log(`📁 Created product images directory: ${PRODUCT_IMAGE_STORAGE_PATH}`);
+    if (!existsSync(storagePath)) {
+      await mkdir(storagePath, { recursive: true });
+      console.log(`📁 Created product images directory: ${storagePath}`);
     }
 
     // Optimize image with sharp
@@ -71,7 +87,7 @@ export async function POST(request: NextRequest) {
 
     // Save optimized image with hash and timestamp
     const filename = `${fileHash}-${timestamp}.jpg`;
-    const filepath = path.join(PRODUCT_IMAGE_STORAGE_PATH, filename);
+    const filepath = path.join(storagePath, filename);
     await writeFile(filepath, optimizedBuffer);
 
     // Calculate sizes for reporting

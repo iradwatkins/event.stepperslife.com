@@ -395,7 +395,7 @@ export default function SeatSelection({
                             ? tableSelected
                               ? "border-green-500 bg-green-50"
                               : "border-gray-200 bg-gray-50 hover:border-purple-300"
-                            : "border-gray-200 bg-gray-50 hover:border-blue-300"
+                            : "border-gray-200 bg-gray-50 hover:border-border"
                         }`}
                       >
                         <h4 className="font-semibold text-gray-900 mb-3 text-center">

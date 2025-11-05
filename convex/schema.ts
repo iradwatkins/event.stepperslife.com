@@ -1133,14 +1133,58 @@ export default defineSchema({
         size: v.optional(v.string()),
         color: v.optional(v.string()),
       }),
-      price: v.optional(v.number()), // Override base price
+      price: v.number(), // Independent price per variant (required for variants)
       sku: v.optional(v.string()),
       inventoryQuantity: v.number(),
+      image: v.optional(v.string()), // Variant-specific image URL
+    }))),
+
+    // Product Options (addons/customizations)
+    options: v.optional(v.array(v.object({
+      id: v.string(), // Unique option ID
+      name: v.string(), // "Gift wrapping", "Engraving text", etc.
+      description: v.optional(v.string()), // Help text for the option
+      type: v.union(
+        v.literal("text"),         // Single line text input
+        v.literal("textarea"),     // Multi-line text
+        v.literal("number"),       // Number input
+        v.literal("select"),       // Dropdown
+        v.literal("radio"),        // Radio buttons
+        v.literal("checkbox"),     // Checkboxes (multiple selection)
+        v.literal("color"),        // Color picker
+        v.literal("date"),         // Date picker
+        v.literal("file"),         // File upload
+        v.literal("image_swatch")  // Image buttons
+      ),
+      required: v.boolean(), // Is this option required?
+
+      // Choices (for select, radio, checkbox, image_swatch)
+      choices: v.optional(v.array(v.object({
+        id: v.string(),
+        label: v.string(),
+        priceModifier: v.number(), // Price adjustment in cents (can be negative)
+        image: v.optional(v.string()), // For image_swatch type
+        default: v.optional(v.boolean()), // Is this the default choice?
+      }))),
+
+      // Price modifier for text/number/file types
+      priceModifier: v.optional(v.number()), // Flat fee in cents
+
+      // Validation rules
+      minLength: v.optional(v.number()), // For text inputs
+      maxLength: v.optional(v.number()),
+      minValue: v.optional(v.number()), // For number inputs
+      maxValue: v.optional(v.number()),
+
+      // Display settings
+      placeholder: v.optional(v.string()),
+      displayOrder: v.number(), // Order to display options
     }))),
 
     // Shipping
     requiresShipping: v.boolean(),
     weight: v.optional(v.number()), // Weight in grams
+    shippingPrice: v.optional(v.number()), // Shipping price in cents (set by admin)
 
     // Status
     status: v.union(

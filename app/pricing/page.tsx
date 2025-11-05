@@ -269,7 +269,7 @@ export default function PricingPage() {
           </div>
 
           {/* CREDIT_CARD Model */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-blue-200 relative">
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-border relative">
             {/* Model Image */}
             <div className="h-48 relative">
               <Image
@@ -507,8 +507,8 @@ export default function PricingPage() {
               </div>
 
               {/* CREDIT_CARD Results */}
-              <div className="bg-blue-50 rounded-lg p-6">
-                <h3 className="font-bold text-lg mb-4 text-blue-700">CREDIT CARD</h3>
+              <div className="bg-accent rounded-lg p-6">
+                <h3 className="font-bold text-lg mb-4 text-primary">CREDIT CARD</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Upfront Cost:</span>
@@ -525,7 +525,7 @@ export default function PricingPage() {
                   <div className="border-t pt-3 mt-3">
                     <div className="flex justify-between">
                       <span className="font-semibold">Your Revenue:</span>
-                      <span className="font-bold text-blue-600">
+                      <span className="font-bold text-primary">
                         ${fees.creditCard.net.toFixed(2)}
                       </span>
                     </div>

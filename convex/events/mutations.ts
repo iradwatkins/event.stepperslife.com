@@ -41,7 +41,7 @@ export const createEvent = mutation({
       console.log("[createEvent] Starting event creation...");
 
       // Use fallback test user for anonymous events
-      const email = "test@stepperslife.com";
+      const email = "iradwatkins@gmail.com";
       const name = "Test Organizer";
       const image = undefined;
 
@@ -301,7 +301,7 @@ export const configurePayment = mutation({
       // Use test user
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
       if (!user) throw new Error("Test user not found");
     } else {
@@ -758,7 +758,7 @@ export const bulkDeleteEvents = mutation({
       console.warn("[bulkDeleteEvents] TESTING MODE - No authentication required");
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
       if (!user) throw new Error("Test user not found");
     } else {

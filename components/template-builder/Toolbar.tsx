@@ -80,12 +80,12 @@ export default function Toolbar({ className = "" }: ToolbarProps) {
                   color: template.color,
                 })
               }
-              className="flex flex-col items-center justify-center p-3 bg-gray-50 border-2 border-gray-200 rounded-lg cursor-move hover:bg-blue-50 hover:border-blue-300 transition-all group"
+              className="flex flex-col items-center justify-center p-3 bg-gray-50 border-2 border-gray-200 rounded-lg cursor-move hover:bg-accent hover:border-border transition-all group"
             >
-              <div className="text-gray-600 group-hover:text-blue-600 mb-1">
+              <div className="text-gray-600 group-hover:text-primary mb-1">
                 {template.icon}
               </div>
-              <span className="text-xs font-medium text-gray-700 group-hover:text-blue-700">
+              <span className="text-xs font-medium text-gray-700 group-hover:text-primary">
                 {template.label}
               </span>
               <span className="text-xs text-gray-500">{template.capacity} seats</span>
@@ -165,8 +165,8 @@ export default function Toolbar({ className = "" }: ToolbarProps) {
       </div>
 
       {/* Instructions */}
-      <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-xs text-blue-800">
+      <div className="mt-6 p-3 bg-accent border border-border rounded-lg">
+        <p className="text-xs text-accent-foreground">
           <strong>Tip:</strong> Drag items onto the canvas to place them. Click to select and edit properties.
         </p>
       </div>

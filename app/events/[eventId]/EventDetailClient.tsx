@@ -68,7 +68,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-16">
           <div className="text-center">
-            <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
             <p className="mt-4 text-gray-500">Loading event...</p>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Events
@@ -115,7 +115,6 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
     }
   };
 
@@ -139,7 +138,6 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
         name: waitlistName,
         quantity: waitlistQuantity,
       });
-      alert("Successfully joined the waitlist! We'll notify you when tickets become available.");
       setShowWaitlistModal(false);
       setWaitlistEmail("");
       setWaitlistName("");
@@ -172,7 +170,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
           <div className="flex items-center justify-between">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors"
+              className="inline-flex items-center gap-2 text-gray-700 hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Events</span>
@@ -214,7 +212,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                     />
                   </div>
                 ) : (
-                  <div className="w-full aspect-[3/4] flex items-center justify-center bg-blue-600">
+                  <div className="w-full aspect-[3/4] flex items-center justify-center bg-primary">
                     <Calendar className="w-24 h-24 text-white opacity-50" />
                   </div>
                 )}
@@ -226,7 +224,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                       ? "bg-yellow-500 text-white"
                       : eventDetails.eventType === "FREE_EVENT"
                       ? "bg-green-500 text-white"
-                      : "bg-blue-500 text-white"
+                      : "bg-primary text-white"
                   }`}>
                     {eventDetails.eventType === "SAVE_THE_DATE"
                       ? "Save the Date"
@@ -265,7 +263,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                   {eventDetails.categories.map((category) => (
                     <span
                       key={category}
-                      className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
+                      className="px-3 py-1 bg-accent text-primary rounded-full text-sm"
                     >
                       {category}
                     </span>
@@ -308,7 +306,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline text-sm mt-1 inline-flex items-center gap-1"
+                        className="text-primary hover:underline text-sm mt-1 inline-flex items-center gap-1"
                       >
                         View Map
                         <ExternalLink className="w-3 h-3" />
@@ -328,7 +326,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                 >
                   <div className="bg-white rounded-lg border border-gray-200 p-6">
                     <div className="flex items-center gap-2 mb-4">
-                      <Ticket className="w-5 h-5 text-blue-600" />
+                      <Ticket className="w-5 h-5 text-primary" />
                       <h3 className="text-lg font-semibold text-gray-900">Available Tickets</h3>
                     </div>
                     <div className="space-y-3">
@@ -346,7 +344,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                             className={`border rounded-lg p-4 hover:shadow-md transition-shadow ${
                               showEarlyBird
                                 ? 'bg-amber-50 border-amber-200'
-                                : 'bg-blue-50 border-blue-100'
+                                : 'bg-accent border-blue-100'
                             }`}
                           >
                             <div className="flex justify-between items-start mb-2">
@@ -365,7 +363,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                                 )}
                               </div>
                               <div className="text-right ml-2">
-                                <p className={`font-bold text-xl ${showEarlyBird ? 'text-amber-600' : 'text-blue-600'}`}>
+                                <p className={`font-bold text-xl ${showEarlyBird ? 'text-amber-600' : 'text-primary'}`}>
                                   ${(tier.currentPrice / 100).toFixed(2)}
                                 </p>
                                 {showEarlyBird && tier.price !== tier.currentPrice && (
@@ -471,7 +469,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                                   <p className="text-xs text-gray-500 mb-1">Includes {bundle.events.length} events:</p>
                                   <div className="flex flex-wrap gap-1">
                                     {bundle.events.map((event: any) => (
-                                      <span key={event._id} className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-200">
+                                      <span key={event._id} className="text-xs px-2 py-0.5 bg-accent text-primary rounded border border-border">
                                         <Calendar className="w-3 h-3 inline mr-1" />
                                         {event.name}
                                       </span>
@@ -551,7 +549,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                 >
                   <button
                     onClick={() => setShowSeatingModal(true)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 transition-colors font-medium"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-border text-primary rounded-lg hover:bg-accent transition-colors font-medium"
                   >
                     <MapPin className="w-5 h-5" />
                     View Seating Chart
@@ -583,7 +581,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                   >
                     <Link
                       href={`/events/${eventId}/checkout`}
-                      className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg shadow-md hover:shadow-lg"
+                      className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-semibold text-lg shadow-md hover:shadow-lg"
                     >
                       <Ticket className="w-5 h-5" />
                       Buy Tickets
@@ -639,7 +637,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                   {eventDetails.organizer?.email && (
                     <a
                       href={`mailto:${eventDetails.organizer.email}`}
-                      className="text-blue-600 hover:underline text-sm mt-2 inline-block"
+                      className="text-primary hover:underline text-sm mt-2 inline-block"
                     >
                       Contact Organizer
                     </a>
@@ -695,7 +693,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
             >
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <Users className="w-6 h-6 text-blue-600" />
+                  <Users className="w-6 h-6 text-primary" />
                   <h2 className="text-2xl font-bold text-gray-900">Seating Chart</h2>
                 </div>
                 <button
@@ -815,7 +813,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
               <div className="mt-6">
                 <Link
                   href={`/events/${eventId}/checkout`}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-semibold"
                   onClick={() => setShowSeatingModal(false)}
                 >
                   <Ticket className="w-5 h-5" />

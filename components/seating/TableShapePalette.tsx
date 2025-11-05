@@ -19,8 +19,8 @@ const tableShapes: TableShapeOption[] = [
     shape: "ROUND",
     label: "Round",
     icon: <Circle className="w-5 h-5" />,
-    color: "text-blue-700",
-    bgColor: "bg-blue-100 hover:bg-blue-200 border-blue-300",
+    color: "text-primary",
+    bgColor: "bg-accent hover:bg-blue-200 border-border",
     description: "Circular tables (most common)",
   },
   {
@@ -145,12 +145,12 @@ export function getTableShapeIcon(shape: TableShape): React.ReactNode {
 
 export function getTableShapeColor(shape: TableShape): string {
   const tableShape = tableShapes.find((ts) => ts.shape === shape);
-  return tableShape?.color || "text-blue-700";
+  return tableShape?.color || "text-primary";
 }
 
 export function getTableShapeBgColor(shape: TableShape): string {
   const tableShape = tableShapes.find((ts) => ts.shape === shape);
-  return tableShape?.bgColor || "bg-blue-100";
+  return tableShape?.bgColor || "bg-accent";
 }
 
 export { tableShapes };

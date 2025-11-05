@@ -37,8 +37,8 @@ const seatTypes: SeatTypeOption[] = [
     type: "STANDARD",
     label: "Standard",
     icon: <Armchair className="w-5 h-5" />,
-    color: "text-blue-700",
-    bgColor: "bg-blue-100 hover:bg-blue-200 border-blue-300",
+    color: "text-primary",
+    bgColor: "bg-accent hover:bg-blue-200 border-border",
     description: "Regular seating",
   },
   {
@@ -137,8 +137,8 @@ export default function SeatTypePalette({
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-          <Info className="w-5 h-5 text-blue-600" />
+        <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+          <Info className="w-5 h-5 text-primary" />
         </div>
         <h3 className="font-semibold text-gray-900">Seat Types</h3>
       </div>
@@ -161,7 +161,7 @@ export default function SeatTypePalette({
               {isSelected && (
                 <motion.div
                   layoutId="selected-seat-type"
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center"
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center"
                 >
                   <div className="w-2 h-2 bg-white rounded-full" />
                 </motion.div>
@@ -195,12 +195,12 @@ export function getSeatTypeIcon(type: SeatType): React.ReactNode {
 
 export function getSeatTypeColor(type: SeatType): string {
   const seatType = seatTypes.find((st) => st.type === type);
-  return seatType?.color || "text-blue-700";
+  return seatType?.color || "text-primary";
 }
 
 export function getSeatTypeBgColor(type: SeatType): string {
   const seatType = seatTypes.find((st) => st.type === type);
-  return seatType?.bgColor || "bg-blue-100";
+  return seatType?.bgColor || "bg-accent";
 }
 
 export { seatTypes };

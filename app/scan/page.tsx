@@ -27,7 +27,7 @@ export default function ScanEventSelectionPage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-              <QrCode className="w-7 h-7 text-blue-600" />
+              <QrCode className="w-7 h-7 text-primary" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">Event Scanner</h1>
@@ -48,7 +48,7 @@ export default function ScanEventSelectionPage() {
             </p>
             <Link
               href="/"
-              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
             >
               Back to Events
             </Link>
@@ -82,7 +82,7 @@ export default function ScanEventSelectionPage() {
                   <div className="flex-1 p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">
                           {event.name}
                         </h3>
 
@@ -107,7 +107,7 @@ export default function ScanEventSelectionPage() {
                           )}
                         </div>
 
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg group-hover:bg-blue-700 transition-colors">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg group-hover:bg-primary/90 transition-colors">
                           <QrCode className="w-5 h-5" />
                           <span className="font-semibold">Start Scanning</span>
                           <ArrowRight className="w-4 h-4" />

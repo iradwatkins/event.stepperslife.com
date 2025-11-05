@@ -61,7 +61,7 @@ export default function SeatingAssignmentsPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
@@ -73,7 +73,7 @@ export default function SeatingAssignmentsPage() {
           <p className="text-gray-600 mb-4">No seating chart found for this event.</p>
           <Link
             href={`/organizer/events/${eventId}`}
-            className="inline-block text-blue-600 hover:underline"
+            className="inline-block text-primary hover:underline"
           >
             Back to Event
           </Link>
@@ -130,7 +130,7 @@ export default function SeatingAssignmentsPage() {
 
             <button
               onClick={exportToCSV}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
             >
               <Download className="w-4 h-4" />
               Export CSV
@@ -166,8 +166,8 @@ export default function SeatingAssignmentsPage() {
 
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Assigned Seats</p>
@@ -204,7 +204,7 @@ export default function SeatingAssignmentsPage() {
           if (reservedTables.length === 0) return null;
 
           return (
-            <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg shadow-md p-6 mb-6 border-2 border-purple-200">
+            <div className="bg-card rounded-lg shadow-md p-6 mb-6 border-2 border-border">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
                   <Users className="w-6 h-6 text-white" />
@@ -219,7 +219,7 @@ export default function SeatingAssignmentsPage() {
                 {reservedTables.map((table) => {
                   const typeColors = {
                     VIP: "bg-purple-100 border-purple-300 text-purple-900",
-                    SPONSOR: "bg-blue-100 border-blue-300 text-blue-900",
+                    SPONSOR: "bg-accent border-border text-foreground",
                     STAFF: "bg-green-100 border-green-300 text-green-900",
                     CUSTOM: "bg-yellow-100 border-yellow-300 text-yellow-900",
                   };

@@ -273,13 +273,13 @@ export const createOrder = mutation({
       // Try to find test user
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
 
       // Create test user if doesn't exist
       if (!user) {
         const userId = await ctx.db.insert("users", {
-          email: "test@stepperslife.com",
+          email: "iradwatkins@gmail.com",
           name: "Test Organizer",
           createdAt: Date.now(),
           updatedAt: Date.now(),
@@ -460,7 +460,7 @@ export const completeOrder = mutation({
       console.warn("[completeOrder] TESTING MODE - Using test user");
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       // Production mode: Verify order belongs to current user
@@ -867,12 +867,12 @@ export const createBundleOrder = mutation({
       console.warn("[createBundleOrder] TESTING MODE - Using test user");
       user = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
 
       if (!user) {
         const userId = await ctx.db.insert("users", {
-          email: "test@stepperslife.com",
+          email: "iradwatkins@gmail.com",
           name: "Test Organizer",
           createdAt: Date.now(),
           updatedAt: Date.now(),

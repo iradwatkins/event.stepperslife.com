@@ -56,7 +56,7 @@ export default function AccessibilityFilters({
               checked={filters.showWheelchair}
               onChange={() => toggleFilter("showWheelchair")}
               disabled={filters.wheelchairOnly}
-              className="w-3.5 h-3.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+              className="w-3.5 h-3.5 text-primary border-gray-300 rounded focus:ring-ring disabled:opacity-50"
             />
             <Accessibility className="w-3.5 h-3.5 text-purple-600" />
             <span className="text-xs text-gray-600 group-hover:text-gray-800">
@@ -70,7 +70,7 @@ export default function AccessibilityFilters({
               checked={filters.showVIP}
               onChange={() => toggleFilter("showVIP")}
               disabled={filters.wheelchairOnly}
-              className="w-3.5 h-3.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+              className="w-3.5 h-3.5 text-primary border-gray-300 rounded focus:ring-ring disabled:opacity-50"
             />
             <Crown className="w-3.5 h-3.5 text-yellow-600" />
             <span className="text-xs text-gray-600 group-hover:text-gray-800">
@@ -84,7 +84,7 @@ export default function AccessibilityFilters({
               checked={filters.showStandard}
               onChange={() => toggleFilter("showStandard")}
               disabled={filters.wheelchairOnly}
-              className="w-3.5 h-3.5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+              className="w-3.5 h-3.5 text-primary border-gray-300 rounded focus:ring-ring disabled:opacity-50"
             />
             <User className="w-3.5 h-3.5 text-gray-600" />
             <span className="text-xs text-gray-600 group-hover:text-gray-800">

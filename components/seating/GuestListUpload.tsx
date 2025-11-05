@@ -138,7 +138,7 @@ export default function GuestListUpload({
 
       {/* Upload Area */}
       {guests.length === 0 ? (
-        <label className="block border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors">
+        <label className="block border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors">
           <input
             type="file"
             accept=".csv"
@@ -224,19 +224,19 @@ export default function GuestListUpload({
             <button
               onClick={processGuestList}
               disabled={isProcessing}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               {isProcessing ? "Processing..." : "Assign Seats"}
             </button>
           </div>
 
           {/* Instructions */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-accent border border-border rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-blue-900">
+              <AlertCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-foreground">
                 <p className="font-medium mb-1">How seat assignment works:</p>
-                <ul className="list-disc list-inside space-y-1 text-blue-800">
+                <ul className="list-disc list-inside space-y-1 text-accent-foreground">
                   <li>If table & seat specified: assigns to exact seat</li>
                   <li>If only table specified: assigns next available seat at table</li>
                   <li>If neither specified: assigns any available seat</li>

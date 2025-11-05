@@ -9,6 +9,7 @@
  */
 
 import type * as addCredits from "../addCredits.js";
+import type * as admin_completeSystemReset from "../admin/completeSystemReset.js";
 import type * as admin_queries from "../admin/queries.js";
 import type * as admin_systemReset from "../admin/systemReset.js";
 import type * as admin from "../admin.js";
@@ -47,6 +48,8 @@ import type * as payments_actions from "../payments/actions.js";
 import type * as payments_consignment from "../payments/consignment.js";
 import type * as payments_mutations from "../payments/mutations.js";
 import type * as payments_queries from "../payments/queries.js";
+import type * as productOrders_mutations from "../productOrders/mutations.js";
+import type * as productOrders_queries from "../productOrders/queries.js";
 import type * as products_mutations from "../products/mutations.js";
 import type * as products_orders from "../products/orders.js";
 import type * as products_queries from "../products/queries.js";
@@ -95,6 +98,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   addCredits: typeof addCredits;
+  "admin/completeSystemReset": typeof admin_completeSystemReset;
   "admin/queries": typeof admin_queries;
   "admin/systemReset": typeof admin_systemReset;
   admin: typeof admin;
@@ -133,6 +137,8 @@ declare const fullApi: ApiFromModules<{
   "payments/consignment": typeof payments_consignment;
   "payments/mutations": typeof payments_mutations;
   "payments/queries": typeof payments_queries;
+  "productOrders/mutations": typeof productOrders_mutations;
+  "productOrders/queries": typeof productOrders_queries;
   "products/mutations": typeof products_mutations;
   "products/orders": typeof products_orders;
   "products/queries": typeof products_queries;

@@ -21,7 +21,7 @@ export default function AnalyticsPage() {
   if (!currentUser || !userEvents) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
@@ -66,8 +66,8 @@ export default function AnalyticsPage() {
           className="bg-white rounded-lg shadow-md p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-primary" />
             </div>
           </div>
           <p className="text-sm text-gray-600 mb-1">Total Events</p>
@@ -180,7 +180,7 @@ export default function AnalyticsPage() {
             </p>
             <Link
               href="/organizer/events/create"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
             >
               <Calendar className="w-5 h-5" />
               Create Event
@@ -232,12 +232,12 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Coming Soon Notice */}
-      <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <div className="mt-8 bg-accent border border-border rounded-lg p-6">
         <div className="flex items-start gap-3">
-          <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5" />
+          <TrendingUp className="w-5 h-5 text-primary mt-0.5" />
           <div>
-            <h3 className="font-semibold text-blue-900 mb-1">More Analytics Coming Soon</h3>
-            <p className="text-sm text-blue-700">
+            <h3 className="font-semibold text-foreground mb-1">More Analytics Coming Soon</h3>
+            <p className="text-sm text-primary">
               We're working on adding charts, trend analysis, and detailed breakdowns by date range.
               Stay tuned for updates!
             </p>

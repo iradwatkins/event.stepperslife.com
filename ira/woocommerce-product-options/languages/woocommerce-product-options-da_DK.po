@@ -1,0 +1,1101 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Product Options 2.5.0\n"
+"Report-Msgid-Bugs-To: https://barn2.com/support-center/\n"
+"Last-Translator: Barn2 Plugins <support@barn2.com>\n"
+"Language-Team: Barn2 Plugins <support@barn2.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-07-07T00:00:00+00:00\n"
+"PO-Revision-Date: 2025-09-10 16:26+0000\n"
+"Language: da-DK\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: woocommerce-product-options\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#: woocommerce-product-options.php
+msgid "WooCommerce Product Options"
+msgstr "WooCommerce Produktmuligheder"
+
+#. Plugin URI of the plugin
+#: woocommerce-product-options.php
+msgid "https://barn2.com/wordpress-plugins/woocommerce-product-options/"
+msgstr "https://barn2.com/wordpress-plugins/woocommerce-product-options/"
+
+#. Description of the plugin
+#: woocommerce-product-options.php
+msgid "Add extra options to your WooCommerce products, with over 14 option types, optional fees for each option, min/max quantities, and conditional logic."
+msgstr "Tilføj ekstra muligheder til dine WooCommerce-produkter, med over 14 mulighedstyper, valgfri gebyrer for hver mulighed, min/maks mængder og betinget logik."
+
+#. Author of the plugin
+#: woocommerce-product-options.php
+msgid "Barn2 Plugins"
+msgstr "Barn2 Plugins"
+
+#. Author URI of the plugin
+#: woocommerce-product-options.php
+msgid "https://barn2.com"
+msgstr "https://barn2.com"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_API_Helper.php:154
+msgid "[View page]"
+msgstr "[Se side]"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_API_Helper.php:615
+#: dependencies/barn2/barn2-lib/src/WooCommerce/Admin/Custom_Settings_Fields.php:138
+msgid "Size"
+msgstr "Størrelse"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_Util.php:70
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/admin/wpo-settings-page.js:32
+msgid "Documentation"
+msgstr "Dokumentation"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_Util.php:70
+msgid "Support"
+msgstr "Support"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:38
+#: src/Admin/Settings_Tab/General.php:43
+msgid "Settings"
+msgstr "Indstillinger"
+
+#. translators: %s: The plugin name
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:54
+msgid "View %s documentation"
+msgstr "Se %s dokumentation"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:55
+msgid "Docs"
+msgstr "Docs"
+
+#. translators: 1: licence key link start, 2: license key link end
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Plugin_Updater.php:155
+msgid "Activate %1$syour license key%2$s to enable updates."
+msgstr "Aktiver %1$syour license key%2$s for at aktivere opdateringer."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Plugin_Updater.php:210
+msgid "Auto-updates unavailable."
+msgstr "Automatiske opdateringer er ikke tilgængelige."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:59
+msgid "License key successfully activated."
+msgstr "Licensnøglen blev aktiveret med succes."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:59
+msgid "There was an error activating your license key."
+msgstr "Der opstod en fejl under aktivering af din licensnøgle."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:63
+msgid "License key successfully deactivated."
+msgstr "Licensnøglen blev deaktiveret med succes."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:63
+msgid "There was an error deactivating your license key, please try again."
+msgstr "Der opstod en fejl under deaktivering af din licensnøgle, prøv venligst igen."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:66
+msgid "The license key looks good!"
+msgstr "Licensnøglen ser god ud!"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:66
+msgid "There's a problem with your license key."
+msgstr "Der er et problem med din licensnøgle."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:108
+msgid "License key"
+msgstr "Licensnøgle"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:110
+msgid "The licence key is contained in your order confirmation email."
+msgstr "Licensnøglen findes i din ordrebekræftelses-e-mail."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:113
+msgid "License Key"
+msgstr "Licensnøgle"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Check"
+msgstr "Tjek"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Activate"
+msgstr "Aktivér"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Deactivate"
+msgstr "Deaktivér"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:140
+msgid "License key deactivated."
+msgstr "Licensnøglen er blevet deaktiveret."
+
+#. translators: 1: the plugin name, 2: settings link start, 3: settings link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:84
+msgid "Thank you for installing %1$s. To get started, please %2$s enter your license key%3$s."
+msgstr "Tak for installationen af %1$s. For at komme i gang, bedes du %2$s indtaste din licensnøgle%3$s."
+
+#. translators: 1: the plugin name, 2: renewal link start, 3: renewal link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:109
+msgid "Your license key for %1$s has expired. %2$sClick here to renew for 20%% discount%3$s."
+msgstr "Din licensnøgle for %1$s er udløbet. %2$sKlik her for at forny med 20%% rabat%3$s."
+
+#. translators: 1: the plugin name, 2: renewal link start, 3: renewal link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:134
+msgid "You no longer have a valid license for %1$s. Please %2$spurchase a new license key%3$s to continue using the plugin."
+msgstr "Du har ikke længere en gyldig licens til %1$s. Venligst %2$skøb en ny licensnøgle%3$s for at fortsætte med at bruge plugin'et."
+
+#. translators: 1: the plugin name, 2: settings link start, 3: settings link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:162
+msgid "%1$s - your site has moved to a new domain. Please %2$sreactivate your license key%3$s."
+msgstr "%1$s - din side er flyttet til et nyt domæne. Venligst %2$sgenaktiver din licensnøgle%3$s."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/EDD_Licensing.php:170
+msgid "An error has occurred, please try again."
+msgstr "Der er opstået en fejl, prøv venligst igen."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:93
+msgid "Your license key is active."
+msgstr "Din licensnøgle er aktiv."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:113
+msgid "Please enter your license key."
+msgstr "Indtast venligst din licensnøgle."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:115
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:393
+msgid "Your license key is invalid."
+msgstr "Din licensnøgle er ugyldig."
+
+#. translators: 1: account page link start, 2: account page link end
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:337
+msgid "Invalid license key - please check your order confirmation email or %1$sAccount%2$s."
+msgstr "Ugyldig licensnøgle - venligst tjek din ordrebekræftelses-e-mail eller %1$sKonto%2$s."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:343
+msgid "No URL was supplied for activation, please contact support."
+msgstr "Der blev ikke leveret nogen URL til aktivering, venligst kontakt support."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:346
+msgid "License key mismatch, please contact support."
+msgstr "Licensnøglen stemmer ikke overens, venligst kontakt support."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:349
+msgid "This license is for a bundled product and cannot be activated."
+msgstr "Denne licens er til et samlet produkt og kan ikke aktiveres."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:353
+msgid "Your license key is not valid for this plugin."
+msgstr "Din licensnøgle er ikke gyldig for dette plugin."
+
+#. translators: %s: The number of sites the license is activated on
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:359
+msgid "%s site active"
+msgid_plural "%s sites active"
+msgstr[0] "%s site aktiv"
+msgstr[1] "%s sites aktive"
+
+#. translators: %s: The sites active description, e.g. '2 sites active'
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:362
+msgid "Your license key has reached its activation limit (%s)."
+msgstr "Din licensnøgle har nået sin aktiveringsgrænse (%s)."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:363
+#: dependencies/barn2/barn2-lib/src/Util.php:35
+msgid "Read more"
+msgstr "Læs mere"
+
+#. translators: support for RTL, 1: the license error, 2: a link
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:365
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:383
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#. translators: %s: The license expiry date
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:378
+msgid "Your license key expired on %s."
+msgstr "Din licensnøgle udløb den %s."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:381
+msgid "Renew now for 20% discount."
+msgstr "Forny nu for 20% rabat."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:584
+msgid "Your license key is not active. Please reactivate or save the settings."
+msgstr "Din licensnøgle er ikke aktiv. Venligst genaktiver eller gem indstillingerne."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:588
+msgid "Your license key has expired."
+msgstr "Din licensnøgle er udløbet."
+
+#. translators: 1: purchase link start, 2: purchase link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:594
+msgid "Your license key has been disabled. Please %1$spurchase a new license key%2$s to continue using the plugin."
+msgstr "%1$skøb en ny licensnøgle%2$s for at fortsætte med at bruge pluginet."
+
+#. translators: %1$s: Plugin name. %2$s: PHP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:103
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:112
+msgid "%1$s requires PHP %2$s or greater. Please update the PHP version used by your web server."
+msgstr "%1$s kræver PHP %2$s eller højere. Venligst opdater PHP-versionen, der bruges af din webserver."
+
+#. translators: %1$s: Plugin name. %2$s: WP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:136
+msgid "%1$s requires WordPress %2$s or greater. Please update your WordPress installation."
+msgstr "%1$s kræver WordPress %2$s eller højere. Venligst opdater din WordPress-installation."
+
+#. translators: %1$s: Plugin name. %2$s: Update Core <a> tag open. %3$s: <a> tag close. %4$s: WP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:146
+msgid "%1$s requires WordPress %4$s or greater. Please %2$supdate%3$s your WordPress installation."
+msgstr "%1$s kræver WordPress %4$s eller højere. Venligst %2$sopdater%3$s din WordPress-installation."
+
+#. translators: %1$s: Plugin name.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:169
+msgid "%1$s requires WooCommerce to be installed and active."
+msgstr "%1$s kræver, at WooCommerce er installeret og aktiv."
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce link. %3$s Install/Upgrade/Activate WooCommerce link.
+#. translators: %1$s: Plugin name. %2$s: EDD link. %3$s Install/Upgrade/Activate EDD link.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:175
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:224
+msgid "%1$s requires %2$s to be installed and active.%3$s"
+msgstr "%1$s kræver %2$s at være installeret og aktiv.%3$s"
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:189
+msgid "%1$s requires WooCommerce %2$s or greater. Please update your WooCommerce setup first."
+msgstr "%1$s kræver WooCommerce %2$s eller højere. Venligst opdater først din WooCommerce-opsætning."
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce link. %3$s WooCommerce version required. %4$s Install/Upgrade/Activate WooCommerce link.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:195
+msgid "%1$s requires %2$s %3$s or greater. Please %4$s your WooCommerce setup first."
+msgstr "%1$s kræver %2$s %3$s eller højere. Venligst %4$s din WooCommerce-opsætning først."
+
+#. translators: %1$s: Plugin name.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:218
+msgid "%1$s requires Easy Digital Downloads to be installed and active."
+msgstr "%1$s kræver, at Easy Digital Downloads er installeret og aktiv."
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Simple_Plugin.php:102
+msgid "%1$s could not complete its first activation because the following error occurred:<br>%2$s"
+msgstr "%1$s kunne ikke fuldføre sin første aktivering, fordi følgende fejl opstod:<br>%2$s"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "%1$s database update required"
+msgstr "%1$s databaseopdatering kræves"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "<p>%1$s has been updated! To keep things running smoothly, we have to update your database to the newest version. The database update process runs in the background and may take a little while, so please be patient.</p>"
+msgstr "<p>%1$s er blevet opdateret! For at holde tingene kørende glat, skal vi opdatere din database til den nyeste version. Databaseopdateringsprocessen kører i baggrunden og kan tage lidt tid, så vær venlig at være tålmodig.</p>"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "%1$s database update done"
+msgstr "%1$s databaseopdatering færdig"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "<p>%1$s database update complete. Thank you for updating to the latest version!</p>"
+msgstr "<p>%1$s databaseopdatering fuldført. Tak fordi du opdaterede til den nyeste version!</p>"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:288
+msgid "You do not have sufficient permissions to perform this action."
+msgstr "Du har ikke tilstrækkelige rettigheder til at udføre denne handling."
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:292
+msgid "An upgrade is already in progress. Please wait until it completes."
+msgstr "En opgradering er allerede i gang. Vent venligst, indtil den er færdig."
+
+#: dependencies/barn2/barn2-lib/src/Util.php:549
+msgid "Unable to connect to the filesystem. Please confirm your credentials."
+msgstr "Kan ikke oprette forbindelse til filsystemet. Bekræft venligst dine legitimationsoplysninger."
+
+#: dependencies/barn2/barn2-lib/src/Util.php:574
+msgid "You don't have permission to activate the plugin."
+msgstr "Du har ikke tilladelse til at aktivere plugin'et."
+
+#: dependencies/barn2/setup-wizard/src/Api.php:151
+msgid "Could not find the appropriate step."
+msgstr "Kunne ikke finde det relevante trin."
+
+#: dependencies/barn2/setup-wizard/src/Api.php:196
+msgid "Please enter a license key."
+msgstr "Indtast venligst en licensnøgle."
+
+#: dependencies/barn2/setup-wizard/src/Api.php:199
+msgid "Invalid action requested."
+msgstr "Ugyldig handling anmodet."
+
+#. translators: %s: The name of the plugin.
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:344
+msgid "%s setup wizard"
+msgstr "%s opsætningsguide"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:434
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:507
+msgid "Warning: This will overwrite your existing settings for %s. Are you sure you want to continue?"
+msgstr "Advarsel: Dette vil overskrive dine eksisterende indstillinger for %s. Er du sikker på, at du vil fortsætte?"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:484
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:492
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:541
+msgid "Setup wizard"
+msgstr "Opsætningsguide"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:487
+msgid "If you need to access the setup wizard again, please click on the button below."
+msgstr "Hvis du har brug for at få adgang til opsætningsguiden igen, skal du klikke på knappen nedenfor."
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:23
+msgid "More"
+msgstr "Mere"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:24
+msgid "Extra features"
+msgstr "Ekstra funktioner"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:25
+msgid "Enhance your site with these fantastic plugins from Barn2."
+msgstr "Forbedr dit site med disse fantastiske plugins fra Barn2."
+
+#: dependencies/barn2/setup-wizard/src/Steps/Ready.php:23
+#: src/Admin/Wizard/Steps/Completed.php:21
+msgid "Ready"
+msgstr "Klar"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Ready.php:24
+msgid "Setup Complete"
+msgstr "Opsætning færdig"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Welcome.php:25
+#: dependencies/barn2/setup-wizard/src/Steps/Welcome_Free.php:24
+#: src/Admin/Wizard/Steps/License_Verification.php:21
+msgid "Welcome"
+msgstr "Velkommen"
+
+#: dependencies/barn2/setup-wizard/src/Util.php:28
+#: src/Fields/Select.php:40
+#: src/Fields/Select.php:41
+#: src/Fields/Select.php:73
+#: assets/js/modules/attribute-options.js:1
+#: assets/js/modules/dropdown.js:1
+msgid "Select an option"
+msgstr "Vælg en mulighed"
+
+#: src/Admin/Admin_Controller.php:87
+msgid "Security error"
+msgstr "Sikkerhedsfejl"
+
+#: src/Admin/Admin_Controller.php:88
+msgid "The authorization to perform this action expired. Please reload the page and try again"
+msgstr "Autorisationen til at udføre denne handling er udløbet. Venligst genindlæs siden og prøv igen"
+
+#: src/Admin/Admin_Controller.php:123
+msgid "Permission error"
+msgstr "Tilladelsesfejl"
+
+#: src/Admin/Admin_Controller.php:124
+msgid "You do not have permission to install plugins."
+msgstr "Du har ikke tilladelse til at installere plugins."
+
+#: src/Admin/Admin_Controller.php:140
+msgid "Already installed"
+msgstr "Allerede installeret"
+
+#: src/Admin/Admin_Controller.php:141
+msgid "The WooCommerce Live Preview plugin is already installed."
+msgstr "WooCommerce Live Preview-pluginet er allerede installeret."
+
+#: src/Admin/Admin_Controller.php:172
+msgid "License error"
+msgstr "Licensfejl"
+
+#: src/Admin/Admin_Controller.php:173
+msgid "Your license doesn't include WooCommerce Live Preview. Please go to the settings page and check your license. Then try again."
+msgstr "Din licens inkluderer ikke WooCommerce Live Preview. Venligst gå til indstillingssiden og tjek din licens. Prøv derefter igen."
+
+#: src/Admin/Admin_Controller.php:191
+msgid "Successfully installed"
+msgstr "Installeret med succes"
+
+#. translators: %s is the link to the product options page
+#: src/Admin/Admin_Controller.php:194
+msgid "The WooCommerce Live Preview plugin has been successfully installed. Now go to %s and enable live preview for each option that you wish to use it for."
+msgstr "WooCommerce Live Preview-pluginet er blevet installeret med succes. Gå nu til %s og aktiver live preview for hver mulighed, du ønsker at bruge det til."
+
+#: src/Admin/Admin_Controller.php:195
+#: src/Admin/Settings_Page.php:164
+#: src/Admin/Settings_Page.php:165
+#: src/Admin/Settings_Page.php:182
+#: src/Admin/Settings_Tab/Product_Options.php:41
+#: src/Plugin_Setup.php:121
+msgid "Product Options"
+msgstr "Produktindstillinger"
+
+#: src/Admin/Admin_Controller.php:210
+msgid "Installation error"
+msgstr "Installationsfejl"
+
+#. translators: %s is the link to the downloads page
+#: src/Admin/Admin_Controller.php:215
+msgid "An error occurred while installing or activating WooCommerce Live Preview (Error code: %1$s).<br>Please reload the page and try again. If the error persists, please go to your %2$s and try to manually install the plugin."
+msgstr "Der opstod en fejl under installationen eller aktiveringen af WooCommerce Live Preview (Fejlkode: %1$s).<br>Venligst genindlæs siden og prøv igen. Hvis fejlen fortsætter, bedes du gå til din %2$s og forsøge at installere pluginet manuelt."
+
+#: src/Admin/Admin_Controller.php:217
+msgid "Barn2 downloads page"
+msgstr "Barn2 downloads side"
+
+#: src/Admin/Admin_Controller.php:399
+msgid "Product Attributes"
+msgstr "Produktattributter"
+
+#: src/Admin/Admin_Controller.php:403
+msgid "Invetory properties"
+msgstr "Lager egenskaber"
+
+#: src/Admin/Admin_Controller.php:407
+msgid "Shipping properties"
+msgstr "Forsendelses egenskaber"
+
+#: src/Admin/Attribute_Term.php:106
+msgid "The attribute has associated attribute based options in <strong>WooCommerce Product Options</strong>, however this term is not configured. Please configure the term in the following options: <br/><br/> %s"
+msgstr "Attributten har tilknyttede attributbaserede muligheder i <strong>WooCommerce Produktindstillinger</strong>, men dette udtryk er ikke konfigureret. Venligst konfigurer udtrykket i følgende muligheder: <br/><br/> %s"
+
+#: src/Admin/Settings_Page.php:81
+msgid "PHP Intl extension required"
+msgstr "PHP Intl-udvidelse kræves"
+
+#: src/Admin/Settings_Page.php:82
+msgid "The PHP Intl extension is required for the WooCommerce Product Options plugin to work correctly. Please ask your hosting provider to enable this extension."
+msgstr "PHP Intl-udvidelsen er nødvendig for at WooCommerce Produktindstillinger-pluginet fungerer korrekt. Venligst bed din hostingudbyder om at aktivere denne udvidelse."
+
+#: src/Admin/Settings_Page.php:92
+#: src/Admin/Settings_Page.php:99
+msgid "Install WooCommerce Live Preview"
+msgstr "Installer WooCommerce Live Preview"
+
+#. translators: %s: Link to install the bonus plugin.
+#: src/Admin/Settings_Page.php:95
+msgid "Thanks for adding the Live Preview add-on to WooCommerce Product Options. Please install it and then enable it on the product options that you wish to use it for. %s"
+msgstr "Tak for at tilføje Live Preview-tilføjelsen til WooCommerce Produktmuligheder. Venligst installer det og aktiver det derefter på de produktmuligheder, som du ønsker at bruge det til. %s"
+
+#: src/Admin/Settings_Page.php:214
+msgid "This tab doesn't exist."
+msgstr "Denne fane findes ikke."
+
+#: src/Admin/Settings_Tab/General.php:62
+msgid "General"
+msgstr "Generelt"
+
+#: src/Admin/Settings_Tab/General.php:65
+msgid "The following options control the WooCommerce Product Options extension."
+msgstr "De følgende indstillinger styrer WooCommerce Produktmuligheder-udvidelsen."
+
+#: src/Admin/Settings_Tab/General.php:104
+msgid "Settings saved."
+msgstr "Indstillinger gemt."
+
+#: src/Admin/Settings_Tab/General.php:117
+msgid "Uninstall"
+msgstr "Afinstaller"
+
+#: src/Admin/Settings_Tab/General.php:120
+msgid "The following options control the uninstallation of the WooCommerce Product Options extension."
+msgstr "De følgende indstillinger styrer afinstallationen af WooCommerce Produktmuligheder-udvidelsen."
+
+#: src/Admin/Settings_Tab/General.php:125
+msgid "Delete data"
+msgstr "Slet data"
+
+#. translators: %s is the plugin name.
+#: src/Admin/Settings_Tab/General.php:130
+msgid "Permanently delete all %s settings and data when uninstalling the plugin."
+msgstr "Slet permanent alle %s indstillinger og data, når plugin'et afinstalleres."
+
+#: src/Admin/Settings_Tab/Import_Export.php:42
+msgid "Import/Export"
+msgstr "Import/Export"
+
+#: src/Admin/Version_Updater.php:116
+msgid "All price formulas have been successfully converted. Please double-check that everything works as expected."
+msgstr "Alle prisformler er blevet konverteret med succes. Venligst dobbeltkontroller, at alt fungerer som forventet."
+
+#. translators: %1$s: link to backup database page
+#: src/Admin/Version_Updater.php:131
+msgid "Your price formulas will be upgraded to the new version.<br>We strongly recommend you %1$s now and export of all your option groups before updating your formulas."
+msgstr "Dine prisformler vil blive opgraderet til den nye version.<br>Vi anbefaler stærkt, at du %1$s nu og eksporterer alle dine optionsgrupper, før du opdaterer dine formler."
+
+#: src/Admin/Version_Updater.php:132
+msgid "backup your database"
+msgstr "sikkerhedskopier din database"
+
+#: src/Admin/Version_Updater.php:138
+msgid "Export option groups"
+msgstr "Eksporter optionsgrupper"
+
+#: src/Admin/Version_Updater.php:143
+msgid "Update price formulas"
+msgstr "Opdater prisformler"
+
+#: src/Admin/Wizard/Steps/Completed.php:22
+msgid "Complete Setup"
+msgstr "Fuldfør opsætning"
+
+#: src/Admin/Wizard/Steps/Completed.php:35
+msgid "Congratulations, you have finished setting up the plugin. Now it’s time to start adding options to your products."
+msgstr "Tillykke, du har afsluttet opsætningen af plugin'et. Nu er det tid til at begynde at tilføje muligheder til dine produkter."
+
+#: src/Admin/Wizard/Steps/License_Verification.php:22
+msgid "Welcome to WooCommerce Product Options."
+msgstr "Velkommen til WooCommerce Produktmuligheder."
+
+#: src/Admin/Wizard/Steps/License_Verification.php:23
+msgid "Use this setup wizard to activate your license key and choose any complementary plugins. After that, you’ll be ready to start creating product options!"
+msgstr "Brug denne opsætningsguide til at aktivere din licensnøgle og vælge eventuelle supplerende plugins. Efter det er du klar til at begynde at oprette produktmuligheder!"
+
+#. translators: %1$s: Option name %2$s: Product name
+#. translators: %s: Option name
+#. translators: %1: Option name %2: Product name
+#: src/Fields/Abstract_Field.php:228
+#: src/Fields/Checkboxes.php:56
+#: src/Fields/Date_Picker.php:73
+#: src/Fields/File.php:83
+msgid "\"%1$s\" is a required field for \"%2$s\"."
+msgstr "\"%1$s\" er et påkrævet felt for \"%2$s\"."
+
+#. translators: %1$s: Option name %2$s: Product name
+#. translators: %s: Option name
+#: src/Fields/Abstract_Field.php:238
+#: src/Fields/Checkboxes.php:68
+msgid "Invalid option choice for \"%1$s\" on \"%2$s\"."
+msgstr "Ugyldigt valg af mulighed for \"%1$s\" på \"%2$s\"."
+
+#. translators: %1$s: A space or an empty string, %2$s: Option choice percentage increase
+#: src/Fields/Abstract_Field.php:784
+msgid "+%1$s%2$s%1$s%%"
+msgstr "+%1$s%2$s%1$s%%"
+
+#. translators: %1$s: A space or an empty string, %2$s: Option choice percentage decrease
+#: src/Fields/Abstract_Field.php:788
+msgid "-%1$s%2$s%1$s%%"
+msgstr "-%1$s%2$s%1$s%%"
+
+#. translators: %s: Option choice price per character
+#: src/Fields/Abstract_Field.php:795
+msgid "%s per character"
+msgstr "%s pr. tegn"
+
+#. translators: %s: Option choice price per character
+#: src/Fields/Abstract_Field.php:799
+msgid "%s per uploaded file"
+msgstr "%s pr. uploadet fil"
+
+#. translators: %1$s: Min quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Checkboxes.php:85
+msgid "You must select at least %1$d option for \"%2$s\" on \"%3$s\"."
+msgid_plural "You must select at least %1$d options for \"%2$s\" on \"%3$s\"."
+msgstr[0] "Du skal vælge mindst %1$d mulighed for \"%2$s\" på \"%3$s\"."
+msgstr[1] "Du skal vælge mindst %1$d muligheder for \"%2$s\" på \"%3$s\"."
+
+#. translators: %1$s: Max quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Checkboxes.php:103
+msgid "You can only select up to %1$d option for \"%2$s\" on \"%3$s\"."
+msgid_plural "You can only select up to %1$d options for \"%2$s\" on \"%3$s\"."
+msgstr[0] "Du kan kun vælge op til %1$d mulighed for \"%2$s\" på \"%3$s\"."
+msgstr[1] "Du kan kun vælge op til %1$d muligheder for \"%2$s\" på \"%3$s\"."
+
+#: src/Fields/Date_Picker.php:86
+msgid "\"%1$s\" is not a valid date for \"%2$s\"."
+msgstr "\"%1$s\" er ikke en gyldig dato for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:101
+msgid "Invalid minimum date for \"%1$s\"."
+msgstr "Ugyldig minimum dato for \"%1$s\"."
+
+#: src/Fields/Date_Picker.php:105
+msgid "\"%1$s\" is before the minimum date for \"%2$s\"."
+msgstr "\"%1$s\" er før minimum dato for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:119
+msgid "Invalid maximum date for \"%1$s\"."
+msgstr "Ugyldig maksimum dato for \"%1$s\"."
+
+#: src/Fields/Date_Picker.php:126
+msgid "\"%1$s\" is after the maximum date for \"%2$s\"."
+msgstr "\"%1$s\" er efter maksimum dato for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:143
+msgid "Invalid disabled date for \"%1$s\"."
+msgstr "Ugyldig deaktiveret dato for \"%1$s\"."
+
+#: src/Fields/Date_Picker.php:147
+msgid "\"%1$s\" is an excluded date for \"%2$s\"."
+msgstr "\"%1$s\" er en ekskluderet dato for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:154
+msgid "\"%1$s\" is a disabled past date for \"%2$s\"."
+msgstr "\"%1$s\" er en deaktiveret fortid dato for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:159
+msgid "\"%1$s\" is a disabled future date for \"%2$s\"."
+msgstr "\"%1$s\" er en deaktiveret fremtid dato for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:166
+msgid "\"%1$s\" is a disabled date for \"%2$s\"."
+msgstr "\"%1$s\" er en deaktiveret dato for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:179
+msgid "\"%1$s\" is a disabled day for \"%2$s\"."
+msgstr "\"%1$s\" er en deaktiveret dag for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:190
+msgid "\"%1$s\" is before the minimum time for \"%2$s\"."
+msgstr "\"%1$s\" er før minimum tid for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:199
+msgid "\"%1$s\" is after the maximum time for \"%2$s\"."
+msgstr "\"%1$s\" er efter den maksimale tid for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:210
+msgid "\"%1$s\" is not a valid hour increment for \"%2$s\"."
+msgstr "\"%1$s\" er ikke et gyldigt timeinkrement for \"%2$s\"."
+
+#: src/Fields/Date_Picker.php:221
+msgid "\"%1$s\" is not a valid minute increment for \"%2$s\"."
+msgstr "\"%1$s\" er ikke et gyldigt minutinkrement for \"%2$s\"."
+
+#. translators: %1: Maxmimum number of files %2: Option name %3: Product name
+#: src/Fields/File.php:98
+msgid "You can only upload up to %1$d files(s) for \"%2$s\" on \"%3$s\"."
+msgstr "Du kan kun uploade op til %1$d fil(er) for \"%2$s\" på \"%3$s\"."
+
+#: src/Fields/File.php:217
+#: assets/js/modules/file-upload.js:1
+msgid "Drop files here to upload"
+msgstr "Træk filer her for at uploade"
+
+#: src/Fields/Number.php:78
+msgid "Please enter a valid number."
+msgstr "Indtast venligst et gyldigt nummer."
+
+#. translators: %s: minimum number
+#: src/Fields/Number.php:85
+msgid "Please enter a number greater than or equal to %s."
+msgstr "Indtast venligst et nummer, der er større end eller lig med %s."
+
+#. translators: %s: maximum number
+#: src/Fields/Number.php:92
+msgid "Please enter a number less than or equal to %s."
+msgstr "Indtast venligst et nummer, der er mindre end eller lig med %s."
+
+#. translators: %s: step value
+#: src/Fields/Number.php:103
+msgid "Please enter a valid number. The value must be in steps of %1$s, starting from %2$s."
+msgstr "Indtast venligst et gyldigt nummer. Værdien skal være i trin på %1$s, startende fra %2$s."
+
+#: src/Fields/Products.php:247
+#: src/Fields/Products.php:537
+msgid "Add to cart"
+msgstr "Tilføj til kurv"
+
+#: src/Fields/Products.php:374
+#: src/Fields/Products.php:377
+msgid "Select a product"
+msgstr "Vælg et produkt"
+
+#: src/Fields/Products.php:818
+#: src/Fields/Products.php:824
+msgid "The selected product is not valid."
+msgstr "Det valgte produkt er ikke gyldigt."
+
+#. translators: %1$d: Min quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Text.php:111
+msgid "You must input at least %1$d character for \"%2$s\" on \"%3$s\"."
+msgid_plural "You must input at least %1$d characters for \"%2$s\" on \"%3$s\"."
+msgstr[0] "Du skal indtaste mindst %1$d tegn for \"%2$s\" på \"%3$s\"."
+msgstr[1] "Du skal indtaste mindst %1$d tegn for \"%2$s\" på \"%3$s\"."
+
+#. translators: %1$d: Max quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Text.php:126
+msgid "You can only input up to %1$d character for \"%2$s\" on \"%3$s\"."
+msgid_plural "You can only input up to %1$d characters for \"%2$s\" on \"%3$s\"."
+msgstr[0] "Du kan kun indtaste op til %1$d tegn for \"%2$s\" på \"%3$s\"."
+msgstr[1] "Du kan kun indtaste op til %1$d tegn for \"%2$s\" på \"%3$s\"."
+
+#: src/Handlers/Add_To_Cart.php:94
+#: src/Handlers/Add_To_Cart.php:102
+msgid "Select options"
+msgstr "Vælg muligheder"
+
+#: src/Handlers/Add_To_Cart.php:96
+msgid "This product has options that may be chosen on the product page"
+msgstr "Dette produkt har muligheder, der kan vælges på produktsiden"
+
+#: src/Handlers/Add_To_Cart.php:210
+msgid "%1$s &times; %2$s"
+msgstr "%1$s &times; %2$s"
+
+#. translators: %1$s: link to the shop/cart, %2$s: product title, %3$s: list of additional products
+#: src/Handlers/Add_To_Cart.php:226
+msgid "%1$s has been added to your cart, together with the following additional products: %2$s"
+msgstr "%1$s er blevet tilføjet til din kurv, sammen med følgende ekstra produkter: %2$s"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:98
+msgid "Group %1$s, option %2$s, name"
+msgstr "Gruppe %1$s, mulighed %2$s, navn"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:104
+msgid "Group %1$s, option %2$s, description"
+msgstr "Gruppe %1$s, mulighed %2$s, beskrivelse"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:111
+msgid "Group %1$s, option %2$s, content"
+msgstr "Gruppe %1$s, mulighed %2$s, indhold"
+
+#. translators: %s is the group name, %s is the option name, %d is the choice index
+#: src/Integration/WPML.php:119
+msgid "Group %1$s, option %2$s, label %3$d"
+msgstr "Gruppe %1$s, mulighed %2$s, etiket %3$d"
+
+#: src/Rest/Routes/File_Upload.php:58
+#: src/Rest/Routes/File_Upload.php:62
+#: src/Rest/Routes/Formula.php:66
+msgid "Insufficient data supplied."
+msgstr "Utilstrækkelige data leveret."
+
+#: src/Rest/Routes/File_Upload.php:68
+#: src/Rest/Routes/File_Upload.php:72
+msgid "Insufficient data supplied"
+msgstr "Utilstrækkelige data leveret"
+
+#: src/Rest/Routes/File_Upload.php:76
+msgid "File type is not allowed."
+msgstr "Filtype er ikke tilladt."
+
+#: src/Rest/Routes/Formula.php:78
+msgid "Invalid option ID."
+msgstr "Ugyldigt options-ID."
+
+#: src/Rest/Routes/Group.php:59
+msgid "An array of group IDs."
+msgstr "Et array af gruppe-ID'er."
+
+#: src/Rest/Routes/Group.php:105
+#: src/Rest/Routes/Group.php:127
+#: src/Rest/Routes/Group.php:1741
+msgid "The unique identifier for the group."
+msgstr "Den unikke identifikator for gruppen."
+
+#: src/Rest/Routes/Group.php:156
+msgid "An array of group_id => menu_order data."
+msgstr "Et array af group_id => menu_order data."
+
+#: src/Rest/Routes/Group.php:203
+msgid "An array of product IDs."
+msgstr "Et array af produkt-ID'er."
+
+#: src/Rest/Routes/Group.php:208
+msgid "A search to filter products by name or SKU."
+msgstr "En søgning for at filtrere produkter efter navn eller SKU."
+
+#: src/Rest/Routes/Group.php:228
+msgid "An array of category IDs."
+msgstr "Et array af kategori-ID'er."
+
+#: src/Rest/Routes/Group.php:250
+#: src/Rest/Routes/Group.php:280
+#: src/Rest/Routes/Group.php:1507
+msgid "No groups"
+msgstr "Ingen grupper"
+
+#: src/Rest/Routes/Group.php:460
+msgid "No group"
+msgstr "Ingen gruppe"
+
+#: src/Rest/Routes/Group.php:486
+msgid "Something went wrong while creating the group"
+msgstr "Noget gik galt under oprettelsen af gruppen"
+
+#: src/Rest/Routes/Group.php:504
+#: src/Rest/Routes/Group.php:1300
+msgid "Something went wrong: could not create an option."
+msgstr "Noget gik galt: kunne ikke oprette en mulighed."
+
+#: src/Rest/Routes/Group.php:541
+msgid "Something went wrong while duplicating the group"
+msgstr "Noget gik galt under duplikeringen af gruppen"
+
+#: src/Rest/Routes/Group.php:969
+#: src/Rest/Routes/Group.php:1042
+msgid "Something went wrong: could not update the selected group"
+msgstr "Noget gik galt: kunne ikke opdatere den valgte gruppe"
+
+#: src/Rest/Routes/Group.php:996
+msgid "Something went wrong: could not update an option."
+msgstr "Noget gik galt: kunne ikke opdatere en mulighed."
+
+#: src/Rest/Routes/Group.php:1071
+msgid "Something went wrong: could not find the group"
+msgstr "Noget gik galt: kunne ikke finde gruppen"
+
+#: src/Rest/Routes/Group.php:1094
+#: src/Rest/Routes/Option.php:295
+msgid "Something went wrong with reodering."
+msgstr "Der opstod en fejl ved omrokeringen."
+
+#. translators: 1: option name, 2: formula name
+#: src/Rest/Routes/Group.php:1166
+msgid "The option \"%1$s\" no longer exists. Please update the formula \"%2$s\"."
+msgstr "Muligheden \"%1$s\" eksisterer ikke længere. Opdater venligst formlen \"%2$s\"."
+
+#: src/Rest/Routes/Group.php:1585
+msgid "Missing parameters. Please provide either \"include\" or \"search\" parameter."
+msgstr "Manglende parametre. Angiv venligst enten \"include\" eller \"search\" parameter."
+
+#: src/Rest/Routes/Group.php:1607
+msgid "No products"
+msgstr "Ingen produkter"
+
+#: src/Rest/Routes/Group.php:1653
+msgid "No search term provided"
+msgstr "Ingen søgeord angivet"
+
+#: src/Rest/Routes/Group.php:1713
+msgid "No categories"
+msgstr "Ingen kategorier"
+
+#: src/Rest/Routes/Group.php:1746
+msgid "The menu order for the group."
+msgstr "Menuordenen for gruppen."
+
+#: src/Rest/Routes/Group.php:1751
+msgid "The name for the group."
+msgstr "Navnet på gruppen."
+
+#: src/Rest/Routes/Group.php:1756
+msgid "Indicates whether the group name should be displayed."
+msgstr "Angiver om gruppens navn skal vises."
+
+#: src/Rest/Routes/Group.php:1761
+msgid "The visiblity status for the group."
+msgstr "Synlighedsstatus for gruppen."
+
+#: src/Rest/Routes/Group.php:1769
+msgid "The products for the group."
+msgstr "Produkter for gruppen."
+
+#: src/Rest/Routes/Group.php:1777
+msgid "The products to exclude for for the group."
+msgstr "Produkter, der skal udelukkes for gruppen."
+
+#: src/Rest/Routes/Group.php:1785
+msgid "The categories for the group."
+msgstr "Kategorier for gruppen."
+
+#: src/Rest/Routes/Group.php:1793
+msgid "The categories to exclude for the group."
+msgstr "Kategorier, der skal udelukkes for gruppen."
+
+#: src/Rest/Routes/Group.php:1798
+msgid "The options for the group."
+msgstr "Muligheder for gruppen."
+
+#: src/Rest/Routes/Group.php:1805
+#: src/Rest/Routes/Option.php:80
+#: src/Rest/Routes/Option.php:128
+#: src/Rest/Routes/Option.php:324
+msgid "The unique identifier for the option."
+msgstr "Den unikke identifikator for muligheden."
+
+#: src/Rest/Routes/Group.php:1810
+#: src/Rest/Routes/Option.php:329
+msgid "The Group ID to which the option belongs."
+msgstr "Gruppens ID, som muligheden tilhører."
+
+#: src/Rest/Routes/Group.php:1815
+#: src/Rest/Routes/Option.php:334
+msgid "The menu order for the option."
+msgstr "Menuordenen for muligheden."
+
+#: src/Rest/Routes/Group.php:1820
+#: src/Rest/Routes/Option.php:339
+msgid "The name for the option."
+msgstr "Navnet på muligheden."
+
+#: src/Rest/Routes/Group.php:1825
+#: src/Rest/Routes/Option.php:344
+msgid "The visiblity status for the option."
+msgstr "Synlighedsstatus for muligheden."
+
+#: src/Rest/Routes/Group.php:1830
+#: src/Rest/Routes/Option.php:349
+msgid "The field type for the option."
+msgstr "Feldtypen for indstillingen."
+
+#: src/Rest/Routes/Group.php:1835
+#: src/Rest/Routes/Option.php:354
+msgid "The choices for the option."
+msgstr "Valgmulighederne for indstillingen."
+
+#: src/Rest/Routes/Group.php:1840
+#: src/Rest/Routes/Option.php:359
+msgid "Indicates whether the option is required."
+msgstr "Angiver, om indstillingen er påkrævet."
+
+#: src/Rest/Routes/Group.php:1845
+#: src/Rest/Routes/Option.php:364
+msgid "Indicates whether the option name should be displayed."
+msgstr "Angiver, om indstillingsnavnet skal vises."
+
+#: src/Rest/Routes/Group.php:1850
+msgid "Any specific extra settings for the option."
+msgstr "Eventuelle specifikke ekstraindstillinger for indstillingen."
+
+#: src/Rest/Routes/Group.php:1855
+msgid "Settings for the datepicker"
+msgstr "Indstillinger for datovælgeren"
+
+#: src/Rest/Routes/Group.php:1860
+msgid "The choice type for the option."
+msgstr "Valgetype for indstillingen."
+
+#: src/Rest/Routes/Group.php:1865
+msgid "The selected attribute for the option."
+msgstr "Den valgte attribut for indstillingen."
+
+#: src/Rest/Routes/Group.php:1870
+msgid "The date format for the option."
+msgstr "Datoformatet for indstillingen."
+
+#: src/Rest/Routes/Group.php:1875
+msgid "The minimum date for the option."
+msgstr "Den tidligste dato for indstillingen."
+
+#: src/Rest/Routes/Group.php:1880
+msgid "The maximum date for the option."
+msgstr "Den seneste dato for indstillingen."
+
+#: src/Rest/Routes/Group.php:1885
+msgid "The days to disable for the option."
+msgstr "De dage, der skal deaktiveres for indstillingen."
+
+#: src/Rest/Routes/Group.php:1893
+msgid "The dates to disable for the option."
+msgstr "De datoer, der skal deaktiveres for indstillingen."
+
+#: src/Rest/Routes/Group.php:1898
+msgid "Indicates whether past dates should be disabled for the option."
+msgstr "Angiver, om fortidige datoer skal deaktiveres for indstillingen."
+
+#: src/Rest/Routes/Group.php:1903
+msgid "Indicates whether future dates should be disabled for the option."
+msgstr "Angiver, om fremtidige datoer skal deaktiveres for indstillingen."
+
+#: src/Rest/Routes/Group.php:1908
+msgid "Indicates whether the time should be enabled for the option."
+msgstr "Angiver, om tiden skal aktiveres for indstillingen."
+
+#: src/Rest/Routes/Group.php:1913
+msgid "The minimum time for the option."
+msgstr "Den tidligste tid for indstillingen."
+
+#: src/Rest/Routes/Group.php:1918
+msgid "The maximum time for the option."
+msgstr "Den seneste tid for indstillingen."
+
+#: src/Rest/Routes/Group.php:1925
+msgid "The minute increment for the option."
+msgstr "Minutincrementet for indstillingen."
+
+#: src/Rest/Routes/Group.php:1932
+msgid "The hour increment for the option."
+msgstr "Timeincrementet for indstillingen."
+
+#: src/Rest/Routes/Option.php:60
+msgid "The unique identifier for the parent group."
+msgstr "Den unikke identifikator for forældergruppen."
+
+#: src/Rest/Routes/Option.php:148
+msgid "An array of option_id => menu_order data."
+msgstr "Et array af option_id => menu_order data."
+
+#: src/Rest/Routes/Option.php:170
+#: src/Rest/Routes/Option.php:188
+msgid "No options"
+msgstr "Ingen muligheder"
+
+#: src/Rest/Routes/Option.php:206
+msgid "No option"
+msgstr "Ingen mulighed"
+
+#: src/Rest/Routes/Option.php:230
+msgid "Something went wrong while creating the option"
+msgstr "Noget gik galt under oprettelsen af muligheden"
+
+#: src/Rest/Routes/Option.php:253
+msgid "Something went wrong: could not update the selected option"
+msgstr "Noget gik galt: kunne ikke opdatere den valgte mulighed"
+
+#: src/Rest/Routes/Option.php:274
+msgid "Something went wrong: could not find the option"
+msgstr "Noget gik galt: kunne ikke finde muligheden"
+
+#: src/Upload_Directory.php:37
+msgid "The files uploaded via WooCommerce Product Options are not currently protected."
+msgstr "Filerne, der er uploadet via WooCommerce Produktmuligheder, er i øjeblikket ikke beskyttet."
+
+#: src/Upload_Directory.php:38
+msgid "To protect them, you must add this <a href=\"https://barn2.com/kb/\">NGINX redirect rule</a>. If you have already done this, or it does not apply to your site, you may permanently dismiss this notice."
+msgstr "For at beskytte dem skal du tilføje denne <a href=\"https://barn2.com/kb/\">NGINX omdirigeringsregel</a>. Hvis du allerede har gjort dette, eller det ikke gælder for dit site, kan du permanent afvise denne meddelelse."
+
+#. translators: %s: option name
+#: src/Util/Cart.php:80
+msgid "The option \"%s\" is not supported."
+msgstr "Muligheden \"%s\" understøttes ikke."
+
+#: src/Util/Display.php:128
+msgid "Total: "
+msgstr "Total: "
+
+#: src/Util/Util.php:186
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Weight"
+msgstr "Vægt"
+
+#: src/Util/Util.php:190
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Length"
+msgstr "Længde"
+
+#: src/Util/Util.php:194
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Width"
+msgstr "Bredde"
+
+#: src/Util/Util.php:198
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Height"
+msgstr "Højde"
+
+#: src/Fields/Abstract_Field.php:780
+msgctxt "one-time fee"
+msgid "%s"
+msgstr "%s"
+
+#: src/Fields/Abstract_Field.php:791
+msgctxt "quantity-based fee"
+msgid "%s"
+msgstr "%s"
+
+#: src/Handlers/Add_To_Cart.php:222
+msgctxt "Item name in quotes"
+msgid "&ldquo;%s&rdquo;"
+msgstr "&ldquo;%s&rdquo;"

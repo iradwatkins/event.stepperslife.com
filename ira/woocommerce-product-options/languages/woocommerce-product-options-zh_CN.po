@@ -1,0 +1,1096 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Product Options 2.5.0\n"
+"Report-Msgid-Bugs-To: https://barn2.com/support-center/\n"
+"Last-Translator: Barn2 Plugins <support@barn2.com>\n"
+"Language-Team: Barn2 Plugins <support@barn2.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-07-07T00:00:00+00:00\n"
+"PO-Revision-Date: 2025-09-10 16:26+0000\n"
+"Language: zh-CN\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: woocommerce-product-options\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. Plugin Name of the plugin
+#: woocommerce-product-options.php
+msgid "WooCommerce Product Options"
+msgstr "WooCommerce 产品选项"
+
+#. Plugin URI of the plugin
+#: woocommerce-product-options.php
+msgid "https://barn2.com/wordpress-plugins/woocommerce-product-options/"
+msgstr "https://barn2.com/wordpress-plugins/woocommerce-product-options/"
+
+#. Description of the plugin
+#: woocommerce-product-options.php
+msgid "Add extra options to your WooCommerce products, with over 14 option types, optional fees for each option, min/max quantities, and conditional logic."
+msgstr "为您的 WooCommerce 产品添加额外选项，提供超过 14 种选项类型、每个选项的可选费用、最小/最大数量以及条件逻辑。"
+
+#. Author of the plugin
+#: woocommerce-product-options.php
+msgid "Barn2 Plugins"
+msgstr "Barn2 插件"
+
+#. Author URI of the plugin
+#: woocommerce-product-options.php
+msgid "https://barn2.com"
+msgstr "https://barn2.com"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_API_Helper.php:154
+msgid "[View page]"
+msgstr "[查看页面]"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_API_Helper.php:615
+#: dependencies/barn2/barn2-lib/src/WooCommerce/Admin/Custom_Settings_Fields.php:138
+msgid "Size"
+msgstr "大小"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_Util.php:70
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/admin/wpo-settings-page.js:32
+msgid "Documentation"
+msgstr "文档"
+
+#: dependencies/barn2/barn2-lib/src/Admin/Settings_Util.php:70
+msgid "Support"
+msgstr "支持"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:38
+#: src/Admin/Settings_Tab/General.php:43
+msgid "Settings"
+msgstr "设置"
+
+#. translators: %s: The plugin name
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:54
+msgid "View %s documentation"
+msgstr "查看 %s 的文档"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Admin_Links.php:55
+msgid "Docs"
+msgstr "文档"
+
+#. translators: 1: licence key link start, 2: license key link end
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Plugin_Updater.php:155
+msgid "Activate %1$syour license key%2$s to enable updates."
+msgstr "激活 %1$syour license key%2$s 以启用更新。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Admin/Plugin_Updater.php:210
+msgid "Auto-updates unavailable."
+msgstr "自动更新不可用。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:59
+msgid "License key successfully activated."
+msgstr "许可证密钥已成功激活。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:59
+msgid "There was an error activating your license key."
+msgstr "激活您的许可证密钥时发生错误。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:63
+msgid "License key successfully deactivated."
+msgstr "许可证密钥已成功停用。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:63
+msgid "There was an error deactivating your license key, please try again."
+msgstr "停用您的许可证密钥时发生错误，请重试。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:66
+msgid "The license key looks good!"
+msgstr "许可证密钥看起来很好！"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:66
+msgid "There's a problem with your license key."
+msgstr "您的许可证密钥有问题。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:108
+msgid "License key"
+msgstr "许可证密钥"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:110
+msgid "The licence key is contained in your order confirmation email."
+msgstr "许可证密钥包含在您的订单确认电子邮件中。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:113
+msgid "License Key"
+msgstr "许可证密钥"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Check"
+msgstr "检查"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Activate"
+msgstr "激活"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:132
+msgid "Deactivate"
+msgstr "停用"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Key_Setting.php:140
+msgid "License key deactivated."
+msgstr "许可证密钥已停用。"
+
+#. translators: 1: the plugin name, 2: settings link start, 3: settings link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:84
+msgid "Thank you for installing %1$s. To get started, please %2$s enter your license key%3$s."
+msgstr "感谢您安装 %1$s。要开始，请 %2$s 输入您的许可证密钥 %3$s。"
+
+#. translators: 1: the plugin name, 2: renewal link start, 3: renewal link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:109
+msgid "Your license key for %1$s has expired. %2$sClick here to renew for 20%% discount%3$s."
+msgstr "您的 %1$s 许可证密钥已过期。 %2$s点击这里以获得 20%% 折扣续订%3$s。"
+
+#. translators: 1: the plugin name, 2: renewal link start, 3: renewal link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:134
+msgid "You no longer have a valid license for %1$s. Please %2$spurchase a new license key%3$s to continue using the plugin."
+msgstr "您没有有效的 %1$s 许可证。请 %2$s购买新许可证密钥%3$s 以继续使用该插件。"
+
+#. translators: 1: the plugin name, 2: settings link start, 3: settings link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Admin/License_Notices.php:162
+msgid "%1$s - your site has moved to a new domain. Please %2$sreactivate your license key%3$s."
+msgstr "%1$s - 您的网站已迁移到新域名。请 %2$s重新激活您的许可证密钥%3$s。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/EDD_Licensing.php:170
+msgid "An error has occurred, please try again."
+msgstr "发生错误，请重试。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:93
+msgid "Your license key is active."
+msgstr "您的许可证密钥是有效的。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:113
+msgid "Please enter your license key."
+msgstr "请输入您的许可证密钥。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:115
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:393
+msgid "Your license key is invalid."
+msgstr "您的许可证密钥无效。"
+
+#. translators: 1: account page link start, 2: account page link end
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:337
+msgid "Invalid license key - please check your order confirmation email or %1$sAccount%2$s."
+msgstr "无效的许可证密钥 - 请检查您的订单确认电子邮件或 %1$s帐户%2$s。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:343
+msgid "No URL was supplied for activation, please contact support."
+msgstr "未提供激活的 URL，请联系支持。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:346
+msgid "License key mismatch, please contact support."
+msgstr "许可证密钥不匹配，请联系支持。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:349
+msgid "This license is for a bundled product and cannot be activated."
+msgstr "此许可证适用于捆绑产品，无法激活。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:353
+msgid "Your license key is not valid for this plugin."
+msgstr "您的许可证密钥不适用于此插件。"
+
+#. translators: %s: The number of sites the license is activated on
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:359
+msgid "%s site active"
+msgid_plural "%s sites active"
+msgstr[0] "%s 个站点已激活"
+
+#. translators: %s: The sites active description, e.g. '2 sites active'
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:362
+msgid "Your license key has reached its activation limit (%s)."
+msgstr "您的许可证密钥已达到激活限制 (%s)。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:363
+#: dependencies/barn2/barn2-lib/src/Util.php:35
+msgid "Read more"
+msgstr "阅读更多"
+
+#. translators: support for RTL, 1: the license error, 2: a link
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:365
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:383
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#. translators: %s: The license expiry date
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:378
+msgid "Your license key expired on %s."
+msgstr "您的许可证密钥已于 %s 过期。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:381
+msgid "Renew now for 20% discount."
+msgstr "立即续费享受 20% 折扣。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:584
+msgid "Your license key is not active. Please reactivate or save the settings."
+msgstr "您的许可证密钥未激活。请重新激活或保存设置。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:588
+msgid "Your license key has expired."
+msgstr "您的许可证密钥已过期。"
+
+#. translators: 1: purchase link start, 2: purchase link end.
+#: dependencies/barn2/barn2-lib/src/Plugin/License/Plugin_License.php:594
+msgid "Your license key has been disabled. Please %1$spurchase a new license key%2$s to continue using the plugin."
+msgstr "您的许可证密钥已被禁用。请 %1$spurchase a new license key%2$s 以继续使用插件。"
+
+#. translators: %1$s: Plugin name. %2$s: PHP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:103
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:112
+msgid "%1$s requires PHP %2$s or greater. Please update the PHP version used by your web server."
+msgstr "%1$s 需要 PHP %2$s 或更高版本。请更新您的网络服务器使用的 PHP 版本。"
+
+#. translators: %1$s: Plugin name. %2$s: WP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:136
+msgid "%1$s requires WordPress %2$s or greater. Please update your WordPress installation."
+msgstr "%1$s 需要 WordPress %2$s 或更高版本。请更新您的 WordPress 安装。"
+
+#. translators: %1$s: Plugin name. %2$s: Update Core <a> tag open. %3$s: <a> tag close. %4$s: WP version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:146
+msgid "%1$s requires WordPress %4$s or greater. Please %2$supdate%3$s your WordPress installation."
+msgstr "%1$s 需要 WordPress %4$s 或更高版本。请 %2$s更新%3$s 您的 WordPress 安装。"
+
+#. translators: %1$s: Plugin name.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:169
+msgid "%1$s requires WooCommerce to be installed and active."
+msgstr "%1$s 需要安装并激活 WooCommerce。"
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce link. %3$s Install/Upgrade/Activate WooCommerce link.
+#. translators: %1$s: Plugin name. %2$s: EDD link. %3$s Install/Upgrade/Activate EDD link.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:175
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:224
+msgid "%1$s requires %2$s to be installed and active.%3$s"
+msgstr "%1$s 需要 %2$s 安装并激活。%3$s"
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce version required.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:189
+msgid "%1$s requires WooCommerce %2$s or greater. Please update your WooCommerce setup first."
+msgstr "%1$s 需要 WooCommerce %2$s 或更高版本。请先更新您的 WooCommerce 设置。"
+
+#. translators: %1$s: Plugin name. %2$s: WooCommerce link. %3$s WooCommerce version required. %4$s Install/Upgrade/Activate WooCommerce link.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:195
+msgid "%1$s requires %2$s %3$s or greater. Please %4$s your WooCommerce setup first."
+msgstr "%1$s 需要 %2$s %3$s 或更高版本。请 %4$s 先更新您的 WooCommerce 设置。"
+
+#. translators: %1$s: Plugin name.
+#: dependencies/barn2/barn2-lib/src/Plugin/Requirements.php:218
+msgid "%1$s requires Easy Digital Downloads to be installed and active."
+msgstr "%1$s 需要安装并激活 Easy Digital Downloads。"
+
+#: dependencies/barn2/barn2-lib/src/Plugin/Simple_Plugin.php:102
+msgid "%1$s could not complete its first activation because the following error occurred:<br>%2$s"
+msgstr "%1$s 无法完成首次激活，因为发生了以下错误：<br>%2$s"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "%1$s database update required"
+msgstr "%1$s 数据库更新需要"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "<p>%1$s has been updated! To keep things running smoothly, we have to update your database to the newest version. The database update process runs in the background and may take a little while, so please be patient.</p>"
+msgstr "<p>%1$s 已更新！为了保持系统平稳运行，我们需要将您的数据库更新到最新版本。数据库更新过程在后台运行，可能需要一些时间，请耐心等待。</p>"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "%1$s database update done"
+msgstr "%1$s 数据库更新完成"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:102
+msgid "<p>%1$s database update complete. Thank you for updating to the latest version!</p>"
+msgstr "<p>%1$s 数据库更新完成。感谢您更新到最新版本！</p>"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:288
+msgid "You do not have sufficient permissions to perform this action."
+msgstr "您没有足够的权限执行此操作。"
+
+#: dependencies/barn2/barn2-lib/src/Service/Updater.php:292
+msgid "An upgrade is already in progress. Please wait until it completes."
+msgstr "升级已经在进行中。请等待它完成。"
+
+#: dependencies/barn2/barn2-lib/src/Util.php:549
+msgid "Unable to connect to the filesystem. Please confirm your credentials."
+msgstr "无法连接到文件系统。请确认您的凭据。"
+
+#: dependencies/barn2/barn2-lib/src/Util.php:574
+msgid "You don't have permission to activate the plugin."
+msgstr "您没有权限激活插件。"
+
+#: dependencies/barn2/setup-wizard/src/Api.php:151
+msgid "Could not find the appropriate step."
+msgstr "找不到适当的步骤。"
+
+#: dependencies/barn2/setup-wizard/src/Api.php:196
+msgid "Please enter a license key."
+msgstr "请输入许可证密钥。"
+
+#: dependencies/barn2/setup-wizard/src/Api.php:199
+msgid "Invalid action requested."
+msgstr "请求的操作无效。"
+
+#. translators: %s: The name of the plugin.
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:344
+msgid "%s setup wizard"
+msgstr "%s 安装向导"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:434
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:507
+msgid "Warning: This will overwrite your existing settings for %s. Are you sure you want to continue?"
+msgstr "警告：这将覆盖您对 %s 的现有设置。您确定要继续吗？"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:484
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:492
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:541
+msgid "Setup wizard"
+msgstr "安装向导"
+
+#: dependencies/barn2/setup-wizard/src/Setup_Wizard.php:487
+msgid "If you need to access the setup wizard again, please click on the button below."
+msgstr "如果您需要再次访问安装向导，请点击下面的按钮。"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:23
+msgid "More"
+msgstr "更多"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:24
+msgid "Extra features"
+msgstr "额外功能"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Cross_Selling.php:25
+msgid "Enhance your site with these fantastic plugins from Barn2."
+msgstr "使用这些来自 Barn2 的精彩插件增强您的网站。"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Ready.php:23
+#: src/Admin/Wizard/Steps/Completed.php:21
+msgid "Ready"
+msgstr "准备就绪"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Ready.php:24
+msgid "Setup Complete"
+msgstr "安装完成"
+
+#: dependencies/barn2/setup-wizard/src/Steps/Welcome.php:25
+#: dependencies/barn2/setup-wizard/src/Steps/Welcome_Free.php:24
+#: src/Admin/Wizard/Steps/License_Verification.php:21
+msgid "Welcome"
+msgstr "欢迎"
+
+#: dependencies/barn2/setup-wizard/src/Util.php:28
+#: src/Fields/Select.php:40
+#: src/Fields/Select.php:41
+#: src/Fields/Select.php:73
+#: assets/js/modules/attribute-options.js:1
+#: assets/js/modules/dropdown.js:1
+msgid "Select an option"
+msgstr "选择一个选项"
+
+#: src/Admin/Admin_Controller.php:87
+msgid "Security error"
+msgstr "安全错误"
+
+#: src/Admin/Admin_Controller.php:88
+msgid "The authorization to perform this action expired. Please reload the page and try again"
+msgstr "执行此操作的授权已过期。请重新加载页面并重试"
+
+#: src/Admin/Admin_Controller.php:123
+msgid "Permission error"
+msgstr "权限错误"
+
+#: src/Admin/Admin_Controller.php:124
+msgid "You do not have permission to install plugins."
+msgstr "您没有安装插件的权限。"
+
+#: src/Admin/Admin_Controller.php:140
+msgid "Already installed"
+msgstr "已安装"
+
+#: src/Admin/Admin_Controller.php:141
+msgid "The WooCommerce Live Preview plugin is already installed."
+msgstr "WooCommerce 实时预览插件已安装。"
+
+#: src/Admin/Admin_Controller.php:172
+msgid "License error"
+msgstr "许可证错误"
+
+#: src/Admin/Admin_Controller.php:173
+msgid "Your license doesn't include WooCommerce Live Preview. Please go to the settings page and check your license. Then try again."
+msgstr "您的许可证不包括 WooCommerce 实时预览。请前往设置页面检查您的许可证。然后再试一次。"
+
+#: src/Admin/Admin_Controller.php:191
+msgid "Successfully installed"
+msgstr "安装成功"
+
+#. translators: %s is the link to the product options page
+#: src/Admin/Admin_Controller.php:194
+msgid "The WooCommerce Live Preview plugin has been successfully installed. Now go to %s and enable live preview for each option that you wish to use it for."
+msgstr "WooCommerce 实时预览插件已成功安装。现在请去 %s 并为您希望使用的每个选项启用实时预览。"
+
+#: src/Admin/Admin_Controller.php:195
+#: src/Admin/Settings_Page.php:164
+#: src/Admin/Settings_Page.php:165
+#: src/Admin/Settings_Page.php:182
+#: src/Admin/Settings_Tab/Product_Options.php:41
+#: src/Plugin_Setup.php:121
+msgid "Product Options"
+msgstr "产品选项"
+
+#: src/Admin/Admin_Controller.php:210
+msgid "Installation error"
+msgstr "安装错误"
+
+#. translators: %s is the link to the downloads page
+#: src/Admin/Admin_Controller.php:215
+msgid "An error occurred while installing or activating WooCommerce Live Preview (Error code: %1$s).<br>Please reload the page and try again. If the error persists, please go to your %2$s and try to manually install the plugin."
+msgstr "安装或激活 WooCommerce 实时预览时发生错误（错误代码：%1$s）。<br>请重新加载页面并重试。如果错误仍然存在，请进入您的 %2$s 并尝试手动安装插件。"
+
+#: src/Admin/Admin_Controller.php:217
+msgid "Barn2 downloads page"
+msgstr "Barn2 下载页面"
+
+#: src/Admin/Admin_Controller.php:399
+msgid "Product Attributes"
+msgstr "产品属性"
+
+#: src/Admin/Admin_Controller.php:403
+msgid "Invetory properties"
+msgstr "库存属性"
+
+#: src/Admin/Admin_Controller.php:407
+msgid "Shipping properties"
+msgstr "运输属性"
+
+#: src/Admin/Attribute_Term.php:106
+msgid "The attribute has associated attribute based options in <strong>WooCommerce Product Options</strong>, however this term is not configured. Please configure the term in the following options: <br/><br/> %s"
+msgstr "该属性在 <strong>WooCommerce 产品选项</strong> 中有相关的基于属性的选项，但此术语尚未配置。请在以下选项中配置该术语：<br/><br/> %s"
+
+#: src/Admin/Settings_Page.php:81
+msgid "PHP Intl extension required"
+msgstr "需要 PHP Intl 扩展"
+
+#: src/Admin/Settings_Page.php:82
+msgid "The PHP Intl extension is required for the WooCommerce Product Options plugin to work correctly. Please ask your hosting provider to enable this extension."
+msgstr "WooCommerce 产品选项插件正常工作需要 PHP Intl 扩展。请询问您的托管服务提供商启用此扩展。"
+
+#: src/Admin/Settings_Page.php:92
+#: src/Admin/Settings_Page.php:99
+msgid "Install WooCommerce Live Preview"
+msgstr "安装 WooCommerce 实时预览"
+
+#. translators: %s: Link to install the bonus plugin.
+#: src/Admin/Settings_Page.php:95
+msgid "Thanks for adding the Live Preview add-on to WooCommerce Product Options. Please install it and then enable it on the product options that you wish to use it for. %s"
+msgstr "感谢您将实时预览附加组件添加到 WooCommerce 产品选项中。请安装它，然后在您希望使用它的产品选项中启用它。 %s"
+
+#: src/Admin/Settings_Page.php:214
+msgid "This tab doesn't exist."
+msgstr "此标签不存在。"
+
+#: src/Admin/Settings_Tab/General.php:62
+msgid "General"
+msgstr "常规"
+
+#: src/Admin/Settings_Tab/General.php:65
+msgid "The following options control the WooCommerce Product Options extension."
+msgstr "以下选项控制 WooCommerce 产品选项扩展。"
+
+#: src/Admin/Settings_Tab/General.php:104
+msgid "Settings saved."
+msgstr "设置已保存。"
+
+#: src/Admin/Settings_Tab/General.php:117
+msgid "Uninstall"
+msgstr "卸载"
+
+#: src/Admin/Settings_Tab/General.php:120
+msgid "The following options control the uninstallation of the WooCommerce Product Options extension."
+msgstr "以下选项控制 WooCommerce 产品选项扩展的卸载。"
+
+#: src/Admin/Settings_Tab/General.php:125
+msgid "Delete data"
+msgstr "删除数据"
+
+#. translators: %s is the plugin name.
+#: src/Admin/Settings_Tab/General.php:130
+msgid "Permanently delete all %s settings and data when uninstalling the plugin."
+msgstr "卸载插件时永久删除所有 %s 设置和数据。"
+
+#: src/Admin/Settings_Tab/Import_Export.php:42
+msgid "Import/Export"
+msgstr "导入/导出"
+
+#: src/Admin/Version_Updater.php:116
+msgid "All price formulas have been successfully converted. Please double-check that everything works as expected."
+msgstr "所有价格公式已成功转换。请仔细检查一切是否按预期工作。"
+
+#. translators: %1$s: link to backup database page
+#: src/Admin/Version_Updater.php:131
+msgid "Your price formulas will be upgraded to the new version.<br>We strongly recommend you %1$s now and export of all your option groups before updating your formulas."
+msgstr "您的价格公式将升级到新版本。<br>我们强烈建议您 %1$s 现在备份并导出所有选项组，然后再更新您的公式。"
+
+#: src/Admin/Version_Updater.php:132
+msgid "backup your database"
+msgstr "备份您的数据库"
+
+#: src/Admin/Version_Updater.php:138
+msgid "Export option groups"
+msgstr "导出选项组"
+
+#: src/Admin/Version_Updater.php:143
+msgid "Update price formulas"
+msgstr "更新价格公式"
+
+#: src/Admin/Wizard/Steps/Completed.php:22
+msgid "Complete Setup"
+msgstr "完成设置"
+
+#: src/Admin/Wizard/Steps/Completed.php:35
+msgid "Congratulations, you have finished setting up the plugin. Now it’s time to start adding options to your products."
+msgstr "恭喜，您已完成插件的设置。现在是时候开始为您的产品添加选项了。"
+
+#: src/Admin/Wizard/Steps/License_Verification.php:22
+msgid "Welcome to WooCommerce Product Options."
+msgstr "欢迎使用 WooCommerce 产品选项。"
+
+#: src/Admin/Wizard/Steps/License_Verification.php:23
+msgid "Use this setup wizard to activate your license key and choose any complementary plugins. After that, you’ll be ready to start creating product options!"
+msgstr "使用此设置向导激活您的许可证密钥并选择任何补充插件。之后，您将准备好开始创建产品选项！"
+
+#. translators: %1$s: Option name %2$s: Product name
+#. translators: %s: Option name
+#. translators: %1: Option name %2: Product name
+#: src/Fields/Abstract_Field.php:228
+#: src/Fields/Checkboxes.php:56
+#: src/Fields/Date_Picker.php:73
+#: src/Fields/File.php:83
+msgid "\"%1$s\" is a required field for \"%2$s\"."
+msgstr "\"%1$s\" 是 \"%2$s\" 的必填字段。"
+
+#. translators: %1$s: Option name %2$s: Product name
+#. translators: %s: Option name
+#: src/Fields/Abstract_Field.php:238
+#: src/Fields/Checkboxes.php:68
+msgid "Invalid option choice for \"%1$s\" on \"%2$s\"."
+msgstr "在 \"%2$s\" 上，\"%1$s\" 的选项选择无效。"
+
+#. translators: %1$s: A space or an empty string, %2$s: Option choice percentage increase
+#: src/Fields/Abstract_Field.php:784
+msgid "+%1$s%2$s%1$s%%"
+msgstr "+%1$s%2$s%1$s%%"
+
+#. translators: %1$s: A space or an empty string, %2$s: Option choice percentage decrease
+#: src/Fields/Abstract_Field.php:788
+msgid "-%1$s%2$s%1$s%%"
+msgstr "-%1$s%2$s%1$s%%"
+
+#. translators: %s: Option choice price per character
+#: src/Fields/Abstract_Field.php:795
+msgid "%s per character"
+msgstr "%s 每个字符"
+
+#. translators: %s: Option choice price per character
+#: src/Fields/Abstract_Field.php:799
+msgid "%s per uploaded file"
+msgstr "%s 每个上传的文件"
+
+#. translators: %1$s: Min quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Checkboxes.php:85
+msgid "You must select at least %1$d option for \"%2$s\" on \"%3$s\"."
+msgid_plural "You must select at least %1$d options for \"%2$s\" on \"%3$s\"."
+msgstr[0] "您必须至少选择 %1$d 个 \"%2$s\" 选项在 \"%3$s\" 上。"
+
+#. translators: %1$s: Max quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Checkboxes.php:103
+msgid "You can only select up to %1$d option for \"%2$s\" on \"%3$s\"."
+msgid_plural "You can only select up to %1$d options for \"%2$s\" on \"%3$s\"."
+msgstr[0] "您只能选择最多 %1$d 个 \"%2$s\" 选项在 \"%3$s\" 上。"
+
+#: src/Fields/Date_Picker.php:86
+msgid "\"%1$s\" is not a valid date for \"%2$s\"."
+msgstr "\"%1$s\" 不是 \"%2$s\" 的有效日期。"
+
+#: src/Fields/Date_Picker.php:101
+msgid "Invalid minimum date for \"%1$s\"."
+msgstr "无效的 \"%1$s\" 最小日期。"
+
+#: src/Fields/Date_Picker.php:105
+msgid "\"%1$s\" is before the minimum date for \"%2$s\"."
+msgstr "\"%1$s\" 在 \"%2$s\" 的最小日期之前。"
+
+#: src/Fields/Date_Picker.php:119
+msgid "Invalid maximum date for \"%1$s\"."
+msgstr "无效的 \"%1$s\" 最大日期。"
+
+#: src/Fields/Date_Picker.php:126
+msgid "\"%1$s\" is after the maximum date for \"%2$s\"."
+msgstr "\"%1$s\" 在 \"%2$s\" 的最大日期之后。"
+
+#: src/Fields/Date_Picker.php:143
+msgid "Invalid disabled date for \"%1$s\"."
+msgstr "无效的 \"%1$s\" 禁用日期。"
+
+#: src/Fields/Date_Picker.php:147
+msgid "\"%1$s\" is an excluded date for \"%2$s\"."
+msgstr "\"%1$s\" 是 \"%2$s\" 的排除日期。"
+
+#: src/Fields/Date_Picker.php:154
+msgid "\"%1$s\" is a disabled past date for \"%2$s\"."
+msgstr "\"%1$s\" 是 \"%2$s\" 的禁用过去日期。"
+
+#: src/Fields/Date_Picker.php:159
+msgid "\"%1$s\" is a disabled future date for \"%2$s\"."
+msgstr "\"%1$s\" 是 \"%2$s\" 的禁用未来日期。"
+
+#: src/Fields/Date_Picker.php:166
+msgid "\"%1$s\" is a disabled date for \"%2$s\"."
+msgstr "\"%1$s\" 是 \"%2$s\" 的禁用日期。"
+
+#: src/Fields/Date_Picker.php:179
+msgid "\"%1$s\" is a disabled day for \"%2$s\"."
+msgstr "\"%1$s\" 是 \"%2$s\" 的禁用日。"
+
+#: src/Fields/Date_Picker.php:190
+msgid "\"%1$s\" is before the minimum time for \"%2$s\"."
+msgstr "\"%1$s\" 在 \"%2$s\" 的最小时间之前。"
+
+#: src/Fields/Date_Picker.php:199
+msgid "\"%1$s\" is after the maximum time for \"%2$s\"."
+msgstr "\"%1$s\" 超过了 \"%2$s\" 的最大时间。"
+
+#: src/Fields/Date_Picker.php:210
+msgid "\"%1$s\" is not a valid hour increment for \"%2$s\"."
+msgstr "\"%1$s\" 不是 \"%2$s\" 的有效小时增量。"
+
+#: src/Fields/Date_Picker.php:221
+msgid "\"%1$s\" is not a valid minute increment for \"%2$s\"."
+msgstr "\"%1$s\" 不是 \"%2$s\" 的有效分钟增量。"
+
+#. translators: %1: Maxmimum number of files %2: Option name %3: Product name
+#: src/Fields/File.php:98
+msgid "You can only upload up to %1$d files(s) for \"%2$s\" on \"%3$s\"."
+msgstr "您只能在 \"%3$s\" 上为 \"%2$s\" 上传最多 %1$d 个文件。"
+
+#: src/Fields/File.php:217
+#: assets/js/modules/file-upload.js:1
+msgid "Drop files here to upload"
+msgstr "将文件拖到这里以上传"
+
+#: src/Fields/Number.php:78
+msgid "Please enter a valid number."
+msgstr "请输入有效的数字。"
+
+#. translators: %s: minimum number
+#: src/Fields/Number.php:85
+msgid "Please enter a number greater than or equal to %s."
+msgstr "请输入大于或等于 %s 的数字。"
+
+#. translators: %s: maximum number
+#: src/Fields/Number.php:92
+msgid "Please enter a number less than or equal to %s."
+msgstr "请输入小于或等于 %s 的数字。"
+
+#. translators: %s: step value
+#: src/Fields/Number.php:103
+msgid "Please enter a valid number. The value must be in steps of %1$s, starting from %2$s."
+msgstr "请输入有效的数字。该值必须是从 %2$s 开始的 %1$s 的倍数。"
+
+#: src/Fields/Products.php:247
+#: src/Fields/Products.php:537
+msgid "Add to cart"
+msgstr "添加到购物车"
+
+#: src/Fields/Products.php:374
+#: src/Fields/Products.php:377
+msgid "Select a product"
+msgstr "选择产品"
+
+#: src/Fields/Products.php:818
+#: src/Fields/Products.php:824
+msgid "The selected product is not valid."
+msgstr "所选产品无效。"
+
+#. translators: %1$d: Min quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Text.php:111
+msgid "You must input at least %1$d character for \"%2$s\" on \"%3$s\"."
+msgid_plural "You must input at least %1$d characters for \"%2$s\" on \"%3$s\"."
+msgstr[0] "您必须为 \"%2$s\" 在 \"%3$s\" 上输入至少 %1$d 个字符。"
+
+#. translators: %1$d: Max quantity %2$s: Option name %3$s: Product name
+#: src/Fields/Text.php:126
+msgid "You can only input up to %1$d character for \"%2$s\" on \"%3$s\"."
+msgid_plural "You can only input up to %1$d characters for \"%2$s\" on \"%3$s\"."
+msgstr[0] "您只能为 \"%2$s\" 在 \"%3$s\" 上输入最多 %1$d 个字符。"
+
+#: src/Handlers/Add_To_Cart.php:94
+#: src/Handlers/Add_To_Cart.php:102
+msgid "Select options"
+msgstr "选择选项"
+
+#: src/Handlers/Add_To_Cart.php:96
+msgid "This product has options that may be chosen on the product page"
+msgstr "此产品在产品页面上有可选择的选项"
+
+#: src/Handlers/Add_To_Cart.php:210
+msgid "%1$s &times; %2$s"
+msgstr "%1$s &times; %2$s"
+
+#. translators: %1$s: link to the shop/cart, %2$s: product title, %3$s: list of additional products
+#: src/Handlers/Add_To_Cart.php:226
+msgid "%1$s has been added to your cart, together with the following additional products: %2$s"
+msgstr "%1$s 已添加到您的购物车，连同以下附加产品：%2$s"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:98
+msgid "Group %1$s, option %2$s, name"
+msgstr "组 %1$s，选项 %2$s，名称"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:104
+msgid "Group %1$s, option %2$s, description"
+msgstr "组 %1$s，选项 %2$s，描述"
+
+#. translators: %s is the group name, %s is the option name
+#: src/Integration/WPML.php:111
+msgid "Group %1$s, option %2$s, content"
+msgstr "组 %1$s, 选项 %2$s, 内容"
+
+#. translators: %s is the group name, %s is the option name, %d is the choice index
+#: src/Integration/WPML.php:119
+msgid "Group %1$s, option %2$s, label %3$d"
+msgstr "组 %1$s, 选项 %2$s, 标签 %3$d"
+
+#: src/Rest/Routes/File_Upload.php:58
+#: src/Rest/Routes/File_Upload.php:62
+#: src/Rest/Routes/Formula.php:66
+msgid "Insufficient data supplied."
+msgstr "提供的数据不足。"
+
+#: src/Rest/Routes/File_Upload.php:68
+#: src/Rest/Routes/File_Upload.php:72
+msgid "Insufficient data supplied"
+msgstr "提供的数据不足"
+
+#: src/Rest/Routes/File_Upload.php:76
+msgid "File type is not allowed."
+msgstr "文件类型不被允许。"
+
+#: src/Rest/Routes/Formula.php:78
+msgid "Invalid option ID."
+msgstr "无效的选项 ID。"
+
+#: src/Rest/Routes/Group.php:59
+msgid "An array of group IDs."
+msgstr "一组组 ID。"
+
+#: src/Rest/Routes/Group.php:105
+#: src/Rest/Routes/Group.php:127
+#: src/Rest/Routes/Group.php:1741
+msgid "The unique identifier for the group."
+msgstr "组的唯一标识符。"
+
+#: src/Rest/Routes/Group.php:156
+msgid "An array of group_id => menu_order data."
+msgstr "一组 group_id => menu_order 数据。"
+
+#: src/Rest/Routes/Group.php:203
+msgid "An array of product IDs."
+msgstr "一组产品 ID。"
+
+#: src/Rest/Routes/Group.php:208
+msgid "A search to filter products by name or SKU."
+msgstr "按名称或 SKU 过滤产品的搜索。"
+
+#: src/Rest/Routes/Group.php:228
+msgid "An array of category IDs."
+msgstr "一组类别 ID。"
+
+#: src/Rest/Routes/Group.php:250
+#: src/Rest/Routes/Group.php:280
+#: src/Rest/Routes/Group.php:1507
+msgid "No groups"
+msgstr "没有组"
+
+#: src/Rest/Routes/Group.php:460
+msgid "No group"
+msgstr "没有组"
+
+#: src/Rest/Routes/Group.php:486
+msgid "Something went wrong while creating the group"
+msgstr "创建组时出现问题"
+
+#: src/Rest/Routes/Group.php:504
+#: src/Rest/Routes/Group.php:1300
+msgid "Something went wrong: could not create an option."
+msgstr "出现问题：无法创建选项。"
+
+#: src/Rest/Routes/Group.php:541
+msgid "Something went wrong while duplicating the group"
+msgstr "复制组时出现问题"
+
+#: src/Rest/Routes/Group.php:969
+#: src/Rest/Routes/Group.php:1042
+msgid "Something went wrong: could not update the selected group"
+msgstr "出现问题：无法更新所选组"
+
+#: src/Rest/Routes/Group.php:996
+msgid "Something went wrong: could not update an option."
+msgstr "出现问题：无法更新选项。"
+
+#: src/Rest/Routes/Group.php:1071
+msgid "Something went wrong: could not find the group"
+msgstr "出现问题：无法找到组"
+
+#: src/Rest/Routes/Group.php:1094
+#: src/Rest/Routes/Option.php:295
+msgid "Something went wrong with reodering."
+msgstr "重新排序时出错。"
+
+#. translators: 1: option name, 2: formula name
+#: src/Rest/Routes/Group.php:1166
+msgid "The option \"%1$s\" no longer exists. Please update the formula \"%2$s\"."
+msgstr "选项 \"%1$s\" 不再存在。请更新公式 \"%2$s\"。"
+
+#: src/Rest/Routes/Group.php:1585
+msgid "Missing parameters. Please provide either \"include\" or \"search\" parameter."
+msgstr "缺少参数。请提供 \"include\" 或 \"search\" 参数。"
+
+#: src/Rest/Routes/Group.php:1607
+msgid "No products"
+msgstr "没有产品"
+
+#: src/Rest/Routes/Group.php:1653
+msgid "No search term provided"
+msgstr "未提供搜索词"
+
+#: src/Rest/Routes/Group.php:1713
+msgid "No categories"
+msgstr "没有类别"
+
+#: src/Rest/Routes/Group.php:1746
+msgid "The menu order for the group."
+msgstr "该组的菜单顺序。"
+
+#: src/Rest/Routes/Group.php:1751
+msgid "The name for the group."
+msgstr "该组的名称。"
+
+#: src/Rest/Routes/Group.php:1756
+msgid "Indicates whether the group name should be displayed."
+msgstr "指示组名是否应显示。"
+
+#: src/Rest/Routes/Group.php:1761
+msgid "The visiblity status for the group."
+msgstr "该组的可见性状态。"
+
+#: src/Rest/Routes/Group.php:1769
+msgid "The products for the group."
+msgstr "该组的产品。"
+
+#: src/Rest/Routes/Group.php:1777
+msgid "The products to exclude for for the group."
+msgstr "该组要排除的产品。"
+
+#: src/Rest/Routes/Group.php:1785
+msgid "The categories for the group."
+msgstr "该组的类别。"
+
+#: src/Rest/Routes/Group.php:1793
+msgid "The categories to exclude for the group."
+msgstr "该组要排除的类别。"
+
+#: src/Rest/Routes/Group.php:1798
+msgid "The options for the group."
+msgstr "该组的选项。"
+
+#: src/Rest/Routes/Group.php:1805
+#: src/Rest/Routes/Option.php:80
+#: src/Rest/Routes/Option.php:128
+#: src/Rest/Routes/Option.php:324
+msgid "The unique identifier for the option."
+msgstr "选项的唯一标识符。"
+
+#: src/Rest/Routes/Group.php:1810
+#: src/Rest/Routes/Option.php:329
+msgid "The Group ID to which the option belongs."
+msgstr "选项所属的组 ID。"
+
+#: src/Rest/Routes/Group.php:1815
+#: src/Rest/Routes/Option.php:334
+msgid "The menu order for the option."
+msgstr "选项的菜单顺序。"
+
+#: src/Rest/Routes/Group.php:1820
+#: src/Rest/Routes/Option.php:339
+msgid "The name for the option."
+msgstr "选项的名称。"
+
+#: src/Rest/Routes/Group.php:1825
+#: src/Rest/Routes/Option.php:344
+msgid "The visiblity status for the option."
+msgstr "选项的可见性状态。"
+
+#: src/Rest/Routes/Group.php:1830
+#: src/Rest/Routes/Option.php:349
+msgid "The field type for the option."
+msgstr "选项的字段类型。"
+
+#: src/Rest/Routes/Group.php:1835
+#: src/Rest/Routes/Option.php:354
+msgid "The choices for the option."
+msgstr "选项的选择。"
+
+#: src/Rest/Routes/Group.php:1840
+#: src/Rest/Routes/Option.php:359
+msgid "Indicates whether the option is required."
+msgstr "指示该选项是否为必填项。"
+
+#: src/Rest/Routes/Group.php:1845
+#: src/Rest/Routes/Option.php:364
+msgid "Indicates whether the option name should be displayed."
+msgstr "指示选项名称是否应显示。"
+
+#: src/Rest/Routes/Group.php:1850
+msgid "Any specific extra settings for the option."
+msgstr "选项的任何特定额外设置。"
+
+#: src/Rest/Routes/Group.php:1855
+msgid "Settings for the datepicker"
+msgstr "日期选择器的设置"
+
+#: src/Rest/Routes/Group.php:1860
+msgid "The choice type for the option."
+msgstr "选项的选择类型。"
+
+#: src/Rest/Routes/Group.php:1865
+msgid "The selected attribute for the option."
+msgstr "选项的选中属性。"
+
+#: src/Rest/Routes/Group.php:1870
+msgid "The date format for the option."
+msgstr "选项的日期格式。"
+
+#: src/Rest/Routes/Group.php:1875
+msgid "The minimum date for the option."
+msgstr "选项的最小日期。"
+
+#: src/Rest/Routes/Group.php:1880
+msgid "The maximum date for the option."
+msgstr "选项的最大日期。"
+
+#: src/Rest/Routes/Group.php:1885
+msgid "The days to disable for the option."
+msgstr "要禁用的选项的日期。"
+
+#: src/Rest/Routes/Group.php:1893
+msgid "The dates to disable for the option."
+msgstr "要禁用的选项的日期。"
+
+#: src/Rest/Routes/Group.php:1898
+msgid "Indicates whether past dates should be disabled for the option."
+msgstr "指示选项是否应禁用过去的日期。"
+
+#: src/Rest/Routes/Group.php:1903
+msgid "Indicates whether future dates should be disabled for the option."
+msgstr "指示选项是否应禁用未来的日期。"
+
+#: src/Rest/Routes/Group.php:1908
+msgid "Indicates whether the time should be enabled for the option."
+msgstr "指示选项是否应启用时间。"
+
+#: src/Rest/Routes/Group.php:1913
+msgid "The minimum time for the option."
+msgstr "选项的最小时间。"
+
+#: src/Rest/Routes/Group.php:1918
+msgid "The maximum time for the option."
+msgstr "选项的最大时间。"
+
+#: src/Rest/Routes/Group.php:1925
+msgid "The minute increment for the option."
+msgstr "选项的分钟增量。"
+
+#: src/Rest/Routes/Group.php:1932
+msgid "The hour increment for the option."
+msgstr "选项的小时增量。"
+
+#: src/Rest/Routes/Option.php:60
+msgid "The unique identifier for the parent group."
+msgstr "父组的唯一标识符。"
+
+#: src/Rest/Routes/Option.php:148
+msgid "An array of option_id => menu_order data."
+msgstr "一个 option_id => menu_order 数据的数组。"
+
+#: src/Rest/Routes/Option.php:170
+#: src/Rest/Routes/Option.php:188
+msgid "No options"
+msgstr "没有选项"
+
+#: src/Rest/Routes/Option.php:206
+msgid "No option"
+msgstr "没有选项"
+
+#: src/Rest/Routes/Option.php:230
+msgid "Something went wrong while creating the option"
+msgstr "创建选项时出现错误"
+
+#: src/Rest/Routes/Option.php:253
+msgid "Something went wrong: could not update the selected option"
+msgstr "出现错误：无法更新选定的选项"
+
+#: src/Rest/Routes/Option.php:274
+msgid "Something went wrong: could not find the option"
+msgstr "出现错误：无法找到选项"
+
+#: src/Upload_Directory.php:37
+msgid "The files uploaded via WooCommerce Product Options are not currently protected."
+msgstr "通过 WooCommerce 产品选项上传的文件当前没有受到保护。"
+
+#: src/Upload_Directory.php:38
+msgid "To protect them, you must add this <a href=\"https://barn2.com/kb/\">NGINX redirect rule</a>. If you have already done this, or it does not apply to your site, you may permanently dismiss this notice."
+msgstr "要保护它们，您必须添加此 <a href=\"https://barn2.com/kb/\">NGINX 重定向规则</a>。如果您已经完成此操作，或者它不适用于您的站点，您可以永久关闭此通知。"
+
+#. translators: %s: option name
+#: src/Util/Cart.php:80
+msgid "The option \"%s\" is not supported."
+msgstr "选项 \"%s\" 不受支持。"
+
+#: src/Util/Display.php:128
+msgid "Total: "
+msgstr "总计："
+
+#: src/Util/Util.php:186
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Weight"
+msgstr "重量"
+
+#: src/Util/Util.php:190
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Length"
+msgstr "长度"
+
+#: src/Util/Util.php:194
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Width"
+msgstr "宽度"
+
+#: src/Util/Util.php:198
+#: assets/js/admin/wpo-settings-page.js:27
+#: assets/js/modules/price-formulas.js:1
+msgid "Height"
+msgstr "高度"
+
+#: src/Fields/Abstract_Field.php:780
+msgctxt "one-time fee"
+msgid "%s"
+msgstr "%s"
+
+#: src/Fields/Abstract_Field.php:791
+msgctxt "quantity-based fee"
+msgid "%s"
+msgstr "%s"
+
+#: src/Handlers/Add_To_Cart.php:222
+msgctxt "Item name in quotes"
+msgid "&ldquo;%s&rdquo;"
+msgstr "&ldquo;%s&rdquo;"

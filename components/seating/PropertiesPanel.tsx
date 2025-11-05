@@ -414,9 +414,9 @@ export default function PropertiesPanel({
 
           {/* Table Info */}
           {isTable && (
-            <div className="px-6 py-4 bg-blue-50 border-y border-blue-200">
-              <h3 className="text-xs font-semibold text-blue-900 mb-2">Table Info</h3>
-              <div className="space-y-1 text-xs text-blue-800">
+            <div className="px-6 py-4 bg-accent border-y border-border">
+              <h3 className="text-xs font-semibold text-foreground mb-2">Table Info</h3>
+              <div className="space-y-1 text-xs text-accent-foreground">
                 <div className="flex items-center justify-between">
                   <span>Shape:</span>
                   <span className="font-medium">{(data as Table).shape}</span>

@@ -121,7 +121,7 @@ export function SquarePaymentForm({
       <div className="relative">
         {isLoading && (
           <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
-            <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
         )}
         <div
@@ -137,7 +137,7 @@ export function SquarePaymentForm({
         className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-lg font-semibold transition-all ${
           isLoading || isProcessing
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-            : "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg"
+            : "bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg"
         }`}
       >
         {isProcessing ? (

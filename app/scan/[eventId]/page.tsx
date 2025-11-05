@@ -307,11 +307,11 @@ export default function EventScanningPage() {
                 <button
                   onClick={startScanner}
                   disabled={isStarting}
-                  className="w-full px-6 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-6 py-4 bg-white text-primary rounded-xl font-bold text-lg hover:bg-accent transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isStarting ? (
                     <>
-                      <div className="w-6 h-6 border-3 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
                       Starting Camera...
                     </>
                   ) : (
@@ -432,7 +432,7 @@ export default function EventScanningPage() {
                         <span>👤</span>
                         Sold by: {scan.soldByStaffName}
                         {scan.paymentMethod && scan.paymentMethod !== "ONLINE" && (
-                          <span className="ml-2 px-2 py-0.5 bg-blue-500/20 rounded text-xs">
+                          <span className="ml-2 px-2 py-0.5 bg-primary/20 rounded text-xs">
                             {scan.paymentMethod}
                           </span>
                         )}

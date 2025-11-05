@@ -123,7 +123,7 @@ export default function TemplateLibrary({
         <h3 className="text-lg font-semibold text-gray-900">Seating Templates</h3>
         <button
           onClick={() => setShowSaveDialog(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
         >
           <Save className="w-4 h-4" />
           Save Current Layout
@@ -136,7 +136,7 @@ export default function TemplateLibrary({
           onClick={() => setSelectedCategory(null)}
           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
             selectedCategory === null
-              ? "bg-blue-600 text-white"
+              ? "bg-primary text-white"
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
         >
@@ -148,7 +148,7 @@ export default function TemplateLibrary({
             onClick={() => setSelectedCategory(cat.id)}
             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
               selectedCategory === cat.id
-                ? "bg-blue-600 text-white"
+                ? "bg-primary text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -214,7 +214,7 @@ export default function TemplateLibrary({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleApplyTemplate(template._id)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 text-sm font-medium transition-colors"
                 >
                   <Download className="w-4 h-4" />
                   Apply
@@ -239,7 +239,7 @@ export default function TemplateLibrary({
           <p className="text-gray-500 mb-4">No templates found in this category</p>
           <button
             onClick={() => setSelectedCategory(null)}
-            className="text-blue-600 hover:underline text-sm"
+            className="text-primary hover:underline text-sm"
           >
             View all templates
           </button>
@@ -266,7 +266,7 @@ export default function TemplateLibrary({
                     setTemplateForm({ ...templateForm, name: e.target.value })
                   }
                   placeholder="e.g., Wedding 150 Guests"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
 
@@ -281,7 +281,7 @@ export default function TemplateLibrary({
                   }
                   placeholder="Describe this seating layout..."
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
 
@@ -297,7 +297,7 @@ export default function TemplateLibrary({
                       category: e.target.value as any,
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 >
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
@@ -318,7 +318,7 @@ export default function TemplateLibrary({
                     setTemplateForm({ ...templateForm, tags: e.target.value })
                   }
                   placeholder="ballroom, 150-guests, round-tables"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
 
@@ -329,7 +329,7 @@ export default function TemplateLibrary({
                   onChange={(e) =>
                     setTemplateForm({ ...templateForm, isPublic: e.target.checked })
                   }
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                 />
                 <span className="text-sm text-gray-700">
                   Make public (share with other organizers)
@@ -347,7 +347,7 @@ export default function TemplateLibrary({
               <button
                 onClick={handleSaveAsTemplate}
                 disabled={savingTemplate}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
                 {savingTemplate ? "Saving..." : "Save Template"}
               </button>

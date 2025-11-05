@@ -37,7 +37,7 @@ export default function StaffLayout({
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">SL</span>
               </div>
               <span className="font-semibold text-lg text-gray-900">SteppersLife Staff</span>
@@ -55,7 +55,7 @@ export default function StaffLayout({
                     href={item.href}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                       isActive
-                        ? 'bg-blue-100 text-blue-700 font-medium'
+                        ? 'bg-accent text-primary font-medium'
                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                     }`}
                   >

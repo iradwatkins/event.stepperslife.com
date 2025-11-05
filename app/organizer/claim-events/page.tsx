@@ -313,7 +313,7 @@ export default function ClaimEventsPage() {
                         )}
 
                         {event.category && (
-                          <span className="inline-block px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
+                          <span className="inline-block px-2 py-1 text-xs font-semibold bg-accent text-primary rounded-full">
                             {event.category}
                           </span>
                         )}

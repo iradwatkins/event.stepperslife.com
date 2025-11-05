@@ -104,7 +104,7 @@ export const getStaffDashboard = query({
       console.warn("[getStaffDashboard] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -245,7 +245,7 @@ export const getOrganizerStaffSummary = query({
       console.warn("[getOrganizerStaffSummary] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -310,7 +310,7 @@ export const getMySubSellers = query({
       console.warn("[getMySubSellers] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -386,7 +386,7 @@ export const getHierarchyTree = query({
       console.warn("[getHierarchyTree] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -458,7 +458,7 @@ export const getMyParentStaff = query({
       console.warn("[getMyParentStaff] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -522,7 +522,7 @@ export const getSubSellerBranchSales = query({
       console.warn("[getSubSellerBranchSales] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -631,7 +631,7 @@ export const getGlobalStaff = query({
       console.warn("[getGlobalStaff] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db
@@ -674,7 +674,7 @@ export const getMyGlobalSubSellers = query({
       console.warn("[getMyGlobalSubSellers] TESTING MODE - Using test user");
       currentUser = await ctx.db
         .query("users")
-        .withIndex("by_email", (q) => q.eq("email", "test@stepperslife.com"))
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
         .first();
     } else {
       currentUser = await ctx.db

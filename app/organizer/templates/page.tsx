@@ -81,17 +81,15 @@ export default function TemplatesPage() {
 
   // Handle delete template
   const handleDeleteTemplate = async (templateId: string, templateName: string, isFloorPlan: boolean = false) => {
-    if (confirm(`Are you sure you want to delete "${templateName}"? This action cannot be undone.`)) {
-      try {
-        if (isFloorPlan) {
-          await deleteFloorPlanTemplate({ templateId: templateId as any });
-        } else {
-          await deleteTemplate({ templateId: templateId as any });
-        }
-        setOpenDropdownId(null);
-      } catch (error: any) {
-        alert(error.message || "Failed to delete template");
+    try {
+      if (isFloorPlan) {
+        await deleteFloorPlanTemplate({ templateId: templateId as any });
+      } else {
+        await deleteTemplate({ templateId: templateId as any });
       }
+      setOpenDropdownId(null);
+    } catch (error: any) {
+      alert(error.message || "Failed to delete template");
     }
   };
 
@@ -199,7 +197,7 @@ export default function TemplatesPage() {
 
   const categories = [
     { id: "all", name: "All Templates", color: "bg-gray-100 text-gray-700", icon: <GridIcon className="w-4 h-4" /> },
-    { id: "theater", name: "Theater", color: "bg-blue-100 text-blue-700" },
+    { id: "theater", name: "Theater", color: "bg-accent text-primary" },
     { id: "stadium", name: "Stadium", color: "bg-purple-100 text-purple-700" },
     { id: "concert", name: "Concert", color: "bg-pink-100 text-pink-700" },
     { id: "conference", name: "Conference", color: "bg-red-100 text-red-700" },
@@ -233,7 +231,7 @@ export default function TemplatesPage() {
 
             <Link
               href="/organizer/templates/create"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
             >
               <Plus className="w-5 h-5" />
               Create Template
@@ -251,7 +249,7 @@ export default function TemplatesPage() {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-600">Total Templates</span>
-                <GridIcon className="w-5 h-5 text-blue-600" />
+                <GridIcon className="w-5 h-5 text-primary" />
               </div>
               <p className="text-3xl font-bold text-gray-900">{allTemplates.length}</p>
             </motion.div>
@@ -321,7 +319,7 @@ export default function TemplatesPage() {
               <span className="text-sm font-medium text-gray-700">Quick Select:</span>
               <button
                 onClick={selectAllTemplates}
-                className="px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                className="px-3 py-1.5 text-sm bg-accent text-primary rounded-md hover:bg-blue-200 transition-colors"
               >
                 All Custom ({allTemplates.filter((t: any) => t.isCustom).length})
               </button>
@@ -407,7 +405,7 @@ export default function TemplatesPage() {
                 placeholder="Search templates..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
 
@@ -417,7 +415,7 @@ export default function TemplatesPage() {
                 onClick={() => setViewMode("grid")}
                 className={`p-2 rounded transition-colors ${
                   viewMode === "grid"
-                    ? "bg-white text-blue-600 shadow-sm"
+                    ? "bg-white text-primary shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
               >
@@ -427,7 +425,7 @@ export default function TemplatesPage() {
                 onClick={() => setViewMode("list")}
                 className={`p-2 rounded transition-colors ${
                   viewMode === "list"
-                    ? "bg-white text-blue-600 shadow-sm"
+                    ? "bg-white text-primary shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
               >
@@ -468,7 +466,7 @@ export default function TemplatesPage() {
             </p>
             <Link
               href="/organizer/templates/create"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
             >
               <Plus className="w-5 h-5" />
               Create Template
@@ -520,14 +518,14 @@ export default function TemplatesPage() {
                           type="checkbox"
                           checked={selectedTemplates.has(String(template.id))}
                           onChange={() => toggleTemplateSelection(String(template.id))}
-                          className="w-5 h-5 text-blue-600 bg-white border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                          className="w-5 h-5 text-primary bg-white border-2 border-gray-300 rounded focus:ring-2 focus:ring-ring cursor-pointer"
                           onClick={(e) => e.stopPropagation()}
                         />
                       </div>
                     )}
 
                     <div className="flex items-center justify-between mb-4">
-                      <div className="text-blue-600 group-hover:scale-110 transition-transform">
+                      <div className="text-primary group-hover:scale-110 transition-transform">
                         {template.icon}
                       </div>
                       <div className="flex items-center gap-2">
@@ -537,7 +535,7 @@ export default function TemplatesPage() {
                           </span>
                         )}
                         {(template as any).isFloorPlan && (
-                          <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                          <span className="px-3 py-1 bg-accent text-primary text-xs font-medium rounded-full">
                             Floor Plan
                           </span>
                         )}
@@ -591,7 +589,7 @@ export default function TemplatesPage() {
                   </div>
                 ) : (
                   <div className="p-6 flex items-center gap-6">
-                    <div className="text-blue-600">{template.icon}</div>
+                    <div className="text-primary">{template.icon}</div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -603,7 +601,7 @@ export default function TemplatesPage() {
                           </span>
                         )}
                         {(template as any).isFloorPlan && (
-                          <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                          <span className="px-3 py-1 bg-accent text-primary text-xs font-medium rounded-full">
                             Floor Plan
                           </span>
                         )}

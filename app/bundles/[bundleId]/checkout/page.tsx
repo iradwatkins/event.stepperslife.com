@@ -257,14 +257,14 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
 
               {/* Payment will be processed by Square */}
               <div className="space-y-4">
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="p-4 bg-accent border border-border rounded-lg">
                   <div className="flex items-start gap-3">
-                    <Lock className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <Lock className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm text-blue-900 font-medium">
+                      <p className="text-sm text-foreground font-medium">
                         Secure Payment Processing
                       </p>
-                      <p className="text-sm text-blue-700 mt-1">
+                      <p className="text-sm text-primary mt-1">
                         Your payment information is encrypted and processed securely by Square.
                         We never store your credit card details.
                       </p>

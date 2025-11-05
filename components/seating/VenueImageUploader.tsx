@@ -214,7 +214,7 @@ export default function VenueImageUploader({
             {isUploading && (
               <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                 <div className="bg-white rounded-lg p-4 flex items-center gap-3">
-                  <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+                  <Loader2 className="w-5 h-5 animate-spin text-primary" />
                   <span className="text-sm font-medium">Uploading...</span>
                 </div>
               </div>
@@ -232,20 +232,20 @@ export default function VenueImageUploader({
             onClick={() => fileInputRef.current?.click()}
             className={`relative rounded-lg border-2 border-dashed transition-all cursor-pointer ${
               isDragging
-                ? "border-blue-500 bg-blue-50"
-                : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                ? "border-primary bg-accent"
+                : "border-gray-300 hover:border-blue-400 hover:bg-accent"
             }`}
           >
             <div className="flex flex-col items-center justify-center py-12 px-6">
               <div
                 className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors ${
-                  isDragging ? "bg-blue-100" : "bg-gray-100"
+                  isDragging ? "bg-accent" : "bg-gray-100"
                 }`}
               >
                 {isUploading ? (
-                  <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                  <Loader2 className="w-8 h-8 text-primary animate-spin" />
                 ) : isDragging ? (
-                  <Upload className="w-8 h-8 text-blue-600" />
+                  <Upload className="w-8 h-8 text-primary" />
                 ) : (
                   <ImageIcon className="w-8 h-8 text-gray-400" />
                 )}
@@ -282,8 +282,8 @@ export default function VenueImageUploader({
       </AnimatePresence>
 
       {preview && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <p className="text-sm text-blue-800">
+        <div className="bg-accent border border-border rounded-lg p-4">
+          <p className="text-sm text-accent-foreground">
             <strong>Tip:</strong> You can now drag and position sections directly on this venue
             image using the canvas editor below.
           </p>

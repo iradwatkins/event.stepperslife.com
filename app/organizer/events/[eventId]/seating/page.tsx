@@ -341,7 +341,6 @@ export default function SeatingChartBuilderPage() {
   };
 
   const deleteSection = (sectionId: string) => {
-    if (!confirm("Delete this section and all its seats?")) return;
     setSections(sections.filter((s) => s.id !== sectionId));
   };
 
@@ -516,7 +515,6 @@ export default function SeatingChartBuilderPage() {
   };
 
   const deleteTable = (sectionId: string, tableId: string) => {
-    if (!confirm("Delete this table and all its seats?")) return;
     setSections(
       sections.map((s) => {
         if (s.id === sectionId) {
@@ -748,7 +746,6 @@ export default function SeatingChartBuilderPage() {
           seatingStyle,
           sections: sections,
         });
-        alert("Seating chart updated successfully!");
       } else {
         await createSeatingChart({
           eventId,
@@ -758,7 +755,6 @@ export default function SeatingChartBuilderPage() {
           seatingStyle,
           sections: sections,
         });
-        alert("Seating chart created successfully!");
       }
       router.push(`/organizer/events/${eventId}`);
     } catch (error: any) {
@@ -770,11 +766,9 @@ export default function SeatingChartBuilderPage() {
 
   const handleDelete = async () => {
     if (!existingChart) return;
-    if (!confirm("Delete this seating chart? This cannot be undone.")) return;
 
     try {
       await deleteSeatingChart({ seatingChartId: existingChart._id });
-      alert("Seating chart deleted");
       router.push(`/organizer/events/${eventId}`);
     } catch (error: any) {
       alert(error.message || "Failed to delete seating chart");
@@ -817,7 +811,6 @@ export default function SeatingChartBuilderPage() {
         category: templateData.category as any,
         isPublic: templateData.isPublic,
       });
-      alert("Template saved successfully!");
       setShowSaveTemplateDialog(false);
     } catch (error: any) {
       alert(error.message || "Failed to save template");
@@ -862,7 +855,7 @@ export default function SeatingChartBuilderPage() {
   if (!event) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
@@ -884,7 +877,7 @@ export default function SeatingChartBuilderPage() {
           </p>
           <Link
             href={`/organizer/events/${eventId}`}
-            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+            className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-semibold"
           >
             Back to Event
           </Link>
@@ -902,7 +895,7 @@ export default function SeatingChartBuilderPage() {
             <div className="flex items-center gap-4">
               <Link
                 href={`/organizer/events/${eventId}`}
-                className="inline-flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors"
+                className="inline-flex items-center gap-2 text-gray-700 hover:text-primary transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Event
@@ -914,7 +907,7 @@ export default function SeatingChartBuilderPage() {
                   value={chartName}
                   onChange={(e) => setChartName(e.target.value)}
                   placeholder="Enter chart name (e.g., Main Hall Seating)"
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
             </div>
@@ -935,7 +928,7 @@ export default function SeatingChartBuilderPage() {
                   onClick={() => setEditorMode("visual")}
                   className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                     editorMode === "visual"
-                      ? "bg-white text-blue-600 shadow-sm"
+                      ? "bg-white text-primary shadow-sm"
                       : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -945,7 +938,7 @@ export default function SeatingChartBuilderPage() {
                   onClick={() => setEditorMode("list")}
                   className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                     editorMode === "list"
-                      ? "bg-white text-blue-600 shadow-sm"
+                      ? "bg-white text-primary shadow-sm"
                       : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -955,7 +948,7 @@ export default function SeatingChartBuilderPage() {
                   onClick={() => setEditorMode("preview")}
                   className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                     editorMode === "preview"
-                      ? "bg-white text-blue-600 shadow-sm"
+                      ? "bg-white text-primary shadow-sm"
                       : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -974,7 +967,7 @@ export default function SeatingChartBuilderPage() {
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 <Save className="w-4 h-4" />
                 {isSaving ? "Saving..." : "Save Chart"}
@@ -1407,7 +1400,7 @@ export default function SeatingChartBuilderPage() {
                 value={chartName}
                 onChange={(e) => setChartName(e.target.value)}
                 placeholder="e.g., Main Hall Seating"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
 
@@ -1430,7 +1423,7 @@ export default function SeatingChartBuilderPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white rounded-lg shadow-md p-4">
                 <div className="flex items-center gap-3">
-                  <Grid className="w-8 h-8 text-blue-600" />
+                  <Grid className="w-8 h-8 text-primary" />
                   <div>
                     <p className="text-sm text-gray-600">Sections</p>
                     <p className="text-2xl font-bold text-gray-900">{sections.length}</p>
@@ -1479,7 +1472,7 @@ export default function SeatingChartBuilderPage() {
             {/* Add Section Button */}
             <button
               onClick={addSection}
-              className="w-full py-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 text-gray-600 hover:text-blue-600 font-medium"
+              className="w-full py-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-accent transition-colors flex items-center justify-center gap-2 text-gray-600 hover:text-primary font-medium"
             >
               <Plus className="w-5 h-5" />
               Add Section
@@ -1498,7 +1491,7 @@ export default function SeatingChartBuilderPage() {
                         type="text"
                         value={section.name}
                         onChange={(e) => updateSection(section.id, { name: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                       />
                     </div>
 
@@ -1528,7 +1521,7 @@ export default function SeatingChartBuilderPage() {
                                 : undefined,
                             })
                           }
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                         >
                           <option value="">No tier assigned</option>
                           {ticketTiers.map((tier) => (
@@ -1565,7 +1558,7 @@ export default function SeatingChartBuilderPage() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => addSeats(section.id, row.id, 5)}
-                            className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                            className="px-3 py-1 bg-primary text-white rounded text-sm hover:bg-primary/90 transition-colors"
                           >
                             +5 Seats
                           </button>
@@ -1641,7 +1634,7 @@ export default function SeatingChartBuilderPage() {
 
                 <button
                   onClick={() => addRow(section.id)}
-                  className="mt-4 w-full py-2 border border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-sm text-gray-600 hover:text-blue-600 font-medium"
+                  className="mt-4 w-full py-2 border border-dashed border-gray-300 rounded-lg hover:border-primary hover:bg-accent transition-colors text-sm text-gray-600 hover:text-primary font-medium"
                 >
                   + Add Row
                 </button>
@@ -1649,12 +1642,12 @@ export default function SeatingChartBuilderPage() {
             ))}
 
             {/* Help Card with Seat Type Legend */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <div className="bg-accent border border-border rounded-lg p-6">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <AlertCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
-                  <h3 className="font-semibold text-blue-900 mb-2">Seating Chart Tips</h3>
-                  <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside mb-4">
+                  <h3 className="font-semibold text-foreground mb-2">Seating Chart Tips</h3>
+                  <ul className="text-sm text-accent-foreground space-y-1 list-disc list-inside mb-4">
                     <li>Upload a venue floor plan image to visualize your layout</li>
                     <li>Click "+5 Seats" to quickly add seats to a row</li>
                     <li>Click on a seat to cycle through 8 different types</li>
@@ -1662,58 +1655,58 @@ export default function SeatingChartBuilderPage() {
                     <li>Assign ticket tiers to sections to link pricing</li>
                     <li>Use different colors for sections to help customers identify areas</li>
                   </ul>
-                  <div className="pt-4 border-t border-blue-300">
-                    <p className="text-sm font-semibold text-blue-900 mb-3">
+                  <div className="pt-4 border-t border-border">
+                    <p className="text-sm font-semibold text-foreground mb-3">
                       Available Seat Types:
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
-                          <Accessibility className="w-4 h-4 text-blue-700" />
+                        <div className="w-6 h-6 bg-accent rounded flex items-center justify-center">
+                          <Accessibility className="w-4 h-4 text-primary" />
                         </div>
-                        <span className="text-blue-900">Wheelchair</span>
+                        <span className="text-foreground">Wheelchair</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-purple-100 rounded flex items-center justify-center">
                           <Crown className="w-4 h-4 text-purple-700" />
                         </div>
-                        <span className="text-blue-900">VIP</span>
+                        <span className="text-foreground">VIP</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-red-100 rounded flex items-center justify-center">
                           <Ban className="w-4 h-4 text-red-700" />
                         </div>
-                        <span className="text-blue-900">Blocked</span>
+                        <span className="text-foreground">Blocked</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center">
                           <User className="w-4 h-4 text-orange-700" />
                         </div>
-                        <span className="text-blue-900">Standing</span>
+                        <span className="text-foreground">Standing</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
                           <Car className="w-4 h-4 text-gray-700" />
                         </div>
-                        <span className="text-blue-900">Parking</span>
+                        <span className="text-foreground">Parking</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-teal-100 rounded flex items-center justify-center">
                           <Tent className="w-4 h-4 text-teal-700" />
                         </div>
-                        <span className="text-blue-900">Tent/Camping</span>
+                        <span className="text-foreground">Tent/Camping</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 bg-yellow-100 rounded flex items-center justify-center text-yellow-700 font-bold">
                           C
                         </div>
-                        <span className="text-blue-900">Companion</span>
+                        <span className="text-foreground">Companion</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center text-blue-700 font-bold">
+                        <div className="w-6 h-6 bg-accent rounded flex items-center justify-center text-primary font-bold">
                           #
                         </div>
-                        <span className="text-blue-900">Standard</span>
+                        <span className="text-foreground">Standard</span>
                       </div>
                     </div>
                   </div>
@@ -1761,7 +1754,7 @@ export default function SeatingChartBuilderPage() {
                                   ? "bg-green-100 text-green-800"
                                   : seat.type === "COMPANION"
                                   ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-blue-100 text-blue-800"
+                                  : "bg-accent text-accent-foreground"
                               }`}
                               style={{
                                 backgroundColor:
@@ -1790,7 +1783,7 @@ export default function SeatingChartBuilderPage() {
               <h4 className="font-semibold text-gray-900 mb-3">Legend</h4>
               <div className="flex flex-wrap gap-4 text-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-blue-500 rounded"></div>
+                  <div className="w-6 h-6 bg-primary rounded"></div>
                   <span className="text-gray-700">Standard Seat</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1835,10 +1828,10 @@ export default function SeatingChartBuilderPage() {
               <span>VIP Table</span>
             </button>
             <button
-              className="w-full px-3 py-2 text-left hover:bg-blue-50 text-sm flex items-center gap-2"
+              className="w-full px-3 py-2 text-left hover:bg-accent text-sm flex items-center gap-2"
               onClick={() => handleSetTableReservation("RESERVED", "SPONSOR")}
             >
-              <Users className="w-4 h-4 text-blue-600" />
+              <Users className="w-4 h-4 text-primary" />
               <span>Sponsor Table</span>
             </button>
             <button

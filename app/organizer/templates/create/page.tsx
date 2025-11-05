@@ -143,13 +143,13 @@ function CreateTemplatePageContent() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-blue-50 border border-blue-200 rounded-lg p-6"
+              className="bg-accent border border-border rounded-lg p-6"
             >
               <div className="flex items-start gap-4">
-                <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <Info className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-semibold text-blue-900 mb-2">About Room Templates</h3>
-                  <p className="text-blue-800 text-sm leading-relaxed">
+                  <h3 className="font-semibold text-foreground mb-2">About Room Templates</h3>
+                  <p className="text-accent-foreground text-sm leading-relaxed">
                     Room templates are reusable seating layouts that you can apply to multiple events.
                     Choose to start from scratch or customize one of our pre-built templates to match
                     your venue's configuration.
@@ -165,9 +165,9 @@ function CreateTemplatePageContent() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
                 onClick={handleStartFromScratch}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer p-8 border-2 border-transparent hover:border-blue-500 group"
+                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer p-8 border-2 border-transparent hover:border-primary group"
               >
-                <div className="text-blue-600 mb-4 group-hover:scale-110 transition-transform">
+                <div className="text-primary mb-4 group-hover:scale-110 transition-transform">
                   <svg className="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
@@ -226,7 +226,7 @@ function CreateTemplatePageContent() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g., Grand Ballroom Layout"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                   required
                 />
               </div>
@@ -241,7 +241,7 @@ function CreateTemplatePageContent() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Describe this room layout..."
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                   required
                 />
               </div>
@@ -254,7 +254,7 @@ function CreateTemplatePageContent() {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value as Category })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 >
                   <option value="theater">Theater</option>
                   <option value="stadium">Stadium</option>
@@ -276,7 +276,7 @@ function CreateTemplatePageContent() {
                 <select
                   value={formData.seatingStyle}
                   onChange={(e) => setFormData({ ...formData, seatingStyle: e.target.value as SeatingStyle })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 >
                   <option value="ROW_BASED">Row-Based (Theater, Stadium)</option>
                   <option value="TABLE_BASED">Table-Based (Wedding, Gala)</option>
@@ -295,7 +295,7 @@ function CreateTemplatePageContent() {
                   onChange={(e) => setFormData({ ...formData, estimatedCapacity: parseInt(e.target.value) || 0 })}
                   placeholder="e.g., 150"
                   min="0"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
 
@@ -306,7 +306,7 @@ function CreateTemplatePageContent() {
                   id="isPublic"
                   checked={formData.isPublic}
                   onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
-                  className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                 />
                 <label htmlFor="isPublic" className="text-sm text-gray-700">
                   <span className="font-medium">Make this template public</span>
@@ -318,11 +318,11 @@ function CreateTemplatePageContent() {
 
               {/* Base Template Info */}
               {selectedBaseTemplate && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-sm text-blue-800">
+                <div className="bg-accent border border-border rounded-lg p-4">
+                  <p className="text-sm text-accent-foreground">
                     <strong>Based on:</strong> {selectedBaseTemplate.name}
                   </p>
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-primary mt-1">
                     You can further customize this template in the seating builder
                   </p>
                 </div>
@@ -346,7 +346,7 @@ function CreateTemplatePageContent() {
                   </button>
                   <button
                     onClick={handleProceedToBuild}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium inline-flex items-center gap-2"
+                    className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium inline-flex items-center gap-2"
                   >
                     <Eye className="w-5 h-5" />
                     Next: Build Layout
@@ -388,7 +388,7 @@ export default function CreateTemplatePage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     }>
       <CreateTemplatePageContent />
