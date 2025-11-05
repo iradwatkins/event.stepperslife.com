@@ -142,8 +142,8 @@ export default function SeatingAssignmentsPage() {
         <div className="grid md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Total Tables</p>
@@ -206,7 +206,7 @@ export default function SeatingAssignmentsPage() {
           return (
             <div className="bg-card rounded-lg shadow-md p-6 mb-6 border-2 border-border">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -218,7 +218,7 @@ export default function SeatingAssignmentsPage() {
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {reservedTables.map((table) => {
                   const typeColors = {
-                    VIP: "bg-purple-100 border-purple-300 text-purple-900",
+                    VIP: "bg-primary border-primary text-primary",
                     SPONSOR: "bg-accent border-border text-foreground",
                     STAFF: "bg-green-100 border-green-300 text-green-900",
                     CUSTOM: "bg-yellow-100 border-yellow-300 text-yellow-900",
@@ -226,7 +226,7 @@ export default function SeatingAssignmentsPage() {
                   const typeColor = typeColors[table.reservationType as keyof typeof typeColors] || "bg-gray-100 border-gray-300 text-gray-900";
 
                   const statusColors = {
-                    RESERVED: "bg-purple-600",
+                    RESERVED: "bg-primary",
                     UNAVAILABLE: "bg-red-600",
                   };
                   const statusColor = statusColors[table.reservationStatus as keyof typeof statusColors] || "bg-gray-600";

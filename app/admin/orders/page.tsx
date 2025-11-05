@@ -270,7 +270,7 @@ export default function OrdersManagementPage() {
                         {order.fulfillmentStatus === "PENDING" && (
                           <button
                             onClick={() => handleStatusChange(order._id, "PROCESSING")}
-                            className="px-2 py-1 bg-accent text-purple-700 rounded hover:bg-accent/90 text-xs"
+                            className="px-2 py-1 bg-accent text-primary rounded hover:bg-accent/90 text-xs"
                           >
                             Process
                           </button>

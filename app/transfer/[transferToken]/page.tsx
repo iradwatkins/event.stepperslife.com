@@ -142,12 +142,12 @@ export default function TransferAcceptancePage() {
             className="bg-white rounded-lg shadow-md overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-purple-600 p-6 text-white">
+            <div className="bg-primary p-6 text-white">
               <div className="flex items-center gap-3 mb-2">
                 <Ticket className="w-8 h-8" />
                 <h1 className="text-2xl font-bold">Ticket Transfer</h1>
               </div>
-              <p className="text-purple-100">
+              <p className="text-white/80">
                 {transfer.fromName} wants to transfer a ticket to you
               </p>
             </div>

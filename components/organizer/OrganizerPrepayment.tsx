@@ -143,7 +143,7 @@ export function OrganizerPrepayment({
       </div>
 
       {/* Payment Summary */}
-      <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-border">
+      <Card className="bg-accent border-2 border-border">
         <CardContent className="pt-6">
           <div className="text-center">
             <p className="text-sm text-gray-600 mb-1">Total Platform Fee</p>

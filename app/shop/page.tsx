@@ -70,7 +70,7 @@ export default function ShopPage() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-purple-600">
+                      <div className="w-full h-full flex items-center justify-center bg-primary">
                         <Package className="w-16 h-16 text-gray-400" />
                       </div>
                     )}

@@ -102,8 +102,8 @@ export default function AnalyticsPage() {
           className="bg-white rounded-lg shadow-md p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <Ticket className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+              <Ticket className="w-6 h-6 text-primary" />
             </div>
           </div>
           <p className="text-sm text-gray-600 mb-1">Tickets Sold</p>
@@ -195,7 +195,7 @@ export default function AnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.4 }}
-          className="bg-purple-600 rounded-lg shadow-md p-6 text-white"
+          className="bg-primary rounded-lg shadow-md p-6 text-white"
         >
           <h3 className="text-lg font-semibold mb-2">Average Ticket Price</h3>
           <p className="text-3xl font-bold">
@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.5 }}
-          className="bg-purple-600 rounded-lg shadow-md p-6 text-white"
+          className="bg-primary rounded-lg shadow-md p-6 text-white"
         >
           <h3 className="text-lg font-semibold mb-2">Conversion Rate</h3>
           <p className="text-3xl font-bold">
@@ -221,13 +221,13 @@ export default function AnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.6 }}
-          className="bg-purple-600 rounded-lg shadow-md p-6 text-white"
+          className="bg-primary rounded-lg shadow-md p-6 text-white"
         >
           <h3 className="text-lg font-semibold mb-2">Average Event Size</h3>
           <p className="text-3xl font-bold">
             {publishedEvents > 0 ? Math.round(totalAttendees / publishedEvents) : 0}
           </p>
-          <p className="text-purple-100 text-sm mt-2">Attendees per event</p>
+          <p className="text-white/80 text-sm mt-2">Attendees per event</p>
         </motion.div>
       </div>
 

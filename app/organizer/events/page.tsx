@@ -172,7 +172,7 @@ export default function OrganizerEventsPage() {
             transition={{ duration: 0.5 }}
             className="mb-6"
           >
-            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-primary rounded-lg p-6 shadow-lg">
+            <div className="bg-accent border-2 border-primary rounded-lg p-6 shadow-lg">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-4 flex-1">
                   <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
@@ -433,7 +433,7 @@ export default function OrganizerEventsPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-purple-600">
+                        <div className="w-full h-full flex items-center justify-center bg-primary">
                           <Calendar className="w-12 h-12 text-white opacity-50" />
                         </div>
                       )}
@@ -510,7 +510,7 @@ export default function OrganizerEventsPage() {
                             </Link>
                             <Link
                               href={`/organizer/events/${event._id}/seating`}
-                              className="flex items-center gap-2 px-4 py-2 text-sm border border-purple-300 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-sm border border-primary bg-accent text-primary rounded-lg hover:bg-blue-100 transition-colors"
                             >
                               <Armchair className="w-4 h-4" />
                               Manage Seating

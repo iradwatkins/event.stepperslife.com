@@ -48,12 +48,12 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section with Bundle Overview */}
-      <div className="bg-purple-600 text-white">
+      <div className="bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Back Button */}
           <Link
             href="/bundles"
-            className="inline-flex items-center gap-2 text-white hover:text-purple-200 transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-white hover:text-blue-100 transition-colors mb-6"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back to Bundles</span>
@@ -72,7 +72,7 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
               </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">{bundle.name}</h1>
               {bundle.description && (
-                <p className="text-xl text-purple-100 mb-6">{bundle.description}</p>
+                <p className="text-xl text-blue-100 mb-6">{bundle.description}</p>
               )}
 
               {/* Key Features */}
@@ -80,17 +80,17 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                   <Calendar className="w-6 h-6 mb-2" />
                   <div className="text-2xl font-bold">{bundle.events?.length || 1}</div>
-                  <div className="text-sm text-purple-100">Events Included</div>
+                  <div className="text-sm text-blue-100">Events Included</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                   <Ticket className="w-6 h-6 mb-2" />
                   <div className="text-2xl font-bold">{totalTickets}</div>
-                  <div className="text-sm text-purple-100">Total Tickets</div>
+                  <div className="text-sm text-blue-100">Total Tickets</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                   <TrendingDown className="w-6 h-6 mb-2" />
                   <div className="text-2xl font-bold">{bundle.percentageSavings}%</div>
-                  <div className="text-sm text-purple-100">You Save</div>
+                  <div className="text-sm text-blue-100">You Save</div>
                 </div>
               </div>
             </div>
@@ -103,7 +103,7 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
                     Save {bundle.percentageSavings}%
                   </div>
                   <div className="text-sm text-gray-500 mb-2">Bundle Price</div>
-                  <div className="text-5xl font-bold text-purple-600 mb-2">
+                  <div className="text-5xl font-bold text-primary mb-2">
                     ${(bundle.price / 100).toFixed(2)}
                   </div>
                   <div className="text-gray-500 line-through text-lg">
@@ -132,7 +132,7 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
                 {/* Buy Button */}
                 <Link
                   href={`/bundles/${bundleId}/checkout`}
-                  className="block w-full bg-purple-600 text-white text-center py-4 rounded-lg font-bold text-lg hover:bg-purple-700 transition-colors shadow-lg hover:shadow-xl"
+                  className="block w-full bg-primary text-white text-center py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
                 >
                   Buy Bundle Now
                   <ChevronRight className="w-5 h-5 inline ml-2" />
@@ -155,14 +155,14 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
             {/* Included Events */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <Calendar className="w-6 h-6 text-purple-600" />
+                <Calendar className="w-6 h-6 text-primary" />
                 Included Events
               </h2>
               <div className="space-y-4">
                 {bundle.events?.map((event: any) => (
                   <div
                     key={event._id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 hover:shadow-md transition-all"
+                    className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all"
                   >
                     <div className="flex items-start gap-4">
                       {/* Event Image */}
@@ -184,7 +184,7 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
                         </h3>
                         {event.startDate && (
                           <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
-                            <Calendar className="w-4 h-4 text-purple-600" />
+                            <Calendar className="w-4 h-4 text-primary" />
                             {new Date(event.startDate).toLocaleDateString('en-US', {
                               weekday: 'long',
                               year: 'numeric',
@@ -195,13 +195,13 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
                         )}
                         {event.location && (
                           <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <MapPin className="w-4 h-4 text-purple-600" />
+                            <MapPin className="w-4 h-4 text-primary" />
                             {formatEventLocation(event.location)}
                           </div>
                         )}
                         <Link
                           href={`/events/${event._id}`}
-                          className="inline-flex items-center gap-1 text-purple-600 hover:text-purple-700 text-sm font-medium mt-2"
+                          className="inline-flex items-center gap-1 text-primary hover:text-blue-700 text-sm font-medium mt-2"
                         >
                           View Event Details
                           <ChevronRight className="w-4 h-4" />
@@ -216,14 +216,14 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
             {/* Included Tickets */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <Ticket className="w-6 h-6 text-purple-600" />
+                <Ticket className="w-6 h-6 text-primary" />
                 What's Included
               </h2>
               <div className="space-y-3">
                 {bundle.includedTiersDetails?.map((tier: any) => (
                   <div
                     key={tier.tierId}
-                    className="flex items-center justify-between p-4 bg-purple-50 border border-purple-200 rounded-lg"
+                    className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg"
                   >
                     <div className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
@@ -263,7 +263,7 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
                   <span>Bundle Savings:</span>
                   <span>-${((bundle.regularPrice - bundle.price) / 100).toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-xl font-bold text-purple-600 pt-2 border-t">
+                <div className="flex justify-between text-xl font-bold text-primary pt-2 border-t">
                   <span>Bundle Price:</span>
                   <span>${(bundle.price / 100).toFixed(2)}</span>
                 </div>

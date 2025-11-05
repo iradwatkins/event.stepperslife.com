@@ -193,7 +193,7 @@ export default function SettlementDashboard() {
                         </span>
                       )}
                       {staff.hierarchyLevel && staff.hierarchyLevel > 1 && (
-                        <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                        <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full">
                           Level {staff.hierarchyLevel} Sub-Seller
                         </span>
                       )}

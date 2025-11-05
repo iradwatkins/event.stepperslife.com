@@ -61,8 +61,8 @@ const seatTypes: SeatTypeOption[] = [
     type: "VIP",
     label: "VIP",
     icon: <Crown className="w-5 h-5" />,
-    color: "text-purple-700",
-    bgColor: "bg-purple-100 hover:bg-purple-200 border-purple-300",
+    color: "text-primary",
+    bgColor: "bg-blue-100 hover:bg-blue-200 border-blue-300",
     description: "Premium VIP seats",
   },
   {

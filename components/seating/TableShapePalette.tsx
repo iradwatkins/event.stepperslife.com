@@ -35,8 +35,8 @@ const tableShapes: TableShapeOption[] = [
     shape: "SQUARE",
     label: "Square",
     icon: <Square className="w-5 h-5" />,
-    color: "text-purple-700",
-    bgColor: "bg-purple-100 hover:bg-purple-200 border-purple-300",
+    color: "text-primary",
+    bgColor: "bg-blue-100 hover:bg-blue-200 border-blue-300",
     description: "Square tables for 4-8 guests",
   },
   {
@@ -73,7 +73,7 @@ export default function TableShapePalette({
               className={`
                 relative p-2 rounded-lg border-2 transition-all
                 ${tableShape.bgColor}
-                ${isSelected ? "ring-2 ring-offset-2 ring-purple-500 scale-110" : ""}
+                ${isSelected ? "ring-2 ring-offset-2 ring-primary scale-110" : ""}
               `}
             >
               <span className={tableShape.color}>{tableShape.icon}</span>
@@ -87,8 +87,8 @@ export default function TableShapePalette({
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-          <Info className="w-5 h-5 text-purple-600" />
+        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+          <Info className="w-5 h-5 text-primary" />
         </div>
         <h3 className="font-semibold text-gray-900">Table Shapes</h3>
       </div>
@@ -105,13 +105,13 @@ export default function TableShapePalette({
               className={`
                 relative flex flex-col items-center p-4 rounded-lg border-2 transition-all
                 ${tableShape.bgColor}
-                ${isSelected ? "ring-2 ring-offset-2 ring-purple-500" : ""}
+                ${isSelected ? "ring-2 ring-offset-2 ring-primary" : ""}
               `}
             >
               {isSelected && (
                 <motion.div
                   layoutId="selected-table-shape"
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center"
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center"
                 >
                   <div className="w-2 h-2 bg-white rounded-full" />
                 </motion.div>

@@ -184,9 +184,9 @@ function CreateTemplatePageContent() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
                 onClick={() => setShowTemplateSelector(true)}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer p-8 border-2 border-transparent hover:border-purple-500 group"
+                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer p-8 border-2 border-transparent hover:border-primary group"
               >
-                <div className="text-purple-600 mb-4 group-hover:scale-110 transition-transform">
+                <div className="text-primary mb-4 group-hover:scale-110 transition-transform">
                   <svg className="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
                   </svg>
@@ -197,7 +197,7 @@ function CreateTemplatePageContent() {
                   weddings, conferences, and more.
                 </p>
                 <div className="mt-4">
-                  <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
+                  <span className="inline-block px-3 py-1 bg-accent text-primary text-xs font-medium rounded-full">
                     Recommended
                   </span>
                 </div>

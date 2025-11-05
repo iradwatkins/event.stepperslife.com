@@ -115,9 +115,9 @@ export default function PlatformAnalyticsPage() {
             <Calendar className="w-8 h-8" />
             <TrendingUp className="w-5 h-5" />
           </div>
-          <p className="text-purple-100 text-sm mb-1">Total Events</p>
+          <p className="text-white/80 text-sm mb-1">Total Events</p>
           <p className="text-3xl font-bold mb-1">{analytics.events.total.toLocaleString()}</p>
-          <p className="text-purple-100 text-xs">+{analytics.events.recentCreated} this week</p>
+          <p className="text-white/80 text-xs">+{analytics.events.recentCreated} this week</p>
         </motion.div>
 
         <motion.div

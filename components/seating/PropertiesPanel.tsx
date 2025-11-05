@@ -172,7 +172,7 @@ export default function PropertiesPanel({
   const panelContent = (
     <>
         {/* Header */}
-        <div className="bg-purple-600 px-6 py-4 text-white sticky top-0 z-10">
+        <div className="bg-primary px-6 py-4 text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold">
               {isTable ? `Edit Table` : `Edit Section`}
@@ -184,7 +184,7 @@ export default function PropertiesPanel({
               <X className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-purple-100 mt-1">
+          <p className="text-sm text-blue-100 mt-1">
             {isTable
               ? `Table ${(data as Table).number}`
               : (data as Section).name}
@@ -207,7 +207,7 @@ export default function PropertiesPanel({
                     value={(data as Table).number}
                     onChange={(e) => onUpdate({ number: e.target.value })}
                     placeholder="e.g., 1, VIP 1, Head Table"
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
 
@@ -234,7 +234,7 @@ export default function PropertiesPanel({
                     max="100"
                     value={(data as Table).capacity}
                     onChange={(e) => handleTableCapacityChange(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     Number of seats around this table (1-100)
@@ -252,7 +252,7 @@ export default function PropertiesPanel({
                     type="text"
                     value={(data as Section).name}
                     onChange={(e) => onUpdate({ name: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
 
@@ -287,7 +287,7 @@ export default function PropertiesPanel({
                       type="number"
                       value={Math.round(data.x || 0)}
                       onChange={(e) => onUpdate({ x: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -296,7 +296,7 @@ export default function PropertiesPanel({
                       type="number"
                       value={Math.round(data.y || 0)}
                       onChange={(e) => onUpdate({ y: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -315,7 +315,7 @@ export default function PropertiesPanel({
                       min="60"
                       value={Math.round(data.width || 0)}
                       onChange={(e) => onUpdate({ width: parseInt(e.target.value) || 100 })}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -325,7 +325,7 @@ export default function PropertiesPanel({
                       min="60"
                       value={Math.round(data.height || 0)}
                       onChange={(e) => onUpdate({ height: parseInt(e.target.value) || 100 })}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -387,7 +387,7 @@ export default function PropertiesPanel({
                     };
                     onUpdate({ seatArc: arcMap[e.target.value as keyof typeof arcMap] });
                   }}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
                   <option value="full">Full Circle (360°)</option>
                   <option value="three-quarter">3/4 Circle (270°)</option>
@@ -403,7 +403,7 @@ export default function PropertiesPanel({
               <div className="mt-4">
                 <button
                   onClick={handleAutoArrange}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all text-sm font-medium"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-all text-sm font-medium"
                 >
                   <Wand2 className="w-4 h-4" />
                   Auto-Arrange Seats

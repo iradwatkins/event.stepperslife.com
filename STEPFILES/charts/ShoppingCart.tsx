@@ -40,7 +40,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
     <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 flex flex-col h-full max-h-[calc(100vh-250px)] sticky top-5">
       {/* Header */}
       <div className="flex items-center gap-2 pb-5 border-b-2 border-purple-500 mb-5">
-        <CartIcon className="w-6 h-6 text-purple-600" />
+        <CartIcon className="w-6 h-6 text-primary" />
         <h2 className="text-2xl font-bold text-gray-800">Shopping Cart</h2>
       </div>
 
@@ -96,7 +96,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({
                     {item.type.toUpperCase()}
                   </div>
                 </div>
-                <span className="font-bold text-purple-600 mr-2">${item.price}</span>
+                <span className="font-bold text-primary mr-2">${item.price}</span>
                 <button
                   onClick={() => onRemoveItem(item.id)}
                   className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors text-sm font-bold"

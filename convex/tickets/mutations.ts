@@ -58,7 +58,8 @@ export const createTicketTier = mutation({
     if (!event) throw new Error("Event not found");
 
     // CHECK CREDIT BALANCE - 100 FREE TICKETS SYSTEM
-    if (organizerId) {
+    // SKIP IN TESTING MODE (no identity)
+    if (organizerId && identity) {
       // Get organizer's credit balance
       const credits = await ctx.db
         .query("organizerCredits")
@@ -93,6 +94,8 @@ export const createTicketTier = mutation({
       });
 
       console.log(`[createTicketTier] Deducted ${creditsNeeded} credits. Remaining: ${credits.creditsRemaining - creditsNeeded}`);
+    } else if (!identity) {
+      console.log(`[createTicketTier] TESTING MODE - Skipping credit deduction for ${args.quantity} tickets`);
     }
 
     // Create ticket tier

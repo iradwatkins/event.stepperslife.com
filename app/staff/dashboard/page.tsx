@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+
+// Force dynamic rendering for user-specific data
+export const dynamic = 'force-dynamic';
 import {
   DollarSign,
   Ticket,

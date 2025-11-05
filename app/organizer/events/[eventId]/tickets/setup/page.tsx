@@ -335,7 +335,7 @@ export default function TicketSetupPage() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-6 bg-purple-600 border-2 border-green-200 rounded-lg p-6"
+            className="mb-6 bg-primary border-2 border-green-200 rounded-lg p-6"
           >
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -482,7 +482,7 @@ export default function TicketSetupPage() {
                   </div>
 
                   {/* Table Package Option */}
-                  <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                  <div className="bg-accent border border-primary rounded-lg p-4">
                     <div className="flex items-start gap-3">
                       <input
                         type="checkbox"
@@ -493,13 +493,13 @@ export default function TicketSetupPage() {
                           newTiers[index].isTablePackage = e.target.checked;
                           setTiers(newTiers);
                         }}
-                        className="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-600"
+                        className="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                       />
                       <div className="flex-1">
-                        <label htmlFor={`tablePackage-${index}`} className="font-semibold text-indigo-900 cursor-pointer">
+                        <label htmlFor={`tablePackage-${index}`} className="font-semibold text-foreground cursor-pointer">
                           Sell as Table Package
                         </label>
-                        <p className="text-sm text-indigo-800 mt-1">
+                        <p className="text-sm text-foreground mt-1">
                           Enable this to sell entire tables instead of individual seats. Customers must purchase all seats at a table together.
                         </p>
 
@@ -515,7 +515,7 @@ export default function TicketSetupPage() {
                             <select
                               value={tier.tableCapacity}
                               onChange={(e) => handleTierChange(index, "tableCapacity", e.target.value)}
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent bg-white"
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-white"
                             >
                               <option value="2">2 seats</option>
                               <option value="4">4 seats</option>
@@ -524,7 +524,7 @@ export default function TicketSetupPage() {
                               <option value="10">10 seats</option>
                               <option value="12">12 seats</option>
                             </select>
-                            <p className="text-xs text-indigo-700 mt-2">
+                            <p className="text-xs text-primary mt-2">
                               <strong>Price breakdown:</strong> ${tier.price ? (parseFloat(tier.price) / parseInt(tier.tableCapacity || "4")).toFixed(2) : "0.00"} per seat
                             </p>
                           </motion.div>
@@ -538,7 +538,7 @@ export default function TicketSetupPage() {
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
-                      className="bg-purple-600 border border-border rounded-lg p-4"
+                      className="bg-primary border border-border rounded-lg p-4"
                     >
                       <div className="flex items-start gap-2">
                         <DollarSign className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
@@ -658,10 +658,10 @@ export default function TicketSetupPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-purple-600 border-2 border-purple-200 rounded-lg p-6 mt-6"
+            className="bg-primary border-2 border-primary rounded-lg p-6 mt-6"
           >
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Ticket className="w-5 h-5 text-purple-600" />
+              <Ticket className="w-5 h-5 text-primary" />
               Total Summary
             </h3>
             <div className="bg-white rounded-lg p-4 space-y-3">
@@ -694,7 +694,7 @@ export default function TicketSetupPage() {
               <div className="flex items-center justify-between">
                 <span className="font-bold text-gray-900">Total Cost:</span>
                 <span className={`text-2xl font-bold ${
-                  costBreakdown.totalCost > 0 ? "text-purple-700" : "text-green-700"
+                  costBreakdown.totalCost > 0 ? "text-primary" : "text-green-700"
                 }`}>
                   {costBreakdown.totalCost > 0 ? `$${costBreakdown.totalCost.toFixed(2)}` : "FREE"}
                 </span>

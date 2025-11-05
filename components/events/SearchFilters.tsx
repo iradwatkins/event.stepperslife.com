@@ -107,7 +107,7 @@ export function SearchFilters({
               px-4 py-2 rounded-full text-sm font-medium transition-all
               ${
                 showPastEvents
-                  ? "bg-purple-600 text-white shadow-md hover:bg-purple-700"
+                  ? "bg-primary text-white shadow-md hover:bg-blue-700"
                   : "bg-white text-gray-700 hover:bg-gray-100 shadow-sm"
               }
             `}

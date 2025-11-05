@@ -65,6 +65,11 @@ export default function CheckoutPage() {
     orderId ? { orderId: orderId as Id<"orders"> } : "skip"
   );
 
+  // Reset seats when tier or quantity changes - MUST be before any conditional returns
+  useEffect(() => {
+    setSelectedSeats([]);
+  }, [selectedTierId, quantity]);
+
   // Only require eventDetails to show tickets, not authentication
   const isLoading = eventDetails === undefined;
 
@@ -180,11 +185,6 @@ export default function CheckoutPage() {
   const handleBallroomSeatDeselect = (seatId: string) => {
     setSelectedSeats(selectedSeats.filter((s) => s.id !== seatId));
   };
-
-  // Reset seats when tier or quantity changes
-  useEffect(() => {
-    setSelectedSeats([]);
-  }, [selectedTierId, quantity]);
 
   const handleContinueToPayment = async () => {
     if ((!selectedTierId && !selectedBundleId) || !buyerEmail || !buyerName) {

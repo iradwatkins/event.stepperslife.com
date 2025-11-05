@@ -226,9 +226,9 @@ function RowSectionProperties({ rowSection, onUpdate }: RowSectionPropertiesProp
   return (
     <div className="space-y-4">
       {/* Row section type indicator */}
-      <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
-        <p className="text-sm font-semibold text-purple-900">Row Section</p>
-        <p className="text-xs text-purple-700 mt-1">
+      <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <p className="text-sm font-semibold text-gray-900">Row Section</p>
+        <p className="text-xs text-primary mt-1">
           Total: {rowSection.rowCount * rowSection.seatsPerRow} seats
         </p>
       </div>
@@ -243,7 +243,7 @@ function RowSectionProperties({ rowSection, onUpdate }: RowSectionPropertiesProp
           value={rowSection.label || ""}
           onChange={(e) => onUpdate({ label: e.target.value })}
           placeholder="e.g., Main Orchestra"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
 
@@ -258,7 +258,7 @@ function RowSectionProperties({ rowSection, onUpdate }: RowSectionPropertiesProp
           max="30"
           value={rowSection.rowCount}
           onChange={(e) => onUpdate({ rowCount: parseInt(e.target.value) || 1 })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
 
@@ -273,7 +273,7 @@ function RowSectionProperties({ rowSection, onUpdate }: RowSectionPropertiesProp
           max="50"
           value={rowSection.seatsPerRow}
           onChange={(e) => onUpdate({ seatsPerRow: parseInt(e.target.value) || 1 })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
 

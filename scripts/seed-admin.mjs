@@ -7,7 +7,7 @@
 
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../convex/_generated/api.js";
-import * as crypto from "crypto";
+import bcrypt from "bcryptjs";
 
 const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL || process.env.CONVEX_URL;
 
@@ -26,9 +26,10 @@ async function seedAdmin() {
   try {
     console.log("Creating admin user: iradwatkins@gmail.com");
 
-    // Generate secure password hash
-    const password = "Admin2025!"; // Temporary password - MUST CHANGE ON FIRST LOGIN
-    const hash = crypto.createHash("sha256").update(password).digest("hex");
+    // Generate secure password hash using bcrypt
+    const password = "Bobby321!"; // Temporary password - MUST CHANGE ON FIRST LOGIN
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(password, saltRounds);
 
     // Create admin user via Convex mutation
     const userId = await client.mutation(api.auth.mutations.createUserWithPassword, {

@@ -300,7 +300,7 @@ function App() {
               
               <div className="space-y-6">
                 <div>
-                  <h4 className="font-semibold text-purple-600 mb-3">Dining Tables</h4>
+                  <h4 className="font-semibold text-primary mb-3">Dining Tables</h4>
                   <div className="space-y-2">
                     {[
                       { type: 'round-8' as const, label: 'Round Table', seats: 8 },
@@ -324,7 +324,7 @@ function App() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-purple-600 mb-3">Special Areas</h4>
+                  <h4 className="font-semibold text-primary mb-3">Special Areas</h4>
                   <div className="space-y-2">
                     {[
                       { type: 'stage' as const, label: 'Stage', icon: '🎭' },
@@ -389,7 +389,7 @@ function App() {
                   </div>
                 )}
 
-                <div className="font-semibold text-purple-600">
+                <div className="font-semibold text-primary">
                   Tables: {totalTables} | Total Seats: {totalSeats}
                 </div>
               </div>

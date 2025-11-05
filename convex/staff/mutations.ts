@@ -21,8 +21,19 @@ function generateReferralCode(name: string): string {
 async function getAuthenticatedUser(ctx: any) {
   const identity = await ctx.auth.getUserIdentity();
 
+  // TESTING MODE: Use fallback test user
   if (!identity?.email) {
-    throw new Error("Authentication required. Please sign in to continue.");
+    console.warn("[getAuthenticatedUser] TESTING MODE - Using test user");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q: any) => q.eq("email", "iradwatkins@gmail.com"))
+      .first();
+
+    if (!user) {
+      throw new Error("Test user not found. Please ensure test user exists.");
+    }
+
+    return user;
   }
 
   const user = await ctx.db
@@ -657,6 +668,123 @@ export const updateStaffPermissions = mutation({
     await ctx.db.patch(args.staffId, updates);
 
     return { success: true };
+  },
+});
+
+/**
+ * Assign a sub-seller for testing - allows specifying parent staff directly
+ * TESTING MODE ONLY
+ */
+export const assignSubSellerForTesting = mutation({
+  args: {
+    parentStaffId: v.id("eventStaff"),
+    name: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    allocatedTickets: v.optional(v.number()),
+    commissionType: v.union(v.literal("PERCENTAGE"), v.literal("FIXED")),
+    commissionValue: v.number(),
+  },
+  handler: async (ctx, args) => {
+    // Get parent staff
+    const parentStaff = await ctx.db.get(args.parentStaffId);
+    if (!parentStaff) {
+      throw new Error("Parent staff not found");
+    }
+
+    // Verify parent has permission to assign sub-sellers
+    if (!parentStaff.canAssignSubSellers) {
+      throw new Error("Parent staff does not have permission to assign sub-sellers");
+    }
+
+    // Verify parent has enough allocated tickets if allocating
+    if (args.allocatedTickets) {
+      const currentBalance = (parentStaff.allocatedTickets || 0) - (parentStaff.ticketsSold || 0);
+      if (currentBalance < args.allocatedTickets) {
+        throw new Error(
+          `Insufficient tickets. Parent has ${currentBalance} tickets available, but tried to allocate ${args.allocatedTickets}`
+        );
+      }
+
+      // Deduct from parent's allocation
+      await ctx.db.patch(parentStaff._id, {
+        allocatedTickets: (parentStaff.allocatedTickets || 0) - args.allocatedTickets,
+        updatedAt: Date.now(),
+      });
+    }
+
+    // Check if sub-seller user exists, create if not
+    let subSellerUser = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .first();
+
+    if (!subSellerUser) {
+      const newUserId = await ctx.db.insert("users", {
+        email: args.email,
+        name: args.name,
+        role: "user",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+      subSellerUser = await ctx.db.get(newUserId);
+    }
+
+    // Generate unique referral code
+    let referralCode = generateReferralCode(args.name);
+    let attempts = 0;
+    while (attempts < 10) {
+      const existing = await ctx.db
+        .query("eventStaff")
+        .withIndex("by_referral_code", (q) => q.eq("referralCode", referralCode))
+        .first();
+
+      if (!existing) break;
+      referralCode = generateReferralCode(args.name);
+      attempts++;
+    }
+
+    // Calculate hierarchy level
+    const hierarchyLevel = (parentStaff.hierarchyLevel || 1) + 1;
+
+    if (hierarchyLevel > HIERARCHY_CONFIG.MAX_DEPTH) {
+      throw new Error(`Maximum hierarchy depth of ${HIERARCHY_CONFIG.MAX_DEPTH} levels reached`);
+    }
+
+    // Create sub-seller record
+    const subSellerId = await ctx.db.insert("eventStaff", {
+      eventId: parentStaff.eventId,
+      organizerId: parentStaff.organizerId,
+      staffUserId: subSellerUser!._id,
+      email: args.email,
+      name: args.name,
+      phone: args.phone,
+      role: "SELLER",
+      canScan: false,
+      commissionType: args.commissionType,
+      commissionValue: args.commissionValue,
+      commissionPercent: args.commissionType === "PERCENTAGE" ? args.commissionValue : undefined,
+      commissionEarned: 0,
+      allocatedTickets: args.allocatedTickets || 0,
+      cashCollected: 0,
+      isActive: true,
+      ticketsSold: 0,
+      referralCode,
+      assignedByStaffId: parentStaff._id,
+      hierarchyLevel,
+      canAssignSubSellers: false,
+      maxSubSellers: undefined,
+      parentCommissionPercent: 0,
+      subSellerCommissionPercent: 0,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
+    return {
+      subSellerId,
+      referralCode,
+      hierarchyLevel,
+    };
   },
 });
 

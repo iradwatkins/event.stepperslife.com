@@ -157,7 +157,7 @@ export default function OnboardingTutorial({ onComplete, onSkip }: OnboardingTut
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.3 }}
-                className="h-full bg-gradient-to-r from-purple-600 to-blue-600"
+                className="h-full bg-primary"
               />
             </div>
 
@@ -169,23 +169,23 @@ export default function OnboardingTutorial({ onComplete, onSkip }: OnboardingTut
 
               {/* Keyboard Shortcuts Hint */}
               {currentStep === 1 && (
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-6">
-                  <p className="text-sm font-semibold text-purple-900 mb-2">Keyboard Shortcuts:</p>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-purple-800">
+                <div className="bg-accent border border-primary rounded-lg p-4 mb-6">
+                  <p className="text-sm font-semibold text-foreground mb-2">Keyboard Shortcuts:</p>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-foreground">
                     <div className="flex items-center gap-2">
-                      <kbd className="px-2 py-1 bg-white border border-purple-300 rounded font-mono">V</kbd>
+                      <kbd className="px-2 py-1 bg-background border border-border rounded font-mono">V</kbd>
                       <span>Select</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <kbd className="px-2 py-1 bg-white border border-purple-300 rounded font-mono">T</kbd>
+                      <kbd className="px-2 py-1 bg-background border border-border rounded font-mono">T</kbd>
                       <span>Round Table</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <kbd className="px-2 py-1 bg-white border border-purple-300 rounded font-mono">R</kbd>
+                      <kbd className="px-2 py-1 bg-background border border-border rounded font-mono">R</kbd>
                       <span>Rectangle</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <kbd className="px-2 py-1 bg-white border border-purple-300 rounded font-mono">H</kbd>
+                      <kbd className="px-2 py-1 bg-background border border-border rounded font-mono">H</kbd>
                       <span>Pan</span>
                     </div>
                   </div>
@@ -209,9 +209,9 @@ export default function OnboardingTutorial({ onComplete, onSkip }: OnboardingTut
                       key={index}
                       className={`h-2 w-2 rounded-full transition-all ${
                         index === currentStep
-                          ? "bg-purple-600 w-6"
+                          ? "bg-primary w-6"
                           : index < currentStep
-                          ? "bg-purple-400"
+                          ? "bg-primary/60"
                           : "bg-gray-300"
                       }`}
                     />

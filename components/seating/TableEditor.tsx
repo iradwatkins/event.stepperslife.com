@@ -110,7 +110,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
         className="fixed right-0 top-0 h-full w-96 bg-white shadow-2xl border-l border-gray-200 overflow-y-auto z-50"
       >
         {/* Header */}
-        <div className="bg-purple-600 px-6 py-4 text-white sticky top-0 z-10">
+        <div className="bg-primary px-6 py-4 text-white sticky top-0 z-10">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold">Edit Table</h2>
             <button
@@ -136,7 +136,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
                 value={table.number}
                 onChange={(e) => onUpdate({ number: e.target.value })}
                 placeholder="e.g., 1, VIP 1, Head Table"
-                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
                 max="100"
                 value={localCapacity}
                 onChange={(e) => handleCapacityChange(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>
             <p className="text-xs text-gray-500 mt-1">
@@ -202,7 +202,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
                   };
                   onUpdate({ seatArc: arcMap[e.target.value as keyof typeof arcMap] });
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
               >
                 <option value="full">Full Circle (360°)</option>
                 <option value="three-quarter">3/4 Circle (270°)</option>
@@ -218,7 +218,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
           {/* Auto-Arrange Button */}
           <button
             onClick={handleAutoArrange}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all"
           >
             <Wand2 className="w-4 h-4" />
             Auto-Arrange Seats
@@ -237,7 +237,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
                   min="60"
                   value={Math.round(table.width)}
                   onChange={(e) => handleResize('width', parseInt(e.target.value) || 100)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
               <div>
@@ -247,7 +247,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
                   min="60"
                   value={Math.round(table.height)}
                   onChange={(e) => handleResize('height', parseInt(e.target.value) || 100)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
             </div>
@@ -265,7 +265,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
                   type="number"
                   value={Math.round(table.x)}
                   onChange={(e) => onUpdate({ x: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
               <div>
@@ -274,7 +274,7 @@ export default function TableEditor({ table, onUpdate, onDelete, onClose }: Tabl
                   type="number"
                   value={Math.round(table.y)}
                   onChange={(e) => onUpdate({ y: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                 />
               </div>
             </div>

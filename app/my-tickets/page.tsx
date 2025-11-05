@@ -370,7 +370,7 @@ export default function MyTicketsPage() {
                                         {ticket.attendeeName || 'Unnamed Ticket'}
                                       </span>
                                       {ticket.bundleId && (
-                                        <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                                        <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full">
                                           {ticket.bundleName || 'Bundled'}
                                         </span>
                                       )}
@@ -484,20 +484,20 @@ export default function MyTicketsPage() {
                       if (bundleInThisEvent.length === 0) return null;
 
                       return (
-                        <div key={bundleId} className="mt-4 p-3 bg-purple-50 rounded-lg">
+                        <div key={bundleId} className="mt-4 p-3 bg-accent rounded-lg">
                           <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2">
-                              <Package className="w-4 h-4 text-purple-600" />
-                              <span className="text-sm font-medium text-purple-700">
+                              <Package className="w-4 h-4 text-primary" />
+                              <span className="text-sm font-medium text-primary">
                                 Bundle: {bundleInThisEvent[0].bundleName}
                               </span>
-                              <span className="text-sm text-purple-600">
+                              <span className="text-sm text-primary">
                                 ({bundleInThisEvent.length} tickets)
                               </span>
                             </div>
                             <button
                               onClick={() => handleUnbundle(bundleInThisEvent.map(t => t._id))}
-                              className="flex items-center gap-1 px-3 py-1 text-sm text-purple-700 hover:bg-purple-100 rounded-lg transition-colors"
+                              className="flex items-center gap-1 px-3 py-1 text-sm text-primary hover:bg-accent rounded-lg transition-colors"
                             >
                               <PackageOpen className="w-4 h-4" />
                               Unbundle

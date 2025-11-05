@@ -66,12 +66,12 @@ export default function BundlesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-purple-600 text-white">
+      <div className="bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Back Button */}
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-white hover:text-purple-200 transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-white hover:text-blue-100 transition-colors mb-6"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back to Events</span>
@@ -82,7 +82,7 @@ export default function BundlesPage() {
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Ticket Bundles & Packages
             </h1>
-            <p className="text-xl text-purple-100 max-w-2xl mx-auto">
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
               Save big with ticket bundles and VIP packages. Buy multiple tickets together at a discounted price!
             </p>
           </div>
@@ -102,15 +102,15 @@ export default function BundlesPage() {
                 <Link
                   key={bundle._id}
                   href={`/bundles/${bundle._id}`}
-                  className="group bg-purple-50 border-2 border-purple-200 rounded-xl p-6 hover:shadow-lg transition-all hover:scale-105"
+                  className="group bg-blue-50 border-2 border-blue-200 rounded-xl p-6 hover:shadow-lg transition-all hover:scale-105"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                       Save {bundle.percentageSavings}%
                     </div>
-                    <Package className="w-6 h-6 text-purple-600" />
+                    <Package className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
                     {bundle.name}
                   </h3>
                   <p className="text-sm text-gray-600 mb-4 line-clamp-2">
@@ -118,14 +118,14 @@ export default function BundlesPage() {
                   </p>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-2xl font-bold text-purple-600">
+                      <div className="text-2xl font-bold text-primary">
                         ${(bundle.price / 100).toFixed(2)}
                       </div>
                       <div className="text-sm text-gray-500 line-through">
                         ${(bundle.regularPrice / 100).toFixed(2)}
                       </div>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-purple-600 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
               ))}
@@ -145,7 +145,7 @@ export default function BundlesPage() {
                   placeholder="Search bundles, events..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
             </div>
@@ -155,7 +155,7 @@ export default function BundlesPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="savings">Best Savings</option>
                 <option value="price_low">Price: Low to High</option>
@@ -193,7 +193,7 @@ export default function BundlesPage() {
                 className="group bg-white rounded-lg shadow hover:shadow-xl transition-all overflow-hidden"
               >
                 {/* Bundle Image (first event image) */}
-                <div className="relative h-48 bg-purple-100">
+                <div className="relative h-48 bg-blue-100">
                   {bundle.events && bundle.events[0]?.imageUrl ? (
                     <Image
                       src={bundle.events[0].imageUrl}
@@ -203,7 +203,7 @@ export default function BundlesPage() {
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Package className="w-16 h-16 text-purple-300" />
+                      <Package className="w-16 h-16 text-blue-300" />
                     </div>
                   )}
 
@@ -215,7 +215,7 @@ export default function BundlesPage() {
 
                 {/* Bundle Details */}
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
                     {bundle.name}
                   </h3>
 
@@ -229,12 +229,12 @@ export default function BundlesPage() {
                   <div className="mb-4 space-y-2">
                     {bundle.events?.slice(0, 2).map((event: any) => (
                       <div key={event._id} className="flex items-center gap-2 text-sm text-gray-700">
-                        <Calendar className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                        <Calendar className="w-4 h-4 text-primary flex-shrink-0" />
                         <span className="truncate">{event.name}</span>
                       </div>
                     ))}
                     {bundle.events && bundle.events.length > 2 && (
-                      <div className="text-sm text-purple-600 font-medium">
+                      <div className="text-sm text-primary font-medium">
                         +{bundle.events.length - 2} more events
                       </div>
                     )}
@@ -245,7 +245,7 @@ export default function BundlesPage() {
                     <div className="flex items-end justify-between">
                       <div>
                         <div className="text-sm text-gray-500">Bundle Price</div>
-                        <div className="text-2xl font-bold text-purple-600">
+                        <div className="text-2xl font-bold text-primary">
                           ${(bundle.price / 100).toFixed(2)}
                         </div>
                       </div>
@@ -261,7 +261,7 @@ export default function BundlesPage() {
                   </div>
 
                   {/* CTA */}
-                  <button className="mt-4 w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors group-hover:shadow-lg">
+                  <button className="mt-4 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors group-hover:shadow-lg">
                     View Bundle Details
                     <ChevronRight className="w-4 h-4 inline ml-1 group-hover:translate-x-1 transition-transform" />
                   </button>

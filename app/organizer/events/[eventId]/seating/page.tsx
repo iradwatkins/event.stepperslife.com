@@ -916,7 +916,7 @@ export default function SeatingChartBuilderPage() {
               {/* Template Button */}
               <button
                 onClick={() => setShowTemplates(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 transition-colors text-sm font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary transition-colors text-sm font-medium"
               >
                 <Grid className="w-4 h-4" />
                 Templates
@@ -1009,7 +1009,7 @@ export default function SeatingChartBuilderPage() {
                     type="text"
                     name="name"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                     placeholder="e.g., Wedding Ballroom 150 guests"
                   />
                 </div>
@@ -1021,7 +1021,7 @@ export default function SeatingChartBuilderPage() {
                     name="description"
                     required
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                     placeholder="Describe this template..."
                   />
                 </div>
@@ -1031,7 +1031,7 @@ export default function SeatingChartBuilderPage() {
                   </label>
                   <select
                     name="category"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
                   >
                     <option value="WEDDING">Wedding</option>
                     <option value="CORPORATE">Corporate</option>
@@ -1046,7 +1046,7 @@ export default function SeatingChartBuilderPage() {
                     type="checkbox"
                     name="isPublic"
                     id="isPublic"
-                    className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                    className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-ring"
                   />
                   <label htmlFor="isPublic" className="ml-2 text-sm text-gray-700">
                     Make this template public (share with other organizers)
@@ -1063,7 +1063,7 @@ export default function SeatingChartBuilderPage() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors"
                 >
                   Save Template
                 </button>
@@ -1306,7 +1306,7 @@ export default function SeatingChartBuilderPage() {
             {/* Mobile: Floating button to open library */}
             <button
               onClick={() => setMobileDrawerOpen(true)}
-              className="md:hidden fixed bottom-4 left-4 z-30 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
+              className="md:hidden fixed bottom-4 left-4 z-30 bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary transition-colors"
             >
               <Plus className="w-6 h-6" />
             </button>
@@ -1432,7 +1432,7 @@ export default function SeatingChartBuilderPage() {
               </div>
               <div className="bg-white rounded-lg shadow-md p-4">
                 <div className="flex items-center gap-3">
-                  <CircleDot className="w-8 h-8 text-purple-600" />
+                  <CircleDot className="w-8 h-8 text-primary" />
                   <div>
                     <p className="text-sm text-gray-600">Total Seats</p>
                     <p className="text-2xl font-bold text-gray-900">{getTotalSeats()}</p>
@@ -1564,7 +1564,7 @@ export default function SeatingChartBuilderPage() {
                           </button>
                           <button
                             onClick={() => duplicateRow(section.id, row.id)}
-                            className="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700 transition-colors flex items-center gap-1"
+                            className="px-3 py-1 bg-primary text-white rounded text-sm hover:bg-primary transition-colors flex items-center gap-1"
                             title="Duplicate this row"
                           >
                             <Plus className="w-3 h-3" />
@@ -1667,8 +1667,8 @@ export default function SeatingChartBuilderPage() {
                         <span className="text-foreground">Wheelchair</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-purple-100 rounded flex items-center justify-center">
-                          <Crown className="w-4 h-4 text-purple-700" />
+                        <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
+                          <Crown className="w-4 h-4 text-primary" />
                         </div>
                         <span className="text-foreground">VIP</span>
                       </div>
@@ -1821,10 +1821,10 @@ export default function SeatingChartBuilderPage() {
           <div className="py-1">
             <p className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">Mark as Reserved</p>
             <button
-              className="w-full px-3 py-2 text-left hover:bg-purple-50 text-sm flex items-center gap-2"
+              className="w-full px-3 py-2 text-left hover:bg-primary text-sm flex items-center gap-2"
               onClick={() => handleSetTableReservation("RESERVED", "VIP")}
             >
-              <Crown className="w-4 h-4 text-purple-600" />
+              <Crown className="w-4 h-4 text-primary" />
               <span>VIP Table</span>
             </button>
             <button

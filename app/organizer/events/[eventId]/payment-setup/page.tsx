@@ -305,25 +305,25 @@ export default function PaymentSetupPage() {
               !hasStripeConnected
                 ? "opacity-60 cursor-not-allowed border-gray-200"
                 : selectedModel === "PAY_AS_SELL"
-                ? "border-purple-600 shadow-lg hover:shadow-lg"
+                ? "border-primary shadow-lg hover:shadow-lg"
                 : "border-gray-200 hover:shadow-lg"
             }`}
           >
             {selectedModel === "PAY_AS_SELL" && (
               <div className="absolute top-4 right-4">
-                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                   <Check className="w-4 h-4 text-white" />
                 </div>
               </div>
             )}
 
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
+                <Zap className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-900">Pay-As-You-Sell</h3>
-                <p className="text-sm text-purple-600 font-semibold">No Upfront Cost</p>
+                <p className="text-sm text-primary font-semibold">No Upfront Cost</p>
               </div>
             </div>
 
@@ -370,10 +370,10 @@ export default function PaymentSetupPage() {
               </div>
             </div>
 
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-4">
+            <div className="bg-primary border border-primary rounded-lg p-3 mb-4">
               <div className="flex items-start gap-2">
-                <Info className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
-                <p className="text-xs text-purple-800">
+                <Info className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-primary">
                   <span className="font-semibold">Requires Stripe Connect:</span> {hasStripeConnected ? 'Your Stripe account is connected and ready!' : 'You\'ll be guided to connect your Stripe account'}
                 </p>
               </div>

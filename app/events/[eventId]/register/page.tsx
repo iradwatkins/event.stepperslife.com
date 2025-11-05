@@ -109,7 +109,7 @@ export default function FreeEventRegisterPage() {
     const ticketUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/ticket/${registrationData.ticketCode}`;
 
     return (
-      <div className="min-h-screen bg-purple-600 py-12">
+      <div className="min-h-screen bg-primary py-12">
         <div className="container mx-auto px-4 max-w-2xl">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -118,7 +118,7 @@ export default function FreeEventRegisterPage() {
             className="bg-white rounded-lg shadow-xl overflow-hidden"
           >
             {/* Success Header */}
-            <div className="bg-purple-600 p-8 text-center">
+            <div className="bg-primary p-8 text-center">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -128,7 +128,7 @@ export default function FreeEventRegisterPage() {
                 <CheckCircle2 className="w-12 h-12 text-green-600" />
               </motion.div>
               <h1 className="text-3xl font-bold text-white mb-2">You're Registered!</h1>
-              <p className="text-green-100">Your free ticket has been confirmed</p>
+              <p className="text-white/80">Your free ticket has been confirmed</p>
             </div>
 
             {/* Event Details */}
@@ -240,14 +240,14 @@ export default function FreeEventRegisterPage() {
 
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Header */}
-          <div className="bg-purple-600 p-8 text-center">
+          <div className="bg-primary p-8 text-center">
             <Ticket className="w-16 h-16 text-white mx-auto mb-4" />
             <h1 className="text-3xl font-bold text-white mb-2">Register for Free</h1>
-            <p className="text-blue-100">No payment required</p>
+            <p className="text-white/80">No payment required</p>
           </div>
 
           {/* Event Info */}
-          <div className="p-8 border-b bg-purple-600">
+          <div className="p-8 border-b bg-background">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">{eventDetails.name}</h2>
             <div className="space-y-3 text-gray-700">
               {eventDetails.startDate && (

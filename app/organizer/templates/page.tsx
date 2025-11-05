@@ -198,12 +198,12 @@ export default function TemplatesPage() {
   const categories = [
     { id: "all", name: "All Templates", color: "bg-gray-100 text-gray-700", icon: <GridIcon className="w-4 h-4" /> },
     { id: "theater", name: "Theater", color: "bg-accent text-primary" },
-    { id: "stadium", name: "Stadium", color: "bg-purple-100 text-purple-700" },
+    { id: "stadium", name: "Stadium", color: "bg-accent text-primary" },
     { id: "concert", name: "Concert", color: "bg-pink-100 text-pink-700" },
     { id: "conference", name: "Conference", color: "bg-red-100 text-red-700" },
     { id: "outdoor", name: "Outdoor", color: "bg-green-100 text-green-700" },
     { id: "wedding", name: "Wedding", color: "bg-pink-100 text-pink-700" },
-    { id: "gala", name: "Gala", color: "bg-purple-100 text-purple-700" },
+    { id: "gala", name: "Gala", color: "bg-accent text-primary" },
     { id: "banquet", name: "Banquet", color: "bg-orange-100 text-orange-700" },
     { id: "custom", name: "Custom", color: "bg-gray-100 text-gray-700" },
   ];
@@ -262,7 +262,7 @@ export default function TemplatesPage() {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-600">Pre-built</span>
-                <Sparkles className="w-5 h-5 text-purple-600" />
+                <Sparkles className="w-5 h-5 text-primary" />
               </div>
               <p className="text-3xl font-bold text-gray-900">{seatingTemplates.length}</p>
             </motion.div>
@@ -325,7 +325,7 @@ export default function TemplatesPage() {
               </button>
               <button
                 onClick={selectFloorPlanTemplates}
-                className="px-3 py-1.5 text-sm bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200 transition-colors"
+                className="px-3 py-1.5 text-sm bg-accent text-primary rounded-md hover:bg-blue-200 transition-colors"
               >
                 Floor Plans ({allTemplates.filter((t: any) => t.isFloorPlan && t.isCustom).length})
               </button>

@@ -179,7 +179,7 @@ export default function VenueImageUploader({
             {!preview && (
               <button
                 onClick={scrollToCanvas}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-blue-700 rounded-lg transition-colors"
               >
                 Skip to Canvas →
               </button>
@@ -262,7 +262,7 @@ export default function VenueImageUploader({
                 <span className="text-xs font-medium text-gray-500">OR</span>
                 <div className="flex-1 h-px bg-gray-300"></div>
               </div>
-              <p className="text-sm font-medium text-purple-600">
+              <p className="text-sm font-medium text-primary">
                 Scroll down to start designing on a blank canvas →
               </p>
               <p className="text-xs text-gray-500 mt-2">

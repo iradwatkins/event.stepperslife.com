@@ -126,7 +126,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
           </p>
           <Link
             href="/my-tickets"
-            className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+            className="inline-block bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             View My Tickets
           </Link>
@@ -141,7 +141,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
         {/* Back Link */}
         <Link
           href={`/bundles/${bundleId}`}
-          className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-8 font-medium"
+          className="inline-flex items-center gap-2 text-primary hover:text-blue-700 mb-8 font-medium"
         >
           <ChevronLeft className="w-4 h-4" />
           Back to Bundle Details
@@ -164,7 +164,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
                 <select
                   value={quantity}
                   onChange={(e) => setQuantity(parseInt(e.target.value))}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
                   {[...Array(Math.min(bundle.available, 10))].map((_, i) => (
                     <option key={i + 1} value={i + 1}>
@@ -194,7 +194,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
                     value={attendeeInfo.name}
                     onChange={(e) => setAttendeeInfo({ ...attendeeInfo, name: e.target.value })}
                     placeholder="John Doe"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
 
@@ -211,7 +211,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent ${
                       attendeeInfo.email && !isEmailValid
                         ? "border-red-500 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-purple-600"
+                        : "border-gray-300 focus:ring-primary"
                     }`}
                   />
                   {attendeeInfo.email && !isEmailValid ? (
@@ -234,7 +234,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
                     value={attendeeInfo.phone}
                     onChange={(e) => setAttendeeInfo({ ...attendeeInfo, phone: e.target.value })}
                     placeholder="+1 (555) 123-4567"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
               </div>
@@ -243,7 +243,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
             {/* Payment Section */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <CreditCard className="w-6 h-6 text-purple-600" />
+                <CreditCard className="w-6 h-6 text-primary" />
                 Payment Information
               </h2>
 
@@ -297,7 +297,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
                     disabled={!canProceed || isProcessing}
                     className={`w-full py-4 px-6 rounded-lg font-bold text-base lg:text-lg transition-all min-h-[44px] ${
                       canProceed && !isProcessing
-                        ? "bg-purple-600 text-white hover:bg-purple-700 hover:shadow-lg active:scale-95"
+                        ? "bg-primary text-white hover:bg-blue-700 hover:shadow-lg active:scale-95"
                         : "bg-gray-300 text-gray-500 cursor-not-allowed"
                     }`}
                   >
@@ -330,7 +330,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
               {/* Bundle Info */}
               <div className="mb-6 pb-6 border-b">
                 <div className="flex items-start gap-3 mb-4">
-                  <Package className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+                  <Package className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="font-bold text-gray-900">{bundle.name}</h3>
                     {bundle.bundleType === "MULTI_EVENT" && (
@@ -351,7 +351,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
                       </li>
                     ))}
                     {bundle.includedTiersDetails && bundle.includedTiersDetails.length > 3 && (
-                      <li className="text-purple-600 font-medium">
+                      <li className="text-primary font-medium">
                         +{bundle.includedTiersDetails.length - 3} more items
                       </li>
                     )}
@@ -365,7 +365,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
                 <div className="space-y-2">
                   {bundle.events?.map((event: any) => (
                     <div key={event._id} className="flex items-start gap-2 text-sm">
-                      <Calendar className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
+                      <Calendar className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                       <span className="text-gray-700">{event.name}</span>
                     </div>
                   ))}
@@ -392,7 +392,7 @@ export default function BundleCheckoutPage({ params }: { params: Promise<{ bundl
                 </div>
                 <div className="pt-3 border-t flex justify-between text-xl font-bold text-gray-900">
                   <span>Total:</span>
-                  <span className="text-purple-600">${(totalAmount / 100).toFixed(2)}</span>
+                  <span className="text-primary">${(totalAmount / 100).toFixed(2)}</span>
                 </div>
               </div>
 

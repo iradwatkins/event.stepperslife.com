@@ -68,7 +68,7 @@ export default function TicketValidationPage() {
   const isUpcoming = event.startDate && event.startDate >= Date.now();
 
   return (
-    <div className="min-h-screen bg-purple-600">
+    <div className="min-h-screen bg-primary">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
@@ -88,8 +88,8 @@ export default function TicketValidationPage() {
           {/* Ticket Status Banner */}
           <div className={`rounded-lg p-6 mb-6 ${
             isValid
-              ? "bg-purple-600 text-white"
-              : "bg-purple-600 text-white"
+              ? "bg-primary text-white"
+              : "bg-primary text-white"
           }`}>
             <div className="flex items-center gap-4">
               {isValid ? (

@@ -40,9 +40,9 @@ export default function AccessibilityFilters({
             type="checkbox"
             checked={filters.wheelchairOnly}
             onChange={() => toggleFilter("wheelchairOnly")}
-            className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+            className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
           />
-          <Accessibility className="w-4 h-4 text-purple-600" />
+          <Accessibility className="w-4 h-4 text-primary" />
           <span className="text-sm text-gray-700 group-hover:text-gray-900">
             Wheelchair Accessible Only
           </span>
@@ -58,7 +58,7 @@ export default function AccessibilityFilters({
               disabled={filters.wheelchairOnly}
               className="w-3.5 h-3.5 text-primary border-gray-300 rounded focus:ring-ring disabled:opacity-50"
             />
-            <Accessibility className="w-3.5 h-3.5 text-purple-600" />
+            <Accessibility className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs text-gray-600 group-hover:text-gray-800">
               Show Wheelchair Seats
             </span>
@@ -95,7 +95,7 @@ export default function AccessibilityFilters({
       </div>
 
       {filters.wheelchairOnly && (
-        <div className="mt-3 p-2 bg-purple-50 border border-purple-200 rounded text-xs text-purple-800">
+        <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-gray-800">
           Only showing wheelchair accessible seats
         </div>
       )}

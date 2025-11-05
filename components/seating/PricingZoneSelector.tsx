@@ -95,7 +95,7 @@ export default function PricingZoneSelector({
                         {zone.name}
                       </span>
                       {zone.id === "vip" && (
-                        <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                        <Sparkles className="w-3.5 h-3.5 text-primary" />
                       )}
                       {zone.id === "front" && (
                         <MapPin className="w-3.5 h-3.5 text-red-600" />

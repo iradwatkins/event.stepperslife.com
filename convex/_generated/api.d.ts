@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as activateAllTickets from "../activateAllTickets.js";
 import type * as addCredits from "../addCredits.js";
 import type * as admin_completeSystemReset from "../admin/completeSystemReset.js";
 import type * as admin_queries from "../admin/queries.js";
@@ -97,6 +98,7 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  activateAllTickets: typeof activateAllTickets;
   addCredits: typeof addCredits;
   "admin/completeSystemReset": typeof admin_completeSystemReset;
   "admin/queries": typeof admin_queries;
