@@ -443,7 +443,7 @@ export default function EventDetailClient({ eventId }: EventDetailClientProps) {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.3, delay: 0.8 + index * 0.1 }}
                           className="bg-purple-50 border border-purple-200 rounded-lg p-4 hover:shadow-md transition-all cursor-pointer"
-                          onClick={() => router.push(`/bundles/${bundle._id}`)}
+                          onClick={() => router.push(`/events/${eventId}/checkout`)}
                         >
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex-1">

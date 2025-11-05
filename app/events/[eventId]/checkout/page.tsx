@@ -30,7 +30,7 @@ export default function CheckoutPage() {
   const [buyerName, setBuyerName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
   const [showPayment, setShowPayment] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cashapp' | 'cash'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cashapp' | 'cash'>('cash');
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [cashOrderData, setCashOrderData] = useState<{
@@ -847,40 +847,55 @@ export default function CheckoutPage() {
                   </div>
                 ) : null}
 
-                {/* Payment Method Selector - Only show for Square/CashApp (prepaid events) */}
+                {/* Payment Method Selector */}
                 {!useStripePayment && (
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    <button
-                      onClick={() => setPaymentMethod('card')}
-                      className={`px-4 py-3 rounded-lg border-2 transition-all ${
-                        paymentMethod === 'card'
-                          ? 'border-primary bg-accent text-foreground font-semibold'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      Credit/Debit Card
-                    </button>
-                    <button
-                      onClick={() => setPaymentMethod('cashapp')}
-                      className={`px-4 py-3 rounded-lg border-2 transition-all ${
-                        paymentMethod === 'cashapp'
-                          ? 'border-green-600 bg-green-50 text-green-900 font-semibold'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      Cash App Pay
-                    </button>
-                    <button
-                      onClick={() => setPaymentMethod('cash')}
-                      className={`px-4 py-3 rounded-lg border-2 transition-all ${
-                        paymentMethod === 'cash'
-                          ? 'border-orange-600 bg-orange-50 text-orange-900 font-semibold'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      💵 Pay Cash In-Person
-                    </button>
-                  </div>
+                  <>
+                    {/* Only show cash option if PREPAY model (no payment processor setup) */}
+                    {paymentModel === 'PREPAY' ? (
+                      <div className="mb-6">
+                        <div className="px-4 py-3 rounded-lg border-2 border-orange-600 bg-orange-50 text-orange-900 font-semibold text-center">
+                          💵 Pay Cash In-Person
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2 text-center">
+                          Payment will be collected in cash at the door
+                        </p>
+                      </div>
+                    ) : (
+                      /* Show all payment options if Square/payment processor is configured */
+                      <div className="grid grid-cols-3 gap-3 mb-6">
+                        <button
+                          onClick={() => setPaymentMethod('card')}
+                          className={`px-4 py-3 rounded-lg border-2 transition-all ${
+                            paymentMethod === 'card'
+                              ? 'border-primary bg-accent text-foreground font-semibold'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          Credit/Debit Card
+                        </button>
+                        <button
+                          onClick={() => setPaymentMethod('cashapp')}
+                          className={`px-4 py-3 rounded-lg border-2 transition-all ${
+                            paymentMethod === 'cashapp'
+                              ? 'border-green-600 bg-green-50 text-green-900 font-semibold'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          Cash App Pay
+                        </button>
+                        <button
+                          onClick={() => setPaymentMethod('cash')}
+                          className={`px-4 py-3 rounded-lg border-2 transition-all ${
+                            paymentMethod === 'cash'
+                              ? 'border-orange-600 bg-orange-50 text-orange-900 font-semibold'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          💵 Pay Cash In-Person
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
 
                 {/* Payment Form */}

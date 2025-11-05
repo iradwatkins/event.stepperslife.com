@@ -7,6 +7,74 @@ const DEFAULT_PLATFORM_FEE_FIXED_CENTS = 179; // $1.79
 const DEFAULT_PROCESSING_FEE_PERCENT = 2.9;
 
 /**
+ * Configure PREPAY payment model for testing (bypasses authentication)
+ * For use in test scripts only - requires TESTING MODE (no auth)
+ */
+export const configurePrepayForTesting = mutation({
+  args: {
+    eventId: v.id("events"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    // TESTING MODE: Skip authentication check
+    let user;
+    if (!identity) {
+      console.warn("[configurePrepayForTesting] TESTING MODE - No authentication required");
+      user = await ctx.db
+        .query("users")
+        .withIndex("by_email", (q) => q.eq("email", "iradwatkins@gmail.com"))
+        .first();
+      if (!user) throw new Error("Test user not found");
+    } else {
+      throw new Error("This mutation is for testing only - use selectPrepayModel in production");
+    }
+
+    // Verify event exists
+    const event = await ctx.db.get(args.eventId);
+    if (!event) throw new Error("Event not found");
+
+    // Check if config already exists
+    const existing = await ctx.db
+      .query("eventPaymentConfig")
+      .withIndex("by_event", (q) => q.eq("eventId", args.eventId))
+      .first();
+
+    if (existing) {
+      console.log(`[configurePrepayForTesting] Payment config already exists - skipping`);
+      return { configId: existing._id, success: true, skipped: true };
+    }
+
+    // Create payment config (PREPAY = cash payment model)
+    const configId = await ctx.db.insert("eventPaymentConfig", {
+      eventId: args.eventId,
+      organizerId: user._id,
+      paymentModel: "PREPAY",
+      isActive: true,
+      activatedAt: Date.now(),
+      ticketsAllocated: 999999, // High number for testing
+      platformFeePercent: 0, // No additional fees for prepay model
+      platformFeeFixed: 0,
+      processingFeePercent: 0, // No processing fee for cash
+      charityDiscount: false,
+      lowPriceDiscount: false,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
+    // Update event
+    await ctx.db.patch(args.eventId, {
+      paymentModelSelected: true,
+      ticketsVisible: true,
+      updatedAt: Date.now(),
+    });
+
+    console.log(`[configurePrepayForTesting] ✅ Payment config created for event ${args.eventId}`);
+    return { configId, success: true };
+  },
+});
+
+/**
  * Select Prepay payment model for event (pay upfront for tickets)
  */
 export const selectPrepayModel = mutation({
