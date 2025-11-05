@@ -32,9 +32,10 @@ export default function StaffTransfersPage() {
   });
 
   const pendingCounts = useQuery(api.staff.transfers.getPendingTransfers, {});
-  const availableRecipients = useQuery(api.staff.transfers.getAvailableRecipients, {
-    eventId: selectedEvent!,
-  });
+  const availableRecipients = useQuery(
+    api.staff.transfers.getAvailableRecipients,
+    selectedEvent ? { eventId: selectedEvent } : "skip"
+  );
 
   // Get user's events (where they are staff)
   const myStaffEvents = useQuery(api.staff.queries.getStaffEvents, {});

@@ -358,7 +358,7 @@ export default function EventDashboardPage() {
               {event.eventType === "TICKETED_EVENT" && (
                 <Link
                   href={`/organizer/events/${eventId}/seating`}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors text-sm font-medium"
                 >
                   <Armchair className="w-4 h-4" />
                   Manage Seating
@@ -517,7 +517,7 @@ export default function EventDashboardPage() {
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-600">Total Orders</span>
-                  <BarChart3 className="w-5 h-5 text-purple-600" />
+                  <BarChart3 className="w-5 h-5 text-primary" />
                 </div>
                 <p className="text-3xl font-bold text-gray-900">{statistics.totalOrders}</p>
                 <div className="flex items-center gap-4 mt-2 text-xs">
@@ -542,7 +542,7 @@ export default function EventDashboardPage() {
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-600">Attendees</span>
-                  <Users className="w-5 h-5 text-indigo-600" />
+                  <Users className="w-5 h-5 text-primary" />
                 </div>
                 <p className="text-3xl font-bold text-gray-900">{statistics.totalAttendees}</p>
                 <p className="text-xs text-gray-500 mt-1">Total registered attendees</p>
@@ -562,7 +562,7 @@ export default function EventDashboardPage() {
                   <div className="flex items-center gap-3">
                     <Link
                       href={`/organizer/events/${eventId}/seating`}
-                      className="text-sm text-purple-600 hover:underline"
+                      className="text-sm text-primary hover:underline"
                     >
                       Manage Seating
                     </Link>
@@ -907,7 +907,7 @@ export default function EventDashboardPage() {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-gray-600">Total Sections</span>
-                      <Layout className="w-5 h-5 text-purple-600" />
+                      <Layout className="w-5 h-5 text-primary" />
                     </div>
                     <p className="text-3xl font-bold text-gray-900">{tableAssignments.sections.length}</p>
                     <p className="text-xs text-gray-500 mt-1">Seating areas</p>
@@ -1103,7 +1103,7 @@ export default function EventDashboardPage() {
             )}
 
             {/* No Assignments Message */}
-            {!tableAssignments || tableAssignments.totalAssignedSeats === 0 && (
+            {(!tableAssignments || tableAssignments.totalAssignedSeats === 0) && (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
                 <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No Seat Assignments Yet</h3>
@@ -1143,7 +1143,7 @@ export default function EventDashboardPage() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-600">Tickets Sold by Staff</span>
-                    <Ticket className="w-5 h-5 text-purple-600" />
+                    <Ticket className="w-5 h-5 text-primary" />
                   </div>
                   <p className="text-3xl font-bold text-gray-900">{staffSummary.totalTicketsSold}</p>
                   <p className="text-xs text-gray-500 mt-1">Total staff sales</p>

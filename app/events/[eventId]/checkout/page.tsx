@@ -32,7 +32,10 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cashapp'>('card');
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [referralCode, setReferralCode] = useState<string | null>(null);
+  // Get referral code from URL immediately (before any hooks)
+  const refParam = searchParams.get("ref");
+  const [referralCode] = useState<string | null>(refParam);
+
   const [discountCode, setDiscountCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState<{
     _id: Id<"discountCodes">;
@@ -61,14 +64,6 @@ export default function CheckoutPage() {
     api.tickets.queries.getOrderDetails,
     orderId ? { orderId: orderId as Id<"orders"> } : "skip"
   );
-
-  // Check for referral code in URL parameters
-  useEffect(() => {
-    const refParam = searchParams.get("ref");
-    if (refParam) {
-      setReferralCode(refParam);
-    }
-  }, [searchParams]);
 
   // Only require eventDetails to show tickets, not authentication
   const isLoading = eventDetails === undefined;
@@ -470,7 +465,7 @@ export default function CheckoutPage() {
                         }}
                         className={`flex-1 py-2 px-4 rounded-md font-medium transition-all ${
                           purchaseType === 'bundle'
-                            ? 'bg-white text-purple-600 shadow-sm'
+                            ? 'bg-white text-primary shadow-sm'
                             : 'text-gray-600 hover:text-gray-900'
                         }`}
                       >
@@ -593,7 +588,7 @@ export default function CheckoutPage() {
                           onClick={() => setSelectedBundleId(bundle._id)}
                           className={`w-full text-left p-4 border-2 rounded-lg transition-all ${
                             selectedBundleId === bundle._id
-                              ? "border-purple-600 bg-purple-50"
+                              ? "border-primary bg-blue-50"
                               : "border-gray-200 hover:border-gray-300"
                           }`}
                         >
@@ -612,14 +607,14 @@ export default function CheckoutPage() {
                                 )}
                                 <div className="flex flex-wrap gap-1 mt-2">
                                   {bundle.includedTiers.map((includedTier: any) => (
-                                    <span key={includedTier.tierId} className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded">
+                                    <span key={includedTier.tierId} className="text-xs px-2 py-0.5 bg-blue-100 text-primary rounded">
                                       {includedTier.quantity}x {includedTier.tierName}
                                     </span>
                                   ))}
                                 </div>
                               </div>
                               <div className="text-right ml-4">
-                                <p className="text-lg font-bold text-purple-600">
+                                <p className="text-lg font-bold text-primary">
                                   ${(bundle.price / 100).toFixed(2)}
                                 </p>
                                 {bundle.regularPrice && (
@@ -931,7 +926,7 @@ export default function CheckoutPage() {
                           <span className="text-gray-900 font-medium">{selectedBundle.name}</span>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {selectedBundle.includedTiers.map((includedTier: any) => (
-                              <span key={includedTier.tierId} className="text-xs px-1.5 py-0.5 bg-purple-100 text-purple-700 rounded">
+                              <span key={includedTier.tierId} className="text-xs px-1.5 py-0.5 bg-blue-100 text-primary rounded">
                                 {includedTier.quantity}x {includedTier.tierName}
                               </span>
                             ))}
