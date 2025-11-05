@@ -12,6 +12,8 @@ import {
   ChevronRight,
   Home,
   Share2,
+  Wallet,
+  Settings,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -35,6 +37,11 @@ export default function StaffLayout({
       icon: DollarSign,
     },
     {
+      title: 'Cash Orders',
+      href: '/staff/cash-orders',
+      icon: Wallet,
+    },
+    {
       title: 'My Team',
       href: '/staff/my-team',
       icon: Users,
@@ -43,6 +50,11 @@ export default function StaffLayout({
       title: 'Ticket Transfers',
       href: '/staff/transfers',
       icon: ArrowRightLeft,
+    },
+    {
+      title: 'Settings',
+      href: '/staff/settings',
+      icon: Settings,
     },
   ]
 

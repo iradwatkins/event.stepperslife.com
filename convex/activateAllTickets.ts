@@ -35,23 +35,23 @@ export const activateAllTickets = mutation({
         .first();
 
       if (!paymentConfig) {
-        // Create payment config with CREDIT_CARD model (standard fees)
+        // Create payment config with PREPAY model (cash payment by default)
         await ctx.db.insert("eventPaymentConfig", {
           eventId: event._id,
           organizerId: event.organizerId!,
-          paymentModel: "CREDIT_CARD",
+          paymentModel: "PREPAY",
           isActive: true,
           activatedAt: Date.now(),
-          platformFeePercent: 3.7,    // 3.7% platform fee
-          platformFeeFixed: 179,       // $1.79 in cents
-          processingFeePercent: 2.9,   // 2.9% processing fee
+          platformFeePercent: 0,       // No platform fee for prepay
+          platformFeeFixed: 0,         // No fixed fee for prepay
+          processingFeePercent: 2.9,   // Only Stripe processing fee if using cards
           charityDiscount: false,
           lowPriceDiscount: false,
           createdAt: Date.now(),
           updatedAt: Date.now(),
         });
         paymentConfigsCreated++;
-        console.log(`[activateAllTickets] Created payment config for: ${event.name}`);
+        console.log(`[activateAllTickets] Created PREPAY (cash) payment config for: ${event.name}`);
       } else if (!paymentConfig.isActive) {
         // Activate existing payment config
         await ctx.db.patch(paymentConfig._id, {

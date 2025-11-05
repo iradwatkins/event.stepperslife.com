@@ -25,7 +25,7 @@ async function main() {
       name: "Ira D Watkins (Test User)",
       email: "iradwatkins@gmail.com",
       phone: "+1234567999",
-      role: "SELLER",
+      role: "TEAM_MEMBERS", // Updated to use new role system
       allocatedTickets: 500,
       commissionType: "FIXED",
       commissionValue: 300, // $3.00

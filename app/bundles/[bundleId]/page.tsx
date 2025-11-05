@@ -129,9 +129,9 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
                   )}
                 </div>
 
-                {/* Buy Button */}
+                {/* Buy Button - Redirect to Event Checkout */}
                 <Link
-                  href={`/bundles/${bundleId}/checkout`}
+                  href={bundle.events?.[0]?._id ? `/events/${bundle.events[0]._id}/checkout?purchaseType=bundle&bundleId=${bundleId}` : '#'}
                   className="block w-full bg-primary text-white text-center py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
                 >
                   Buy Bundle Now
@@ -139,7 +139,7 @@ export default function BundleDetailPage({ params }: { params: Promise<{ bundleI
                 </Link>
 
                 <p className="text-xs text-gray-500 text-center mt-4">
-                  Secure checkout powered by Square
+                  Secure checkout with multiple payment options
                 </p>
               </div>
             </div>

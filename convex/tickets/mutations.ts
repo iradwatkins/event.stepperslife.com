@@ -14,6 +14,8 @@ export const createTicketTier = mutation({
     quantity: v.number(),
     saleStart: v.optional(v.number()),
     saleEnd: v.optional(v.number()),
+    // Multi-day event support
+    dayNumber: v.optional(v.number()), // 1=Day 1, 2=Day 2, etc. null=all days
     // Early Bird Pricing - time-based pricing tiers
     pricingTiers: v.optional(v.array(v.object({
       name: v.string(), // "Early Bird", "Regular", "Last Chance"
@@ -107,6 +109,7 @@ export const createTicketTier = mutation({
       pricingTiers: args.pricingTiers, // Early bird pricing support
       quantity: args.quantity,
       sold: 0,
+      dayNumber: args.dayNumber, // Multi-day event support
       saleStart: args.saleStart,
       saleEnd: args.saleEnd,
       isTablePackage: args.isTablePackage, // Table package mode

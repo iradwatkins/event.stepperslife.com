@@ -23,10 +23,12 @@ export const USER_ROLES = {
  * Staff roles for event-specific staff members
  */
 export const STAFF_ROLES = {
-  /** Can sell tickets and earn commission */
-  SELLER: "SELLER",
-  /** Can scan tickets at event entrance */
-  SCANNER: "SCANNER",
+  /** Door staff - Can scan tickets, can sell only if organizer permits */
+  STAFF: "STAFF",
+  /** Team members/partners who sell tickets and can assign associates */
+  TEAM_MEMBERS: "TEAM_MEMBERS",
+  /** Associates - Get tickets from Team Members to sell */
+  ASSOCIATES: "ASSOCIATES",
 } as const;
 
 /**
@@ -118,8 +120,9 @@ export function getRoleName(role: UserRole | StaffRole): string {
     [USER_ROLES.ADMIN]: "Administrator",
     [USER_ROLES.ORGANIZER]: "Event Organizer",
     [USER_ROLES.USER]: "User",
-    [STAFF_ROLES.SELLER]: "Ticket Seller",
-    [STAFF_ROLES.SCANNER]: "Ticket Scanner",
+    [STAFF_ROLES.STAFF]: "Door Staff",
+    [STAFF_ROLES.TEAM_MEMBERS]: "Team Member",
+    [STAFF_ROLES.ASSOCIATES]: "Associate",
   };
   return roleNames[role] || role;
 }
@@ -132,8 +135,9 @@ export function getRoleDescription(role: UserRole | StaffRole): string {
     [USER_ROLES.ADMIN]: "Full platform access with ability to manage all events and users",
     [USER_ROLES.ORGANIZER]: "Create and manage events, ticket tiers, and staff members",
     [USER_ROLES.USER]: "Browse events and purchase tickets",
-    [STAFF_ROLES.SELLER]: "Sell tickets and earn commission, may assign sub-sellers",
-    [STAFF_ROLES.SCANNER]: "Scan and validate tickets at event entrance",
+    [STAFF_ROLES.STAFF]: "Scan and validate tickets at event entrance, can sell if organizer permits",
+    [STAFF_ROLES.TEAM_MEMBERS]: "Team member/partner who sells tickets and can assign associates",
+    [STAFF_ROLES.ASSOCIATES]: "Receives tickets from Team Members to sell and earn commission",
   };
   return descriptions[role] || "Unknown role";
 }

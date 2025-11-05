@@ -722,3 +722,16 @@ export const getMyGlobalSubSellers = query({
     return subSellers;
   },
 });
+
+/**
+ * Get staff member by ID
+ */
+export const getStaffMember = query({
+  args: {
+    staffId: v.id("eventStaff"),
+  },
+  handler: async (ctx, args) => {
+    const staffMember = await ctx.db.get(args.staffId);
+    return staffMember;
+  },
+});

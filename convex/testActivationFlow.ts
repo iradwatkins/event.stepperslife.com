@@ -82,7 +82,7 @@ export const testActivationFlow = mutation({
           staffUserId: testUser._id,
           email: "iradwatkins@gmail.com",
           name: "Test Staff",
-          role: "SELLER",
+          role: "TEAM_MEMBERS",
           commissionType: "PERCENTAGE",
           commissionValue: 10,
           commissionPercent: 10,

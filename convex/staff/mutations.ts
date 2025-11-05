@@ -57,11 +57,12 @@ export const addStaffMember = mutation({
     name: v.string(),
     email: v.string(),
     phone: v.optional(v.string()),
-    role: v.union(v.literal("SELLER"), v.literal("SCANNER")),
-    canScan: v.optional(v.boolean()), // Sellers can also scan if approved
+    role: v.union(v.literal("TEAM_MEMBERS"), v.literal("STAFF"), v.literal("ASSOCIATES")),
+    canScan: v.optional(v.boolean()), // Team members can also scan if approved
     commissionType: v.optional(v.union(v.literal("PERCENTAGE"), v.literal("FIXED"))),
     commissionValue: v.optional(v.number()),
     allocatedTickets: v.optional(v.number()),
+    assignedByStaffId: v.optional(v.id("eventStaff")), // For Associates assigned by Team Members
   },
   handler: async (ctx, args) => {
     const currentUser = await getAuthenticatedUser(ctx);
@@ -108,6 +109,9 @@ export const addStaffMember = mutation({
       attempts++;
     }
 
+    // Determine hierarchy level based on assignment
+    const hierarchyLevel = args.assignedByStaffId ? 2 : 1; // Associates are level 2, others are level 1
+
     // Create staff member record
     const staffId = await ctx.db.insert("eventStaff", {
       eventId: args.eventId,
@@ -117,7 +121,7 @@ export const addStaffMember = mutation({
       name: args.name,
       phone: args.phone,
       role: args.role,
-      canScan: args.canScan || (args.role === STAFF_ROLES.SCANNER), // Scanners can always scan, sellers only if approved
+      canScan: args.canScan || (args.role === STAFF_ROLES.STAFF), // Staff can always scan, team members only if approved
       commissionType: args.commissionType,
       commissionValue: args.commissionValue,
       commissionPercent: args.commissionType === "PERCENTAGE" ? args.commissionValue : undefined,
@@ -127,9 +131,9 @@ export const addStaffMember = mutation({
       isActive: true,
       ticketsSold: 0,
       referralCode,
-      // Hierarchy fields - organizer-assigned staff is level 1
-      assignedByStaffId: undefined,
-      hierarchyLevel: 1,
+      // Hierarchy fields
+      assignedByStaffId: args.assignedByStaffId,
+      hierarchyLevel,
       canAssignSubSellers: false, // Default disabled, organizer can enable
       maxSubSellers: undefined,
       parentCommissionPercent: undefined,
@@ -759,7 +763,7 @@ export const assignSubSellerForTesting = mutation({
       email: args.email,
       name: args.name,
       phone: args.phone,
-      role: "SELLER",
+      role: "ASSOCIATES",
       canScan: false,
       commissionType: args.commissionType,
       commissionValue: args.commissionValue,
@@ -798,7 +802,7 @@ export const assignSubSeller = mutation({
     name: v.string(),
     email: v.string(),
     phone: v.optional(v.string()),
-    role: v.union(v.literal("SELLER"), v.literal("SCANNER")),
+    role: v.union(v.literal("TEAM_MEMBERS"), v.literal("STAFF")),
     canScan: v.optional(v.boolean()),
     allocatedTickets: v.optional(v.number()), // Tickets allocated from parent's balance
     parentCommissionPercent: v.number(), // What % parent keeps from sub-seller sales
@@ -953,7 +957,7 @@ export const assignSubSeller = mutation({
       name: args.name,
       phone: args.phone,
       role: args.role,
-      canScan: args.canScan || (args.role === STAFF_ROLES.SCANNER),
+      canScan: args.canScan || (args.role === STAFF_ROLES.STAFF),
       commissionType: parentCommissionType,
       commissionValue: subSellerCommissionValue,
       commissionPercent: parentCommissionType === "PERCENTAGE" ? subSellerCommissionValue : undefined,
@@ -991,7 +995,7 @@ export const addGlobalStaff = mutation({
     name: v.string(),
     email: v.string(),
     phone: v.optional(v.string()),
-    role: v.union(v.literal("SELLER"), v.literal("SCANNER")),
+    role: v.union(v.literal("TEAM_MEMBERS"), v.literal("STAFF")),
     canScan: v.optional(v.boolean()),
     commissionType: v.optional(v.union(v.literal("PERCENTAGE"), v.literal("FIXED"))),
     commissionValue: v.optional(v.number()),
@@ -1064,7 +1068,7 @@ export const addGlobalStaff = mutation({
       name: args.name,
       phone: args.phone,
       role: args.role,
-      canScan: args.canScan || (args.role === STAFF_ROLES.SCANNER),
+      canScan: args.canScan || (args.role === STAFF_ROLES.STAFF),
       commissionType: args.commissionType,
       commissionValue: args.commissionValue,
       commissionPercent: args.commissionType === "PERCENTAGE" ? args.commissionValue : undefined,
@@ -1157,7 +1161,7 @@ export const addGlobalSubSeller = mutation({
     name: v.string(),
     email: v.string(),
     phone: v.optional(v.string()),
-    role: v.union(v.literal("SELLER"), v.literal("SCANNER")),
+    role: v.union(v.literal("TEAM_MEMBERS"), v.literal("STAFF")),
     canScan: v.optional(v.boolean()),
     parentCommissionPercent: v.number(), // What % parent keeps
     subSellerCommissionPercent: v.number(), // What % sub-seller gets
@@ -1270,7 +1274,7 @@ export const addGlobalSubSeller = mutation({
       name: args.name,
       phone: args.phone,
       role: args.role,
-      canScan: args.canScan || (args.role === STAFF_ROLES.SCANNER),
+      canScan: args.canScan || (args.role === STAFF_ROLES.STAFF),
       referralCode,
       isActive: true,
       ticketsSold: 0,
@@ -1296,5 +1300,37 @@ export const addGlobalSubSeller = mutation({
       referralCode,
       hierarchyLevel,
     };
+  },
+});
+
+/**
+ * Update staff member's cash payment acceptance settings
+ */
+export const updateCashSettings = mutation({
+  args: {
+    staffId: v.id("eventStaff"),
+    acceptCashInPerson: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const user = await getAuthenticatedUser(ctx);
+
+    // Verify staff member exists
+    const staffMember = await ctx.db.get(args.staffId);
+    if (!staffMember) {
+      throw new Error("Staff member not found");
+    }
+
+    // Verify the current user owns this staff record
+    if (staffMember.staffUserId !== user._id) {
+      throw new Error("You can only update your own settings");
+    }
+
+    // Update settings
+    await ctx.db.patch(args.staffId, {
+      acceptCashInPerson: args.acceptCashInPerson,
+      updatedAt: Date.now(),
+    });
+
+    return { success: true };
   },
 });

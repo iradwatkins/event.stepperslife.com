@@ -28,10 +28,16 @@ export default function CheckoutPage() {
   const [quantity, setQuantity] = useState(1);
   const [buyerEmail, setBuyerEmail] = useState("");
   const [buyerName, setBuyerName] = useState("");
+  const [buyerPhone, setBuyerPhone] = useState("");
   const [showPayment, setShowPayment] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cashapp'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cashapp' | 'cash'>('card');
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [cashOrderData, setCashOrderData] = useState<{
+    orderNumber: string;
+    holdExpiresAt: number;
+    totalCents: number;
+  } | null>(null);
   // Get referral code from URL immediately (before any hooks)
   const refParam = searchParams.get("ref");
   const [referralCode] = useState<string | null>(refParam);
@@ -60,6 +66,7 @@ export default function CheckoutPage() {
   const createBundleOrder = useMutation(api.tickets.mutations.createBundleOrder);
   const completeOrder = useMutation(api.tickets.mutations.completeOrder);
   const completeBundleOrder = useMutation(api.tickets.mutations.completeBundleOrder);
+  const createCashOrder = useMutation(api.orders.cashPayments.createCashOrder);
   const getOrderDetails = useQuery(
     api.tickets.queries.getOrderDetails,
     orderId ? { orderId: orderId as Id<"orders"> } : "skip"
@@ -720,13 +727,26 @@ export default function CheckoutPage() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email Address
+                          Email Address {paymentMethod === 'cash' && <span className="text-gray-500 text-xs">(optional for cash)</span>}
                         </label>
                         <input
                           type="email"
                           value={buyerEmail}
                           onChange={(e) => setBuyerEmail(e.target.value)}
                           placeholder="john@example.com"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Phone Number {paymentMethod !== 'cash' && <span className="text-gray-500 text-xs">(optional)</span>}
+                          {paymentMethod === 'cash' && <span className="text-red-600 text-xs">*</span>}
+                        </label>
+                        <input
+                          type="tel"
+                          value={buyerPhone}
+                          onChange={(e) => setBuyerPhone(e.target.value)}
+                          placeholder="(555) 123-4567"
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-gray-900 placeholder:text-gray-400"
                         />
                       </div>
@@ -829,10 +849,10 @@ export default function CheckoutPage() {
 
                 {/* Payment Method Selector - Only show for Square/CashApp (prepaid events) */}
                 {!useStripePayment && (
-                  <div className="flex gap-3 mb-6">
+                  <div className="grid grid-cols-3 gap-3 mb-6">
                     <button
                       onClick={() => setPaymentMethod('card')}
-                      className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+                      className={`px-4 py-3 rounded-lg border-2 transition-all ${
                         paymentMethod === 'card'
                           ? 'border-primary bg-accent text-foreground font-semibold'
                           : 'border-gray-200 hover:border-gray-300'
@@ -842,13 +862,23 @@ export default function CheckoutPage() {
                     </button>
                     <button
                       onClick={() => setPaymentMethod('cashapp')}
-                      className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
+                      className={`px-4 py-3 rounded-lg border-2 transition-all ${
                         paymentMethod === 'cashapp'
                           ? 'border-green-600 bg-green-50 text-green-900 font-semibold'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
                       Cash App Pay
+                    </button>
+                    <button
+                      onClick={() => setPaymentMethod('cash')}
+                      className={`px-4 py-3 rounded-lg border-2 transition-all ${
+                        paymentMethod === 'cash'
+                          ? 'border-orange-600 bg-orange-50 text-orange-900 font-semibold'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      💵 Pay Cash In-Person
                     </button>
                   </div>
                 )}
@@ -887,7 +917,7 @@ export default function CheckoutPage() {
                     onPaymentError={handlePaymentError}
                     onBack={() => setShowPayment(false)}
                   />
-                ) : (
+                ) : paymentMethod === 'cashapp' ? (
                   // CashApp payment
                   <CashAppQRPayment
                     total={total / 100}
@@ -895,6 +925,82 @@ export default function CheckoutPage() {
                     onPaymentError={handlePaymentError}
                     onBack={() => setShowPayment(false)}
                   />
+                ) : (
+                  // Cash In-Person payment
+                  <div className="space-y-4">
+                    {!cashOrderData ? (
+                      <>
+                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                          <h4 className="font-semibold text-orange-900 mb-2">💵 Pay Cash In-Person</h4>
+                          <p className="text-sm text-orange-800">
+                            Your tickets will be held for 30 minutes. Complete payment with the seller to activate your tickets.
+                          </p>
+                        </div>
+                        <button
+                          onClick={async () => {
+                            if (!buyerName || !buyerPhone) {
+                              alert('Please enter your name and phone number');
+                              return;
+                            }
+                            try {
+                              const tickets = [];
+                              if (purchaseType === 'tier' && selectedTierId) {
+                                tickets.push({
+                                  tierId: selectedTierId,
+                                  quantity,
+                                });
+                              }
+                              const result = await createCashOrder({
+                                eventId,
+                                buyerName,
+                                buyerPhone,
+                                buyerEmail: buyerEmail || undefined,
+                                tickets,
+                              });
+                              setCashOrderData({
+                                orderNumber: result.orderNumber,
+                                holdExpiresAt: result.holdExpiresAt,
+                                totalCents: result.totalCents,
+                              });
+                            } catch (error: any) {
+                              alert('Error creating cash order: ' + error.message);
+                            }
+                          }}
+                          className="w-full py-4 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+                        >
+                          Reserve Tickets for Cash Payment
+                        </button>
+                        <button
+                          onClick={() => setShowPayment(false)}
+                          className="w-full py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          Back
+                        </button>
+                      </>
+                    ) : (
+                      <div className="text-center space-y-4">
+                        <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto" />
+                        <h3 className="text-2xl font-bold text-gray-900">Tickets Reserved!</h3>
+                        <div className="bg-white border-2 border-orange-200 rounded-lg p-6">
+                          <p className="text-lg font-semibold text-gray-900 mb-2">
+                            Order #: {cashOrderData.orderNumber}
+                          </p>
+                          <p className="text-3xl font-bold text-orange-600 mb-4">
+                            ${(cashOrderData.totalCents / 100).toFixed(2)}
+                          </p>
+                          <p className="text-sm text-gray-700">
+                            Show this order number to the seller to complete your purchase.
+                          </p>
+                          <p className="text-sm text-orange-700 mt-4 font-semibold">
+                            ⏰ Expires in: {Math.floor((cashOrderData.holdExpiresAt - Date.now()) / 1000 / 60)} minutes
+                          </p>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          The seller will receive a notification and can approve your payment to activate your tickets.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             )}

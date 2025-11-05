@@ -155,11 +155,12 @@ export class PermissionChecker {
 
     if (!staff) return false;
 
-    // SCANNER role always has permission
-    if (staff.role === STAFF_ROLES.SCANNER) return true;
+    // STAFF role always has permission
+    if (staff.role === STAFF_ROLES.STAFF) return true;
 
-    // SELLER role needs explicit canScan permission
-    if (staff.role === STAFF_ROLES.SELLER && staff.canScan === true) return true;
+    // TEAM_MEMBERS and ASSOCIATES need explicit canScan permission
+    if (staff.role === STAFF_ROLES.TEAM_MEMBERS && staff.canScan === true) return true;
+    if (staff.role === STAFF_ROLES.ASSOCIATES && staff.canScan === true) return true;
 
     return false;
   }
@@ -181,16 +182,23 @@ export class PermissionChecker {
     // Admins and event organizers can always sell
     if (this.isEventOrganizer(user, event)) return true;
 
-    // Check if user is active SELLER staff
+    // Check if user is active SUPPORT_STAFF or SUB_RESELLER (or legacy SELLER)
     const staff = await ctx.db
       .query("eventStaff")
       .withIndex("by_event", (q: any) => q.eq("eventId", eventId))
       .filter((q: any) => q.eq(q.field("staffUserId"), user._id))
       .filter((q: any) => q.eq(q.field("isActive"), true))
-      .filter((q: any) => q.eq(q.field("role"), STAFF_ROLES.SELLER))
       .first();
 
-    return staff !== null;
+    if (!staff) return false;
+
+    // Can sell if TEAM_MEMBERS or ASSOCIATES
+    if (staff.role === STAFF_ROLES.TEAM_MEMBERS) return true;
+    if (staff.role === STAFF_ROLES.ASSOCIATES) return true;
+    // STAFF can sell only if organizer gave permission
+    if (staff.role === STAFF_ROLES.STAFF && staff.canScan === true) return true;
+
+    return false;
   }
 
   /**

@@ -188,6 +188,15 @@ export default defineSchema({
     charityDiscount: v.boolean(),
     lowPriceDiscount: v.boolean(),
 
+    // Payment method toggles (organizer level)
+    merchantProcessor: v.optional(v.union(
+      v.literal("SQUARE"),
+      v.literal("STRIPE"),
+      v.literal("PAYPAL")
+    )),
+    creditCardEnabled: v.optional(v.boolean()),  // Enable/disable credit card payments
+    cashAppEnabled: v.optional(v.boolean()),     // Enable/disable Cash App payments
+
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -202,6 +211,9 @@ export default defineSchema({
     name: v.string(), // "General Admission", "VIP", etc.
     description: v.optional(v.string()),
     price: v.number(), // Base price in cents (used if no pricingTiers)
+
+    // Multi-day event support
+    dayNumber: v.optional(v.number()), // For multi-day events: 1=Day 1, 2=Day 2, etc. null=all days
 
     // Early Bird Pricing - time-based pricing tiers
     pricingTiers: v.optional(v.array(v.object({
@@ -227,7 +239,8 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
-    .index("by_event", ["eventId"]),
+    .index("by_event", ["eventId"])
+    .index("by_event_and_day", ["eventId", "dayNumber"]),
 
   // Ticket Bundles - Package multiple tickets together
   ticketBundles: defineTable({
@@ -312,12 +325,16 @@ export default defineSchema({
     attendeeId: v.optional(v.id("users")),
     attendeeEmail: v.optional(v.string()),
     attendeeName: v.optional(v.string()),
+    attendeePhone: v.optional(v.string()),
     ticketCode: v.optional(v.string()), // unique code for this ticket
     status: v.optional(v.union(
       v.literal("VALID"),
+      v.literal("ACTIVE"), // Active ticket ready to use
       v.literal("SCANNED"),
       v.literal("CANCELLED"),
       v.literal("REFUNDED"),
+      v.literal("PENDING"), // Pending cash payment approval
+      v.literal("EXPIRED"), // Cash order expired
       v.literal("PENDING_ACTIVATION") // For cash sales awaiting customer activation
     )),
     scannedAt: v.optional(v.number()),
@@ -386,8 +403,12 @@ export default defineSchema({
     autoAssignToNewEvents: v.optional(v.boolean()), // Auto-assign this staff/sub-seller to new events created by organizer or when parent joins new event
 
     // Role and permissions
-    role: v.union(v.literal("SELLER"), v.literal("SCANNER")),
-    canScan: v.optional(v.boolean()), // Sellers can also scan if approved by organizer
+    role: v.union(
+      v.literal("STAFF"),          // Door staff - scans tickets
+      v.literal("TEAM_MEMBERS"),   // Team member - sells tickets, can assign associates
+      v.literal("ASSOCIATES")      // Gets tickets from Team Members to sell
+    ),
+    canScan: v.optional(v.boolean()), // Team members can also scan if approved by organizer
 
     // Commission
     commissionType: v.optional(v.union(v.literal("PERCENTAGE"), v.literal("FIXED"))),
@@ -404,6 +425,9 @@ export default defineSchema({
 
     // Cash tracking
     cashCollected: v.optional(v.number()), // Total cash collected by staff in cents
+
+    // Payment method control (staff level)
+    acceptCashInPerson: v.optional(v.boolean()), // Staff can enable/disable accepting cash in-person
 
     // Status
     isActive: v.boolean(),
@@ -430,6 +454,27 @@ export default defineSchema({
     .index("by_assigned_by", ["assignedByStaffId"]) // Query all sub-sellers assigned by a staff member
     .index("by_hierarchy_level", ["hierarchyLevel"]), // Query staff by level
 
+  // Tier-specific staff allocations (for multi-day events and bundles)
+  staffTierAllocations: defineTable({
+    staffId: v.id("eventStaff"),
+    eventId: v.id("events"),
+    tierId: v.id("ticketTiers"),
+
+    // Allocation tracking
+    allocatedQuantity: v.number(), // How many tickets from this tier allocated to staff
+    soldQuantity: v.number(), // How many sold from this allocation
+    remainingQuantity: v.number(), // Calculated: allocatedQuantity - soldQuantity
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_staff", ["staffId"])
+    .index("by_event", ["eventId"])
+    .index("by_tier", ["tierId"])
+    .index("by_staff_and_tier", ["staffId", "tierId"])
+    .index("by_staff_and_event", ["staffId", "eventId"]),
+
   // Staff sales tracking
   staffSales: defineTable({
     orderId: v.id("orders"),
@@ -446,7 +491,8 @@ export default defineSchema({
       v.literal("CASH"),
       v.literal("CASH_APP"),
       v.literal("SQUARE"),
-      v.literal("STRIPE")
+      v.literal("STRIPE"),
+      v.literal("ZELLE")
     )),
     createdAt: v.number(),
     soldAt: v.optional(v.number()), // Legacy field
@@ -514,10 +560,12 @@ export default defineSchema({
     // Status
     status: v.union(
       v.literal("PENDING"),
+      v.literal("PENDING_CASH_PAYMENT"), // NEW: Cash order awaiting approval
       v.literal("COMPLETED"),
       v.literal("CANCELLED"),
       v.literal("FAILED"),
-      v.literal("REFUNDED")
+      v.literal("REFUNDED"),
+      v.literal("EXPIRED")  // NEW: Cash order expired (30 min timeout)
     ),
 
     // Pricing
@@ -528,7 +576,14 @@ export default defineSchema({
 
     // Payment
     paymentId: v.optional(v.string()), // Square or Stripe payment ID
-    paymentMethod: v.optional(v.union(v.literal("SQUARE"), v.literal("STRIPE"), v.literal("TEST"))),
+    paymentMethod: v.optional(v.union(
+      v.literal("SQUARE"),
+      v.literal("STRIPE"),
+      v.literal("TEST"),
+      v.literal("CASH"),
+      v.literal("CASH_APP"),
+      v.literal("ZELLE")
+    )),
     paidAt: v.optional(v.number()),
     stripePaymentIntentId: v.optional(v.string()),
 
@@ -564,6 +619,11 @@ export default defineSchema({
       seatNumber: v.string(),
     }))),
 
+    // Cash payment fields (NEW)
+    holdExpiresAt: v.optional(v.number()),           // 30-minute expiration for cash orders
+    approvedByStaffId: v.optional(v.id("eventStaff")), // Staff who approved the cash payment
+    approvedAt: v.optional(v.number()),              // When payment was approved
+
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -572,7 +632,8 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_event", ["eventId"])
     .index("by_status", ["status"])
-    .index("by_referral", ["staffReferralCode"]),
+    .index("by_referral", ["staffReferralCode"])
+    .index("by_hold_expiry", ["holdExpiresAt", "status"]), // NEW: For cron job
 
   // Individual ticket instances
   ticketInstances: defineTable({
@@ -1298,4 +1359,76 @@ export default defineSchema({
     .index("by_payment_status", ["paymentStatus"])
     .index("by_fulfillment_status", ["fulfillmentStatus"])
     .index("by_created_at", ["createdAt"]),
+
+  // Push notification subscriptions (PWA)
+  pushSubscriptions: defineTable({
+    // User/Staff identification
+    staffId: v.optional(v.id("eventStaff")), // Staff member receiving notifications
+    userId: v.optional(v.id("users")), // User receiving notifications (for future use)
+
+    // Push subscription data (from PushSubscription.toJSON())
+    endpoint: v.string(), // Unique push endpoint
+    keys: v.object({
+      p256dh: v.string(),
+      auth: v.string(),
+    }),
+
+    // Device/browser info
+    userAgent: v.optional(v.string()),
+    deviceType: v.optional(v.string()), // "mobile", "desktop", "tablet"
+
+    // Notification preferences
+    notifyOnCashOrders: v.optional(v.boolean()), // Receive cash order notifications
+    notifyOnOnlineSales: v.optional(v.boolean()), // Receive online sale notifications
+
+    // Status
+    isActive: v.boolean(),
+    lastUsed: v.optional(v.number()), // Last successful notification sent
+    failureCount: v.optional(v.number()), // Track failed notifications
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_staff", ["staffId"])
+    .index("by_user", ["userId"])
+    .index("by_endpoint", ["endpoint"])
+    .index("by_active", ["isActive"]),
+
+  // Notification history/log
+  notificationLog: defineTable({
+    // Recipient
+    staffId: v.optional(v.id("eventStaff")),
+    userId: v.optional(v.id("users")),
+
+    // Notification details
+    type: v.union(
+      v.literal("CASH_ORDER"), // New cash order
+      v.literal("ONLINE_SALE"), // Online ticket sale via referral
+      v.literal("ORDER_EXPIRED"), // Cash order expired
+    ),
+    title: v.string(),
+    body: v.string(),
+
+    // Related data
+    orderId: v.optional(v.id("orders")),
+    eventId: v.optional(v.id("events")),
+
+    // Delivery status
+    status: v.union(
+      v.literal("SENT"),
+      v.literal("FAILED"),
+      v.literal("CLICKED"), // User clicked notification
+    ),
+    error: v.optional(v.string()),
+
+    // Timestamps
+    sentAt: v.number(),
+    clickedAt: v.optional(v.number()),
+  })
+    .index("by_staff", ["staffId"])
+    .index("by_user", ["userId"])
+    .index("by_type", ["type"])
+    .index("by_order", ["orderId"])
+    .index("by_status", ["status"]),
 });
